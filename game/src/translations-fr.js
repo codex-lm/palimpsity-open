@@ -216,6 +216,8 @@ export const EXACT_FR = {
   "The WebGL context was lost. Reload the game to return to the valley.": "Le contexte WebGL a été perdu. Recharge le jeu pour retrouver la vallée.",
   "The renderer has been disposed.": "Le renderer a été libéré.",
   "Terrain missing from the manifest": "Terrain absent du manifeste",
+  "Invalid embedded model data. Rebuild the standalone game.": "Données du modèle embarqué invalides. Reconstruis le jeu autonome.",
+  "Missing embedded asset manifest. Rebuild the standalone game.": "Manifeste des modèles embarqués absent. Reconstruis le jeu autonome.",
   "Loading canceled: renderer disposed": "Chargement annulé : renderer libéré",
   "Asset failed to load:": "Asset non chargé :",
   "Spring": "printemps",
@@ -333,6 +335,10 @@ export const EXACT_FR = {
 };
 
 export const TEMPLATES_FR = [
+  {
+    "en": "Missing embedded model: {0}. Rebuild the standalone game.",
+    "fr": "Modèle embarqué absent : {0}. Reconstruis le jeu autonome."
+  },
   {
     "en": "Available in phase {0}.",
     "fr": "Disponible en phase {0}."

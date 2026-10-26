@@ -41,11 +41,13 @@ assert.ok(source.includes('data-conversion'), 'Conversion commands are included 
 const bundle = await esbuild.build({
   entryPoints: [path.join(game, 'src/main.js')], bundle: true, format: 'esm', minify: true,
   write: false, target: 'es2019', legalComments: 'none',
+  define: { __PALIMPSITY_EMBEDDED__: 'true' },
   alias: {
     'three/addons/controls/OrbitControls.js': path.join(game, 'node_modules/three/examples/jsm/controls/OrbitControls.js'),
     'three/addons/loaders/GLTFLoader.js': path.join(game, 'node_modules/three/examples/jsm/loaders/GLTFLoader.js'),
   },
 });
 const js = bundle.outputFiles[0].text.replace(/<\/script/gi, '<\\/script').replace(/[ \t]+$/gm, '');
+assert.ok(!js.includes('./art/diorama/'), 'Standalone code must not retain development asset URLs');
 assert.ok(source.includes(`<script type="module">\n${js}\n</script>`), 'The actual delivered code exactly matches the current source bundle');
 console.log(JSON.stringify({ result: 'PASS', sourceBundleMatches: true, models: 18, embeddedGLBs: files.size, bytes: Buffer.byteLength(source), sha256: createHash('sha256').update(source).digest('hex'), browserValidation: false }, null, 2));

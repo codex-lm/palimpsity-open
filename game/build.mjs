@@ -19,6 +19,7 @@ const result = await esbuild.build({
   entryPoints: [p("src/main.js")],
   bundle: true, format: "esm", minify: true, write: false,
   target: "es2019",                    // down-level explicite (?. / ?? transpilés) — cible large
+  define: { __PALIMPSITY_EMBEDDED__: "true" },
   alias: {
     "three/addons/controls/OrbitControls.js":
       p("node_modules/three/examples/jsm/controls/OrbitControls.js"),

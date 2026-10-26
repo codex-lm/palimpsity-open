@@ -5,6 +5,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { COLS, ROWS, BUILDINGS, districtOf } from "./data.js";
 import { localizeDOM } from "./localization.js";
+import { loadDioramaManifest, loadDioramaGLB } from "./diorama-assets.js";
 
 const worldX = c => c - (COLS - 1) / 2;
 const worldZ = r => r - (ROWS - 1) / 2;
@@ -211,10 +212,7 @@ export class Renderer3D {
   }
 
   async _loadAssets() {
-    const manifest = window.__PALIMPSITY_ASSET_MANIFEST || await fetch("./art/diorama/asset-manifest.json").then(response => {
-      if (!response.ok) throw new Error(`Missing asset manifest (${response.status})`);
-      return response.json();
-    });
+    const manifest = await loadDioramaManifest(window);
     for (const id of Object.keys(BUILDINGS)) if (!manifest.models?.[id]?.file) throw new Error(`Model missing from the manifest: ${id}`);
     if (!fileOf(manifest.terrain)) throw new Error("Terrain missing from the manifest");
     for (const key of Object.values(DECOR)) if (!fileOf(manifest.decor?.[key])) throw new Error(`Scenery missing from the manifest: ${key}`);
@@ -230,8 +228,7 @@ export class Renderer3D {
     const loader = new GLTFLoader();
     const embedded = window.__PALIMPSITY_ASSETS || {};
     const results = await Promise.allSettled([...files].map(async file => {
-      const url = embedded[fileKey(file)] || embedded[file.split(/[\\/]/).pop()] || `./art/diorama/${file}`;
-      const gltf = await loader.loadAsync(url);
+      const gltf = await loadDioramaGLB(loader, file, embedded);
       gltf.scene.traverse(object => {
         if (!object.isMesh) return;
         object.castShadow = object.receiveShadow = true;

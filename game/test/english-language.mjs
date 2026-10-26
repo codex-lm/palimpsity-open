@@ -107,7 +107,7 @@ test('the default English player copy excludes French outside the language choic
   const visibleDocument = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<style>[\s\S]*?<\/style>/g, '')
     .replace(/(<option\b[^>]*\bvalue=["']fr["'][^>]*>)\s*Français\s*(<\/option>)/gi, '$1French$2');
   assertEnglish(visibleDocument, 'game HTML, tooltips and accessibility labels');
-  for (const file of ['data.js', 'engine.js', 'ui.js', 'main.js', 'render3d.js']) {
+  for (const file of ['data.js', 'engine.js', 'ui.js', 'main.js', 'render3d.js', 'diorama-assets.js']) {
     const source = readFileSync(new URL('../src/' + file, import.meta.url), 'utf8');
     const { code } = await esbuild.transform(source, { loader: 'js', legalComments: 'none', charset: 'utf8', minifyWhitespace: true });
     assertEnglish(code, `${file} runtime copy (comments removed)`);

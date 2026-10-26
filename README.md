@@ -28,6 +28,9 @@ intended for LOB7; this source branch retains the editable modules, model files,
 Blender generator and active game tests. Historical prototypes are not part of
 this distribution. No private project history is included.
 
+The standalone loader parses embedded GLBs directly from memory, without fetching
+data URLs. `npm test` verifies all 39 models with network requests disabled.
+
 ## Credits and license
 
 Created by Cédric with AI assistance from Codex, Claude and Kimi.
