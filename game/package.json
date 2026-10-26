@@ -1,0 +1,24 @@
+{
+  "name": "palimpsity-mvp",
+  "version": "0.1.0",
+  "description": "A city builder where your solutions reshape the rules — playable MVP",
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 5173",
+    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs",
+    "test:gameplay": "node test/gameplay-regressions.mjs",
+    "test:ui": "node test/ui-contracts.mjs",
+    "test:language": "node test/english-language.mjs",
+    "test:localization": "node test/localization.mjs",
+    "test:victory": "node test/victory-check.mjs",
+    "test:artifact": "node test/artifact-check.mjs",
+    "test:browser": "node test/game-browser-check.mjs",
+    "build": "node build.mjs",
+    "assets:diorama": "node build-diorama-assets.mjs"
+  },
+  "license": "CC0-1.0",
+  "dependencies": {
+    "esbuild": "^0.28.0",
+    "three": "^0.160.0"
+  }
+}

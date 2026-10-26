@@ -1,0 +1,166 @@
+{
+  "terrain": "terrain-game.glb",
+  "models": {
+    "house": {
+      "file": "house.glb",
+      "footprint": 0.95,
+      "height": 1.128,
+      "smoke": null
+    },
+    "well": {
+      "file": "well.glb",
+      "footprint": 0.95,
+      "height": 1.027,
+      "smoke": null
+    },
+    "farm": {
+      "file": "farm.glb",
+      "footprint": 0.95,
+      "height": 0.766,
+      "smoke": null
+    },
+    "workshop": {
+      "file": "workshop.glb",
+      "footprint": 0.95,
+      "height": 1.11,
+      "smoke": null
+    },
+    "market": {
+      "file": "market.glb",
+      "footprint": 0.95,
+      "height": 0.882,
+      "smoke": null
+    },
+    "generator": {
+      "file": "generator.glb",
+      "footprint": 0.95,
+      "height": 1.6,
+      "smoke": [
+        -0.285,
+        1.6,
+        -0.225
+      ]
+    },
+    "park": {
+      "file": "park.glb",
+      "footprint": 0.95,
+      "height": 0.951,
+      "smoke": null
+    },
+    "path": {
+      "file": "path.glb",
+      "footprint": 0.95,
+      "height": 0.34,
+      "smoke": null
+    },
+    "road": {
+      "file": "road.glb",
+      "footprint": 0.95,
+      "height": 0.18,
+      "smoke": null
+    },
+    "factory": {
+      "file": "factory.glb",
+      "footprint": 0.95,
+      "height": 1.47,
+      "smoke": [
+        -0.28,
+        1.47,
+        -0.18
+      ]
+    },
+    "warehouse": {
+      "file": "warehouse.glb",
+      "footprint": 0.95,
+      "height": 0.817,
+      "smoke": null
+    },
+    "water_plant": {
+      "file": "water_plant.glb",
+      "footprint": 0.95,
+      "height": 0.688,
+      "smoke": null
+    },
+    "tower": {
+      "file": "tower.glb",
+      "footprint": 0.95,
+      "height": 2.058,
+      "smoke": null
+    },
+    "depot": {
+      "file": "depot.glb",
+      "footprint": 0.95,
+      "height": 0.697,
+      "smoke": null
+    },
+    "tram": {
+      "file": "tram.glb",
+      "footprint": 0.95,
+      "height": 0.85,
+      "smoke": null,
+      "car": {
+        "file": "tram_car.glb",
+        "anchor": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "maint_center": {
+      "file": "maint_center.glb",
+      "footprint": 0.95,
+      "height": 1.148,
+      "smoke": null
+    },
+    "greenhouse": {
+      "file": "greenhouse.glb",
+      "footprint": 0.95,
+      "height": 0.803,
+      "smoke": null
+    },
+    "recycler": {
+      "file": "recycler.glb",
+      "footprint": 0.95,
+      "height": 0.942,
+      "smoke": null,
+      "rotor": {
+        "file": "recycler_rotor.glb",
+        "anchor": [
+          0.2,
+          0.7,
+          -0.05
+        ],
+        "axis": "y"
+      }
+    }
+  },
+  "transportVariants": {
+    "path": {
+      "end": "path_end.glb",
+      "straight": "path_straight.glb",
+      "corner": "path_corner.glb",
+      "tee": "path_tee.glb",
+      "cross": "path_cross.glb"
+    },
+    "road": {
+      "end": "road_end.glb",
+      "straight": "road_straight.glb",
+      "corner": "road_corner.glb",
+      "tee": "road_tee.glb",
+      "cross": "road_cross.glb"
+    },
+    "tram": {
+      "end": "tram_end.glb",
+      "straight": "tram_straight.glb",
+      "corner": "tram_corner.glb",
+      "tee": "tram_tee.glb",
+      "cross": "tram_cross.glb"
+    }
+  },
+  "decor": {
+    "forest": "forest.glb",
+    "hill": "hill.glb",
+    "fertile": "fertile.glb"
+  }
+}

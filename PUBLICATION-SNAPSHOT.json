@@ -1,0 +1,10 @@
+{
+  "game": "Palimpsity",
+  "version": "0.1.0-en-fr",
+  "artifact": "dist/palimpsity-mvp.html",
+  "artifactSha256": "1b9a9e05bba323e8aaa5e3845963bc9a13088bef80f5266c90fc6ca125cabb21",
+  "artifactBytes": 13109989,
+  "models": 18,
+  "referencedGlbs": 39,
+  "publicationFilesAreExplicitExport": true
+}

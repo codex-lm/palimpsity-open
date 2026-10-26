@@ -1,0 +1,8 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+.claude/
+game/art/diorama/*.blend
+game/art/diorama/*.blend1
+game/art/diorama/*.png

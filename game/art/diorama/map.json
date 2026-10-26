@@ -1,0 +1,110 @@
+{
+  "cols": 16,
+  "rows": 12,
+  "rowsData": [
+    "...TTT.....W....",
+    "..TTTT....WW....",
+    "...TT.P...W....T",
+    "......P...W....T",
+    "......P...WW..P.",
+    "..FPPPPPPPPWPPP.",
+    "..FFF.P....W..P.",
+    "..FFF.P...WW...T",
+    "......PPPPW.HHTT",
+    "T.....P..WW.HHTT",
+    "TT.......W..HHTT",
+    "TT......WW....TT"
+  ],
+  "initial": [
+    {
+      "id": "house",
+      "c": 4,
+      "r": 4,
+      "rotation": 0
+    },
+    {
+      "id": "house",
+      "c": 7,
+      "r": 4,
+      "rotation": 0
+    },
+    {
+      "id": "house",
+      "c": 5,
+      "r": 6,
+      "rotation": 3.141592653589793
+    },
+    {
+      "id": "house",
+      "c": 8,
+      "r": 6,
+      "rotation": 3.141592653589793
+    },
+    {
+      "id": "house",
+      "c": 2,
+      "r": 3,
+      "rotation": 0.18
+    },
+    {
+      "id": "well",
+      "c": 5,
+      "r": 4,
+      "rotation": 0
+    },
+    {
+      "id": "well",
+      "c": 3,
+      "r": 4,
+      "rotation": -0.12
+    },
+    {
+      "id": "farm",
+      "c": 3,
+      "r": 6,
+      "rotation": 3.141592653589793
+    },
+    {
+      "id": "workshop",
+      "c": 8,
+      "r": 4,
+      "rotation": 0
+    },
+    {
+      "id": "market",
+      "c": 7,
+      "r": 6,
+      "rotation": 3.141592653589793
+    },
+    {
+      "id": "market",
+      "c": 12,
+      "r": 4,
+      "rotation": 0.12
+    },
+    {
+      "id": "generator",
+      "c": 13,
+      "r": 4,
+      "rotation": 0
+    },
+    {
+      "id": "park",
+      "c": 9,
+      "r": 4,
+      "rotation": 0
+    },
+    {
+      "id": "park",
+      "c": 5,
+      "r": 7,
+      "rotation": -0.2
+    },
+    {
+      "id": "park",
+      "c": 12,
+      "r": 6,
+      "rotation": 3.141592653589793
+    }
+  ]
+}
