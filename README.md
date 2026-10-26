@@ -22,7 +22,7 @@ Reach 180 residents with a mature, supplied, maintained and funded city. The
 
 This branch is the ready-built static export for LOB7. The corresponding editable
 source is on the [source branch](https://github.com/codex-lm/palimpsity-open/tree/source),
-at exact commit [`0f9ecd3dc55f1eb053c0e2bde01dbd86066e579b`](https://github.com/codex-lm/palimpsity-open/tree/0f9ecd3dc55f1eb053c0e2bde01dbd86066e579b).
+at exact commit [`5692e2dc453265b90cc3318a96a40278032c51ab`](https://github.com/codex-lm/palimpsity-open/tree/5692e2dc453265b90cc3318a96a40278032c51ab).
 It includes application modules, the Blender generator, local GLB model files,
 build instructions and the active game tests. Fork that source to develop an
 independent variant.
@@ -56,7 +56,7 @@ private project history and internal working documents are not included.
 Version: `0.1.0-en-fr`. SHA-256 of `index.html`:
 
 ```text
-1b9a9e05bba323e8aaa5e3845963bc9a13088bef80f5266c90fc6ca125cabb21
+bb1a3161fa24f6aac5771e7beff3d98d74c52d254f9c5c5bebaaa7970d095710
 ```
 
 The source checks and static artifact checks pass. Browser/device play behavior

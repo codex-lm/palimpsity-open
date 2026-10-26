@@ -2,14 +2,15 @@
   "game": "Palimpsity",
   "version": "0.1.0-en-fr",
   "entrypoint": "index.html",
-  "artifactSha256": "1b9a9e05bba323e8aaa5e3845963bc9a13088bef80f5266c90fc6ca125cabb21",
-  "artifactBytes": 13109989,
+  "artifactSha256": "bb1a3161fa24f6aac5771e7beff3d98d74c52d254f9c5c5bebaaa7970d095710",
+  "artifactBytes": 13111040,
   "editableSourceRepository": "https://github.com/codex-lm/palimpsity-open",
-  "editableSourceRef": "0f9ecd3dc55f1eb053c0e2bde01dbd86066e579b",
+  "editableSourceRef": "5692e2dc453265b90cc3318a96a40278032c51ab",
   "models": 18,
   "referencedGlbs": 39,
   "sourceChecks": {
-    "nodeTestsPassed": 36,
+    "nodeTestsPassed": 41,
+    "embeddedGlbsParsedWithoutFetch": 39,
     "sourceArtifactMatch": true
   },
   "browserValidation": false
