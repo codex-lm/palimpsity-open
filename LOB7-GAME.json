@@ -1,0 +1,25 @@
+{
+  "title": "Palimpsity",
+  "description": "Build a miniature city whose solutions reshape its future challenges. Balance production, deliveries, heat and maintenance, and give older workshops a new role.",
+  "entrypoint": "index.html",
+  "license": "CC0-1.0",
+  "genre": [
+    "City builder",
+    "Strategy"
+  ],
+  "themes": [
+    "Resilience",
+    "Diorama"
+  ],
+  "controls": [
+    "Click: build or inspect. Drag: rotate. Right-drag: pan. Scroll: zoom.",
+    "R: rotate a building. Escape: cancel. Space: pause or resume.",
+    "Arrow keys and Enter: choose a tile and build or inspect.",
+    "English / Français: switch language without restarting."
+  ],
+  "credits": [
+    "Created by Cédric, developed with AI assistance from Codex, Claude and Kimi.",
+    "Original application code and original Blender diorama models: CC0-1.0.",
+    "Three.js, OrbitControls and GLTFLoader: Three.js authors, MIT; see THIRD_PARTY_NOTICES.md."
+  ]
+}
