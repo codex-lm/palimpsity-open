@@ -17,7 +17,10 @@ const p = (...x) => path.join(here, ...x);
 // 1) bundle (three résolu depuis node_modules ; les alias couvrent "three/addons/")
 const result = await esbuild.build({
   entryPoints: [p("src/main.js")],
-  bundle: true, format: "esm", minify: true, write: false,
+  // Keep conditional-number spacing readable for static JavaScript analyzers.
+  // Identifiers and expressions are still compacted; game behavior is unchanged.
+  bundle: true, format: "esm", minifyWhitespace: false,
+  minifyIdentifiers: true, minifySyntax: true, write: false,
   target: "es2019",                    // down-level explicite (?. / ?? transpilés) — cible large
   define: { __PALIMPSITY_EMBEDDED__: "true" },
   alias: {

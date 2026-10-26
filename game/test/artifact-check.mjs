@@ -39,7 +39,8 @@ for (const id of ['cv', 'palette', 'inspector', 'objectives-summary', 'objective
 }
 assert.ok(source.includes('data-conversion'), 'Conversion commands are included in the delivered UI');
 const bundle = await esbuild.build({
-  entryPoints: [path.join(game, 'src/main.js')], bundle: true, format: 'esm', minify: true,
+  entryPoints: [path.join(game, 'src/main.js')], bundle: true, format: 'esm',
+  minifyWhitespace: false, minifyIdentifiers: true, minifySyntax: true,
   write: false, target: 'es2019', legalComments: 'none',
   define: { __PALIMPSITY_EMBEDDED__: 'true' },
   alias: {

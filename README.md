@@ -30,6 +30,8 @@ this distribution. No private project history is included.
 
 The standalone loader parses embedded GLBs directly from memory, without fetching
 data URLs. `npm test` verifies all 39 models with network requests disabled.
+The export keeps readable JavaScript whitespace so static analyzers can parse
+conditional decimal expressions without confusing them with optional chaining.
 
 ## Credits and license
 
