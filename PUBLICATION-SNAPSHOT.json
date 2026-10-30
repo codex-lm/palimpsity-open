@@ -1,17 +1,25 @@
 {
   "game": "Palimpsity",
-  "version": "0.1.0-en-fr",
+  "version": "0.1.1-neighbourhood",
   "artifact": "dist/palimpsity-mvp.html",
-  "artifactSha256": "37042a98449e06f77e8312fdc5cd652905fa9a98c652ae7fcff89dd17b496c72",
-  "artifactBytes": 13290098,
+  "artifactSha256": "4f559952ed9b897c2d0efc34fab70f400204b8cf10fd6983d99ed5acded80f9b",
+  "artifactBytes": 13301869,
   "models": 18,
   "referencedGlbs": 39,
   "publicationFilesAreExplicitExport": true,
   "sourceChecks": {
-    "nodeTestsPassed": 41,
+    "nodeTestsPassed": 55,
     "embeddedGlbsParsedWithoutFetch": 39,
     "sourceArtifactMatch": true
   },
-  "browserValidation": false,
+  "browserValidation": {
+    "scope": "isolated headless Chromium, normal UI and canvas keyboard only",
+    "challengeCompletedAtTick": 13,
+    "timeoutAtTick": 120,
+    "bestSurvivesReload": true,
+    "classicReset": true,
+    "frenchResult": true,
+    "pageErrors": 0
+  },
   "buildFormat": "readable whitespace; compact identifiers and expressions"
 }
