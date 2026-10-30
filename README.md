@@ -10,7 +10,7 @@ when this edition is published. The game includes its 18 Blender building models
 and needs no installation, server or external network connection.
 
 New games start paused. Build houses, a well and a farm in the same district,
-then press **Play**. Use the **English / FranÃ§ais** selector to change language.
+then press **Play**. Use the **English / Français** selector to change language.
 Left-click builds or inspects; left-drag rotates the camera, right-drag pans, and
 the mouse wheel zooms. **R** rotates a building, **Escape** cancels the tool, and
 **Space** pauses or resumes. Arrow keys and Enter provide keyboard placement.
@@ -42,7 +42,7 @@ regenerating models; set `BLENDER_EXE` to its executable. Commit the resulting
 
 ## Credits and licensing
 
-Created by CÃ©dric with AI assistance from Codex, Claude and Kimi. Original code
+Created by Cédric with AI assistance from Codex, Claude and Kimi. Original code
 and original Blender models: **CC0-1.0**. Bundled Three.js, OrbitControls and
 GLTFLoader: **MIT**. Keep the notices when sharing or adapting this edition.
 See [CREDITS.md](CREDITS.md), [LICENSE](LICENSE) and
