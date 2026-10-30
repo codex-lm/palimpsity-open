@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "contributions": [
+    {
+      "kind": "agent",
+      "name": "LOB7 Enhancement",
+      "status": "included",
+      "url": "https://github.com/codex-lm/palimpsity-open/commit/af4298244f7df57e1c1a17177f0a79a7e80f26b0",
+      "summary": "Build your first thriving neighbourhood against the clock, and keep your best completion time."
+    }
+  ]
+}
