@@ -1,6 +1,6 @@
 {
-  "title": "Palimpsity",
-  "description": "Build a miniature city whose solutions reshape its future challenges. Balance production, deliveries, heat and maintenance, and give older workshops a new role.",
+  "title": "Palimpsity - First Neighbourhood",
+  "description": "Welcome 24 residents with healthy food, water and finances for eight consecutive turns before turn 120. Choose First Neighbourhood to start, or keep playing the original city mode. Automatically produced by LOB7 Enhancement.",
   "entrypoint": "index.html",
   "license": "CC0-1.0",
   "genre": [
@@ -15,10 +15,12 @@
     "Click: build or inspect. Drag: rotate. Right-drag: pan. Scroll: zoom.",
     "R: rotate a building. Escape: cancel. Space: pause or resume.",
     "Arrow keys and Enter: choose a tile and build or inspect.",
-    "English / Français: switch language without restarting."
+    "English / FranÃ§ais: switch language without restarting.",
+    "First Neighbourhood starts a fresh timed challenge; Classic city returns to a fresh original game.",
+    "Simulation clock: 120 turns at 0.6 seconds per turn; pauses are free, fast speed advances the clock faster. Hiding the tab pauses; press Play to resume."
   ],
   "credits": [
-    "Created by Cédric, developed with AI assistance from Codex, Claude and Kimi.",
+    "Created by CÃ©dric, developed with AI assistance from Codex, Claude and Kimi.",
     "Original application code and original Blender diorama models: CC0-1.0.",
     "Three.js, OrbitControls and GLTFLoader: Three.js authors, MIT; see THIRD_PARTY_NOTICES.md."
   ]

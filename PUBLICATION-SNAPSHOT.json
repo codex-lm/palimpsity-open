@@ -1,18 +1,27 @@
 {
   "game": "Palimpsity",
-  "version": "0.1.0-en-fr",
-  "entrypoint": "index.html",
-  "artifactSha256": "37042a98449e06f77e8312fdc5cd652905fa9a98c652ae7fcff89dd17b496c72",
-  "artifactBytes": 13290098,
-  "editableSourceRepository": "https://github.com/codex-lm/palimpsity-open",
-  "editableSourceRef": "208996e8ba459f16ba3c7df40d7434e87cea38a8",
+  "version": "0.1.1-neighbourhood",
+  "artifactSha256": "4f559952ed9b897c2d0efc34fab70f400204b8cf10fd6983d99ed5acded80f9b",
+  "artifactBytes": 13301869,
   "models": 18,
   "referencedGlbs": 39,
+  "publicationFilesAreExplicitExport": true,
   "sourceChecks": {
-    "nodeTestsPassed": 41,
+    "nodeTestsPassed": 55,
     "embeddedGlbsParsedWithoutFetch": 39,
-    "sourceArtifactMatch": true,
-    "semgrepStaticAnalysis": "passed locally with 1.182.1"
+    "sourceArtifactMatch": true
   },
-  "browserValidation": false
+  "browserValidation": {
+    "scope": "isolated headless Chromium, normal UI and canvas keyboard only",
+    "challengeCompletedAtTick": 13,
+    "timeoutAtTick": 120,
+    "bestSurvivesReload": true,
+    "classicReset": true,
+    "frenchResult": true,
+    "pageErrors": 0
+  },
+  "buildFormat": "readable whitespace; compact identifiers and expressions",
+  "entrypoint": "index.html",
+  "editableSourceRepository": "https://github.com/codex-lm/palimpsity-open",
+  "editableSourceRef": "af4298244f7df57e1c1a17177f0a79a7e80f26b0"
 }
