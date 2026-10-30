@@ -331,7 +331,22 @@ export const EXACT_FR = {
   "Foundations established": "Fondation établie",
   "Logistics revealed": "Révélation logistique",
   "Heat and maintenance revealed": "Révélation chaleur & maintenance",
-  "Cascading failures": "Pannes en chaîne"
+  "Cascading failures": "Pannes en chaîne",
+  "First Neighbourhood": "Premier quartier",
+  "Classic city": "Ville classique",
+  "Start the First Neighbourhood challenge": "Lancer le défi Premier quartier",
+  "Return to the classic city": "Retour à la ville classique",
+  "Reach 24 residents": "Atteindre 24 habitants",
+  "Keep food and water healthy": "Garder nourriture et eau saines",
+  "Keep finances non-negative": "Garder les finances non négatives",
+  "Hold everything together": "Tout tenir ensemble",
+  "You can pause freely: only simulation turns count (0.6 s each).": "Tu peux mettre en pause librement : seuls les tours de simulation comptent (0,6 s chacun).",
+  "Challenge completed": "Défi réussi",
+  "Out of time": "Temps écoulé",
+  "Try again": "Réessayer",
+  "Back to classic city": "Retour à la ville classique",
+  "New best time!": "Nouveau meilleur temps !",
+  "A side challenge — the Thriving city victory stays the classic mode's goal.": "Un défi à part — la victoire Ville accomplie reste le but du mode classique."
 };
 
 export const TEMPLATES_FR = [
@@ -582,5 +597,49 @@ export const TEMPLATES_FR = [
   {
     "en": "{0} trust",
     "fr": "{0} confiance"
+  },
+  {
+    "en": "Turn {0}/{1} · {2} left · {3}/{4} held",
+    "fr": "Tour {0}/{1} · {2} restantes · {3}/{4} tenus"
+  },
+  {
+    "en": "Best: {0}",
+    "fr": "Record : {0}"
+  },
+  {
+    "en": "First Neighbourhood · {0}/{1}",
+    "fr": "Premier quartier · {0}/{1}"
+  },
+  {
+    "en": "Food {0}% · water {1}% · need {2}%",
+    "fr": "Nourriture {0} % · eau {1} % · {2} % requis"
+  },
+  {
+    "en": "Balance {0} €",
+    "fr": "Solde {0} €"
+  },
+  {
+    "en": "{0} / {1} consecutive turns",
+    "fr": "{0} / {1} tours consécutifs"
+  },
+  {
+    "en": "Goals held together at turn {0} · simulation time {1}.",
+    "fr": "Objectifs tenus ensemble au tour {0} · temps de simulation {1}."
+  },
+  {
+    "en": "Turn {0} arrived before every goal held together.",
+    "fr": "Le tour {0} est arrivé avant que tous les objectifs tiennent ensemble."
+  },
+  {
+    "en": "The city collapsed first: {0}",
+    "fr": "La ville s'est effondrée d'abord : {0}"
+  },
+  {
+    "en": "Best completion: {0}",
+    "fr": "Meilleur temps : {0}"
+  },
+  {
+    "en": "First Neighbourhood: reach {0} residents with healthy food, water and finances for {1} consecutive turns, before turn {2}.",
+    "fr": "Premier quartier : atteins {0} habitants, avec nourriture, eau et finances saines pendant {1} tours consécutifs, avant le tour {2}."
   }
 ];

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "python -m http.server 5173",
-    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs",
+    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs",
+    "test:challenge": "node --test test/challenge.mjs",
     "test:gameplay": "node test/gameplay-regressions.mjs",
     "test:ui": "node test/ui-contracts.mjs",
     "test:language": "node test/english-language.mjs",

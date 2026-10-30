@@ -4,6 +4,7 @@ import {
 } from "./data.js";
 import { buildingIcon } from "./icons.js";
 import { localizeDOM } from "./localization.js";
+import { CHALLENGE, formatSimTime } from "./challenge.js";
 
 const SEASONS = ["Spring", "Summer", "Autumn", "Winter"];
 const FLOW_NAMES = { food: "food", water: "water", energy: "energy", materials: "materials", workers: "workers", population: "residents", money: "€", heat: "heat", trust: "trust" };
@@ -24,8 +25,9 @@ export class UI {
     this.lens = "none";
     this.inspectBuilding = null;
     this.lastReportId = null;
+    this.challenge = null;         // posé par main.js quand le défi tourne
     this.$ = {};
-    for (const id of ["hud-res", "regimes", "clock", "speed", "palette", "advisors", "diagnostic", "inspector", "lenses", "modal", "toast", "end", "camera-home", "objectives-summary", "objectives-list"]) {
+    for (const id of ["hud-res", "regimes", "clock", "speed", "palette", "advisors", "diagnostic", "inspector", "lenses", "modal", "toast", "end", "camera-home", "objectives-summary", "objectives-list", "challenge", "challenge-end"]) {
       this.$[id] = document.getElementById(id);
     }
     this.buildSpeed();
@@ -190,11 +192,60 @@ export class UI {
   }
 
   renderObjectives() {
+    if (this.challenge) return this.renderChallengeObjectives();
     const progress = this.engine.victoryProgress();
     const ready = progress.filter(item => item.met).length;
     setHTML(this.$["objectives-summary"], `Thriving city · ${ready}/${progress.length}`);
     const rows = progress.map(item => `<li class="objective ${item.met ? "met" : "pending"}" data-objective="${item.key}"><span aria-hidden="true">${item.met ? "✓" : "○"}</span><div><b>${item.label}</b><small>${item.detail}</small></div><span class="sr-only">${item.met ? "Achieved" : "Not yet achieved"}</span></li>`).join("");
     setHTML(this.$["objectives-list"], `<ul>${rows}</ul><p>You can prevent crises and still win.</p>`);
+  }
+
+  // En mode défi, le panneau d'objectifs suit le défi — la victoire classique
+  // "Thriving city" n'est ni affichée ni revendiquée ici.
+  renderChallengeObjectives() {
+    const progress = this.challenge.progress();
+    setHTML(this.$["objectives-summary"], `First Neighbourhood · ${progress.metCount}/${progress.rows.length}`);
+    const rows = progress.rows.map(item => `<li class="objective ${item.met ? "met" : "pending"}" data-objective="${item.key}"><span aria-hidden="true">${item.met ? "✓" : "○"}</span><div><b>${item.label}</b><small>${item.detail}</small></div><span class="sr-only">${item.met ? "Achieved" : "Not yet achieved"}</span></li>`).join("");
+    setHTML(this.$["objectives-list"], `<ul>${rows}</ul><p>You can pause freely: only simulation turns count (0.6 s each).</p>`);
+  }
+
+  renderChallenge() {
+    const chip = this.$.challenge;
+    const ch = this.challenge;
+    if (!ch) {
+      chip.hidden = true;
+      setHTML(chip, "");
+      this.renderChallengeEnd();
+      return;
+    }
+    const progress = ch.progress();
+    chip.hidden = false;
+    chip.title = progress.best != null ? `Best: ${formatSimTime(progress.best)}` : "First Neighbourhood";
+    setHTML(chip, `<b>First Neighbourhood</b><br>Turn ${progress.tick}/${CHALLENGE.deadlineTicks} · ${progress.timeRemaining} left · ${progress.streak}/${CHALLENGE.sustainTicks} held`);
+    this.renderChallengeEnd();
+  }
+
+  renderChallengeEnd() {
+    const box = this.$["challenge-end"];
+    const ch = this.challenge;
+    if (!ch || ch.status === "running") { box.classList.remove("on"); return; }
+    if (box.classList.contains("on")) return;
+    this.$.modal.classList.remove("on");
+    this.$.end.classList.remove("on");
+    const progress = ch.progress();
+    const win = ch.status === "success";
+    let reason;
+    if (win) reason = `Goals held together at turn ${ch.finishedAtTick} · simulation time ${formatSimTime(ch.finishedAtTick)}.`;
+    else if (ch.failReason === "collapse") reason = `The city collapsed first: ${this.engine.state.outcomeInfo?.reason || ""}`;
+    else reason = `Turn ${CHALLENGE.deadlineTicks} arrived before every goal held together.`;
+    const best = progress.best != null ? `Best completion: ${formatSimTime(progress.best)}` : "";
+    const record = win && progress.newBest ? "New best time!" : "";
+    box.innerHTML = `<div class="end-box ${win ? "win" : "lose"}" role="dialog" aria-modal="true"><h1>${win ? "Challenge completed" : "Out of time"}</h1><p class="end-reason">${reason}</p><div class="end-traj">${[best, record].filter(Boolean).join("<br>") || "First Neighbourhood"}</div><p class="end-metrics">A side challenge — the Thriving city victory stays the classic mode's goal.</p><button id="challenge-retry">Try again</button> <button id="challenge-exit">Back to classic city</button></div>`;
+    box.classList.add("on");
+    document.getElementById("challenge-retry").onclick = () => this.h.onRestart();
+    document.getElementById("challenge-exit").onclick = () => this.h.onExitChallenge();
+    document.getElementById("challenge-retry").focus();
+    localizeDOM(box);
   }
 
   showInspector(building) {
@@ -286,6 +337,7 @@ export class UI {
 
   renderEnd() {
     const state = this.engine.state;
+    if (this.challenge) { this.$.end.classList.remove("on"); return; } // en défi, seul l'écran du défi parle
     if (!state.outcome) { this.$.end.classList.remove("on"); return; }
     if (this.$.end.classList.contains("on")) return;
     this.$.modal.classList.remove("on");
@@ -306,6 +358,7 @@ export class UI {
     this.renderDiagnostic();
     this.renderObjectives();
     this.renderProjection();
+    this.renderChallenge();
     if (this.engine.state.newlyUnlocked.length) { this.renderPalette(); this.renderLenses(); }
     else this.refreshPaletteAfford();
     if (this.inspectBuilding) this.showInspector(this.inspectBuilding);
