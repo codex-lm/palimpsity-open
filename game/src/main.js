@@ -1,9 +1,12 @@
 import { CityEngine } from "./engine.js";
 import { Renderer3D } from "./render3d.js";
 import { UI } from "./ui.js";
-import { BUILDINGS, COLS, ROWS } from "./data.js";
+import { BUILDINGS, COLS, ROWS, DISTRICT_NAMES, districtOf } from "./data.js";
 import { getLocale, setLocale, onLocaleChange, localizeDOM } from "./localization.js";
 import { FirstNeighbourhood, applyHiddenPause, shouldAdvance } from "./challenge.js";
+import { RiverCityEngine, RiverPact } from "./river-pact.js";
+import { RiverPactView } from "./river-pact-ui.js";
+import { advanceRiverTurns } from "./river-pact-controls.js";
 
 const languageSelect = document.getElementById("language-select");
 function applyLocale() {
@@ -20,8 +23,10 @@ const loading = document.getElementById("loading");
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 let engine = new CityEngine();
 let renderer, ui;
-let mode = "classic";              // "classic" | "challenge" (First Neighbourhood)
+onLocaleChange(() => ui?.riverView?.render());
+let mode = "classic";              // classic | challenge | river
 let challenge = null;
+let river = null;
 const challengeStorage = (() => { try { return globalThis.localStorage || null; } catch { return null; } })();
 let selected = null, bulldoze = false, selectedRotation = 0, lastTool = null;
 let keyboardCell = { c: Math.floor(COLS / 2), r: Math.floor(ROWS / 2) };
@@ -53,14 +58,28 @@ const handlers = {
     if (id) setStatus(`Choose a tile for ${BUILDINGS[id].name.toLowerCase()} · R to rotate`);
     else setStatus("");
   },
-  onSpeed: () => {},
+  onSpeed: () => {
+    if (river && !river.canAdvance) { engine.state.speed = 0; ui.buildSpeed(); }
+    clock.acc = 0;
+  },
   onRestart: () => restart(),
-  onExitChallenge: () => exitChallenge()
+  onExitChallenge: () => exitChallenge(),
+  onRiver: () => { mode = "river"; restart(); },
+  onCharter: id => { river?.chooseCharter(id); ui.buildSpeed(); ui.update(); },
+  onStep: () => {
+    if (document.hidden || document.getElementById("modal").classList.contains("on")) return;
+    advanceRiverTurns(engine, river, 5);
+    clock.acc = 0;
+    clock.last = performance.now();
+    renderer.sync();
+    ui.buildSpeed();
+    ui.update();
+  }
 };
 
 function syncModeButton() {
   const button = document.getElementById("mode-toggle");
-  const challengeMode = mode === "challenge";
+  const challengeMode = mode !== "classic";
   button.textContent = challengeMode ? "Classic city" : "First Neighbourhood";
   button.title = challengeMode ? "Return to the classic city" : "Start the First Neighbourhood challenge";
   button.setAttribute("aria-pressed", String(challengeMode));
@@ -119,7 +138,7 @@ function cellStatus(cr) {
   }
   if (selected) {
     const reason = engine.placeBlockReason(selected, cr.c, cr.r);
-    setStatus(reason || `Place ${BUILDINGS[selected].name.toLowerCase()} · ${BUILDINGS[selected].cost.money} € · Enter to confirm`, !!reason);
+    setStatus((river ? `${DISTRICT_NAMES[districtOf(cr.c, cr.r)]} · ` : "") + (reason || `Place ${BUILDINGS[selected].name.toLowerCase()} · ${BUILDINGS[selected].cost.money} € · Enter to confirm`), !!reason);
     return;
   }
   const building = engine.occ[cr.r]?.[cr.c];
@@ -135,6 +154,7 @@ function updateKeyboardCursor() {
 }
 
 function handleCell(cr) {
+  if (river && river.status !== "running") return;
   syncTools();
   if (!cr) { ui.showInspector(null); return; }
   if (bulldoze) {
@@ -231,7 +251,7 @@ function wireInputs() {
     }
   });
   document.getElementById("mode-toggle").onclick = () => {
-    if (mode === "challenge") exitChallenge();
+    if (mode !== "classic") exitChallenge();
     else startChallenge();
   };
   canvas.addEventListener("focus", updateKeyboardCursor);
@@ -251,6 +271,7 @@ function wireInputs() {
     }
     if (event.code === "Space" && !["BUTTON", "INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)) {
       event.preventDefault();
+      if (river && !river.canAdvance) return;
       engine.state.speed = engine.state.speed === 0 ? 1 : 0;
       ui.buildSpeed();
       return;
@@ -285,17 +306,18 @@ let uiIdle = 0;
 function loop(now) {
   const dt = now - clock.last;
   clock.last = now;
-  if (shouldAdvance(engine, document.hidden, challenge)) {
+  if (shouldAdvance(engine, document.hidden, challenge) && (!river || river.canAdvance)) {
     clock.acc = Math.min(clock.acc + dt * engine.state.speed, TICK_MS * 4);
     let steps = 0;
     while (clock.acc >= TICK_MS && steps < 4) {
       clock.acc -= TICK_MS;
       engine.tick();
       challenge?.update();
+      river?.update();
       steps++;
-      if (challenge && challenge.status !== "running") break;
+      if ((challenge && challenge.status !== "running") || (river && !river.canAdvance)) break;
     }
-    if (challenge && challenge.status !== "running" && engine.state.speed !== 0) {
+    if (((challenge && challenge.status !== "running") || (river && !river.canAdvance)) && engine.state.speed !== 0) {
       engine.state.speed = 0;                 // le défi est terminé : on fige tout
       ui.buildSpeed();
     }
@@ -319,10 +341,11 @@ function restart() {
     renderer.disposeObj(puff);
   }
   renderer.smokePuffs = [];
-  engine = new CityEngine();
+  engine = mode === "river" ? new RiverCityEngine() : new CityEngine();
   // Chaque entrée/sortie de mode repart d'un moteur frais : 600 € et les
   // déblocages naturels, que ce soit pour le défi ou pour la ville classique.
   challenge = mode === "challenge" ? new FirstNeighbourhood(engine, { storage: challengeStorage }) : null;
+  river = mode === "river" ? new RiverPact(engine) : null;
   renderer.engine = engine;
   renderer.setLens("none");
   renderer.setGhost(null);
@@ -332,6 +355,8 @@ function restart() {
   renderer.sync();
   ui = new UI(engine, renderer, handlers);
   ui.challenge = challenge;
+  ui.river = river;
+  ui.riverView = new RiverPactView(river, engine, handlers);
   ui.showInspector(null);
   selected = null;
   bulldoze = false;
@@ -345,6 +370,7 @@ function restart() {
   document.getElementById("challenge-end").classList.remove("on");
   syncModeButton();
   challenge?.start();
+  river?.start();
   ui.update();
 }
 
@@ -353,6 +379,7 @@ async function start() {
   await renderer.loadAssets();
   renderer.sync();
   ui = new UI(engine, renderer, handlers);
+  ui.riverView = new RiverPactView(null, engine, handlers);
   wireInputs();
   syncModeButton();
   ui.update();

@@ -49,6 +49,19 @@
   @media(max-width:900px){#language-control{top:10px;right:10px}}
   @media(max-width:650px){#hud .hud-right{margin-right:0}#language-control{top:58px;height:29px}#language-select{height:23px}}
 </style>
+<style>
+  #river-panel{flex-shrink:0;padding:15px;border-radius:16px;background:var(--paper-solid);border:1px solid #aac8c5;box-shadow:var(--shadow)}
+  #river-panel h2{font:600 20px Georgia,serif;margin:6px 0 8px}#river-panel p{font-size:11px;line-height:1.5;margin:6px 0 10px;color:var(--muted)}
+  .river-kicker{font-size:9px;font-weight:750;text-transform:uppercase;letter-spacing:1.1px;color:#287b88}
+  #river-panel button,.river-dialog-box button{border:0;border-radius:9px;background:#287b88;color:white;padding:10px 13px;font-size:11px;font-weight:650;cursor:pointer}
+  #river-panel button{width:100%}#river-panel button:disabled{background:#d8e4e1;color:#64776d;cursor:default}
+  #river-panel small{display:block;font-size:10px;line-height:1.5;color:var(--muted);margin-top:5px}.river-mode #objectives,.river-mode #advisors,.river-mode #diagnostic{display:none}
+  .river-acts{display:flex;list-style:none;margin:12px 0;padding:0;gap:6px}.river-acts li{flex:1;font-size:9px;line-height:1.4;color:var(--muted)}.river-acts li>span{display:block;width:22px;height:22px;border-radius:50%;background:#e4e9e2;text-align:center;line-height:22px;margin-bottom:5px;font-weight:750}.river-acts li.current{font-weight:750;color:#287b88}.river-acts li.current>span,.river-acts li.done>span{background:#287b88;color:white}
+  .river-weather{padding:10px;border-radius:10px;background:#e6f0ec;font-size:10px;line-height:1.5}.river-weather.drought{background:#f6e4c7;color:#865330}.river-timeline{height:6px;background:#cadad4;border-radius:8px;margin-top:8px;position:relative;overflow:hidden}.river-timeline i{height:100%;display:block;background:#287b88;position:relative;z-index:1}.river-timeline span{position:absolute;top:0;bottom:0;left:50%;width:12.5%;background:#b77741}.river-budget{font-size:10px;font-weight:650;margin:10px 0}
+  .river-goals{padding:0;margin:10px 0;list-style:none}.river-goals li{display:flex;gap:8px;border-top:1px solid var(--line);padding:7px 0;font-size:10px;line-height:1.4}.river-goals li>span{color:#9a7625}.river-goals li.met>span{color:#2f7d61}.river-goals b{font-weight:650}.river-goals small{margin-top:2px!important}
+  #river-dialog{display:none;position:fixed;inset:0;z-index:50;background:rgba(26,49,46,.55);backdrop-filter:blur(6px);padding:20px;align-items:center;justify-content:center}#river-dialog.on{display:flex}.river-dialog-box{max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:27px;border-radius:22px;background:var(--paper-solid);box-shadow:var(--shadow)}.river-dialog-box h1{font:600 28px Georgia,serif;margin:10px 0}.river-dialog-box p{font-size:12px;line-height:1.65;color:var(--muted)}.river-charters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.river-charters section{padding:16px;border:1px solid #bdd2ca;border-radius:15px;background:#eef3e9;display:flex;flex-direction:column}.river-charters section+section{background:#f2e8dc;border-color:#d9c7b2}.river-charters h2{font:600 20px Georgia,serif;margin:5px 0}.river-charters button{margin-top:auto}.charter-symbol{font:32px Georgia,serif;color:#287b88}.river-charters section+section .charter-symbol{color:#a2663c}
+  @media(max-width:650px){#river-panel{padding:11px}.river-mode #side{max-height:47vh}.river-charters{grid-template-columns:1fr}.river-dialog-box{padding:20px}.river-dialog-box h1{font-size:24px}.river-charters section{padding:12px}.river-charters p{margin:6px 0 12px}.charter-symbol{display:none}}
+</style>
 </head>
 <body>
 <div id="language-control"><select id="language-select" aria-label="Language"><option value="en" data-no-translate>English</option><option value="fr" data-no-translate>Français</option></select></div>
@@ -73,6 +86,7 @@
 <div id="regimes" class="panel"></div>
 <div id="lenses"></div>
 <aside id="side">
+  <section id="river-panel" data-no-translate aria-label="River Pact"></section>
   <details id="objectives"><summary id="objectives-summary">Thriving city</summary><div id="objectives-list"></div></details>
   <div id="advisors"></div>
   <div id="diagnostic"></div>
@@ -86,6 +100,7 @@
 <div id="toast" aria-live="polite" aria-atomic="true"></div>
 <div id="end"></div>
 <div id="challenge-end"></div>
+<div id="river-dialog" data-no-translate></div>
 
 <script type="importmap">
 {"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}

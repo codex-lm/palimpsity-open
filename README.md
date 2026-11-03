@@ -26,6 +26,35 @@ farm and a local market. Prepare while paused, then press Play. The original
 Thriving city objective and all original rules remain available in classic mode.
 Hiding the tab pauses either mode; press Play manually when returning.
 
+## River Pact scenario
+
+Choose **Start River Pact** in the side panel to build a city in three acts.
+Start with the normal 600 EUR, reach 24 residents and keep food, water and
+finances healthy for four turns. The council awards 200 EUR and pauses the
+city for a choice:
+
+- **Garden commons:** 100 EUR, with two parks and two wells in each of two
+  inhabited districts.
+- **Makers quarter:** 200 EUR, with a workshop and a local market in each
+  district. Deliver 40 materials once when the second act completes.
+
+Both districts need housing for at least 12 residents and healthy local
+supplies. Holding the second act for four turns awards another 100 EUR.
+Prepare before the drought on turns **120–149**: water-producing buildings
+deliver **55%** of their usual output. Keep at least 36 residents and both
+districts supplied for 12 consecutive drought turns, then reach 48 residents
+and hold the pact for 12 turns after the river recovers. The deadline is turn
+240. The panel shows exact goals and the weather forecast throughout.
+
+Use **Advance 5 turns** for deliberate play, or the usual speed controls.
+Turn batches stop at the charter choice and the result; pauses cost nothing.
+Districts are the four quarters of the map. Build local food and water services
+in the same quarter as housing. The original city and First Neighbourhood
+remain available, and returning to Classic city starts a fresh original game.
+
+This independent scenario was automatically produced by LOB7 Enhancement,
+with a bounded Kimi K3 implementation reviewed and integrated by Nilo.
+
 ## Develop
 
 Use Node.js 22 or newer. From `game/`, run:

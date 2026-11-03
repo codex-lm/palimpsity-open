@@ -1,11 +1,11 @@
 {
   "name": "palimpsity-mvp",
   "version": "0.1.0",
-  "description": "A city builder where your solutions reshape the rules — playable MVP",
+  "description": "A city builder where your solutions reshape the rules â€” playable MVP",
   "type": "module",
   "scripts": {
     "dev": "python -m http.server 5173",
-    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs",
+    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs test/river-pact.mjs test/river-pact-controls.mjs",
     "test:challenge": "node --test test/challenge.mjs",
     "test:gameplay": "node test/gameplay-regressions.mjs",
     "test:ui": "node test/ui-contracts.mjs",
@@ -22,7 +22,8 @@
     "build": "node build.mjs",
     "build:maquette-diorama": "node build-maquette-diorama.mjs",
     "build:maquette-complete": "node build-maquette-complete.mjs",
-    "assets:diorama": "node build-diorama-assets.mjs"
+    "assets:diorama": "node build-diorama-assets.mjs",
+    "test:river": "node --test test/river-pact.mjs test/river-pact-controls.mjs"
   },
   "license": "CC0-1.0",
   "dependencies": {

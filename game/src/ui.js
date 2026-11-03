@@ -310,6 +310,7 @@ export class UI {
 
   drainReports() {
     const state = this.engine.state;
+    if (this.river && !this.river.canAdvance) return;
     if (state.outcome || this.$.modal.classList.contains("on")) return;
     const report = state.reports.find(item => item.id !== this.lastReportId && !item._shown);
     if (!report) return;
@@ -337,7 +338,7 @@ export class UI {
 
   renderEnd() {
     const state = this.engine.state;
-    if (this.challenge) { this.$.end.classList.remove("on"); return; } // en défi, seul l'écran du défi parle
+    if (this.challenge || this.river) { this.$.end.classList.remove("on"); return; } // chaque scénario a son écran de résultat
     if (!state.outcome) { this.$.end.classList.remove("on"); return; }
     if (this.$.end.classList.contains("on")) return;
     this.$.modal.classList.remove("on");
@@ -365,5 +366,6 @@ export class UI {
     this.drainReports();
     this.drainToasts();
     this.renderEnd();
+    this.riverView?.render();
   }
 }

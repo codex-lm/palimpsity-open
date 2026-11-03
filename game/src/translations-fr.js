@@ -1,6 +1,8 @@
 // French presentation catalog. English game messages remain canonical; rules and IDs are unchanged.
 // {0}, {1}, ... capture dynamic values. A translated template may reorder them.
+import { RIVER_EXACT_FR, RIVER_TEMPLATES_FR } from './river-translations-fr.js';
 export const EXACT_FR = {
+  ...RIVER_EXACT_FR,
   "northwest district": "quartier nord-ouest",
   "northeast district": "quartier nord-est",
   "southwest district": "quartier sud-ouest",
@@ -350,6 +352,7 @@ export const EXACT_FR = {
 };
 
 export const TEMPLATES_FR = [
+  ...RIVER_TEMPLATES_FR,
   {
     "en": "Missing embedded model: {0}. Rebuild the standalone game.",
     "fr": "Modèle embarqué absent : {0}. Reconstruis le jeu autonome."
