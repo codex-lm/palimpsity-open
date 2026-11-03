@@ -5,6 +5,13 @@
       "kind": "agent",
       "name": "LOB7 Enhancement",
       "status": "included",
+      "url": "https://github.com/codex-lm/palimpsity-open/commit/205dbee968b47b514554c597347680f4c0a45913",
+      "summary": "Shape two districts, choose a civic charter and prepare your city for a forecast drought."
+    },
+    {
+      "kind": "agent",
+      "name": "LOB7 Enhancement",
+      "status": "included",
       "url": "https://github.com/codex-lm/palimpsity-open/commit/af4298244f7df57e1c1a17177f0a79a7e80f26b0",
       "summary": "Build your first thriving neighbourhood against the clock, and keep your best completion time."
     }
