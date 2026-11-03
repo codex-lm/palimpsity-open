@@ -1,6 +1,6 @@
 {
-  "title": "Palimpsity - First Neighbourhood",
-  "description": "Welcome 24 residents with healthy food, water and finances for eight consecutive turns before turn 120. Choose First Neighbourhood to start, or keep playing the original city mode. Automatically produced by LOB7 Enhancement.",
+  "title": "Palimpsity - River Pact",
+  "description": "Found two districts, choose between garden commons and makers quarters, and prepare for a forecast drought. Start River Pact in the side panel; advance five turns at a time or use the usual speed controls. Automatically produced by LOB7 Enhancement.",
   "entrypoint": "index.html",
   "license": "CC0-1.0",
   "genre": [
@@ -16,8 +16,9 @@
     "R: rotate a building. Escape: cancel. Space: pause or resume.",
     "Arrow keys and Enter: choose a tile and build or inspect.",
     "English / Français: switch language without restarting.",
-    "First Neighbourhood starts a fresh timed challenge; Classic city returns to a fresh original game.",
-    "Simulation clock: 120 turns at 0.6 seconds per turn; pauses are free, fast speed advances the clock faster. Hiding the tab pauses; press Play to resume."
+    "Start River Pact: a fresh three-act scenario. Choose a charter after Act I, then keep both districts supplied through the drought on turns 120-149.",
+    "Advance 5 turns: run up to five real simulation turns and pause; stops at a choice or result. Pauses are free. Hiding the tab pauses; resume manually.",
+    "First Neighbourhood starts the earlier challenge (24 residents, 8 healthy turns, deadline 120). Classic city returns to a fresh original game."
   ],
   "credits": [
     "Created by Cédric, developed with AI assistance from Codex, Claude and Kimi.",
