@@ -157,13 +157,18 @@ try {
   result.checks.push({ name: "drought and recovery preserve reactive environment materials", ...drought });
   const bankComposition = await browser.page(async () => {
     const { environmentPlanForCell } = await import("/src/diorama-assets.js");
-    return [[3, 6], [4, 6]].map(([c, r]) => ({
+    return [[3, 6], [4, 6], [9, 3], [6, 4], [12, 4]].map(([c, r]) => ({
       c, r,
       modules: environmentPlanForCell(PALIMPSITY.engine.terrain, c, r, (x, y) => PALIMPSITY.engine.occ[y]?.[x] || null).map(module => module.key),
+      assembledPartTypes: PALIMPSITY.renderer._environmentCellParts.get(r * 16 + c)?.size || 0,
     }));
   });
   for (const cell of bankComposition) {
     assert.ok(!cell.modules.some(key => key.startsWith("ground_") || key === "vegetation_flowers" || key.startsWith("furniture_")));
+    if ([9, 6, 12].includes(cell.c) && cell.r !== 6) {
+      assert.deepEqual(cell.modules, []);
+      assert.equal(cell.assembledPartTypes, 0);
+    }
   }
   result.checks.push({ name: "bank cells have no full ground or unmasked decoration", cells: bankComposition });
   await browser.evaluate("PALIMPSITY.renderer.setPhotoMode(false); PALIMPSITY.renderer.focusBuilding({ c: 3, r: 6 })");
@@ -173,6 +178,13 @@ try {
     await browser.frames(2);
   }
   result.screenshots.push(await browser.screenshot("environment-bank-no-furrows", viewport));
+  await browser.evaluate("PALIMPSITY.renderer.focusBuilding({ c: 9, r: 3 })");
+  await browser.frames(10);
+  for (let step = 0; step < 4; step++) {
+    await browser.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: 520, y: 360, deltaX: 0, deltaY: -120 });
+    await browser.frames(2);
+  }
+  result.screenshots.push(await browser.screenshot("environment-no-coplanar-banks", viewport));
   assert.deepEqual([...browser.exceptions, ...browser.pageErrors], []);
   console.log(JSON.stringify(result, null, 2));
 } finally {

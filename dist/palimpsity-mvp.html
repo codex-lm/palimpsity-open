@@ -19954,14 +19954,7 @@ function xd(s, e, t, n = () => null) {
     var b, E;
     return ((E = (b = r(S, I)) == null ? void 0 : b.def) == null ? void 0 : E.id) === "park" || i(S, I) === 4;
   }), y = d ? "ground_path" : a ? "ground_soil" : s[t][e] === 2 || Us.some(({ dc: S, dr: I }) => i(S, I) === 2) ? "ground_fertile" : s[t][e] === 4 || p ? "ground_planted" : c ? "ground_soil" : null, g = c ? "quay_straight" : "bank_straight", m = [];
-  if (h === 0 && u.length) m.push({ ...u[0], key: "bank_corner_outer" });
-  else if ([1, 2, 4, 8].includes(h)) m.push({ ...l[0], key: g });
-  else if (h === 3) m.push({ key: "bank_corner_inner", rotation: Math.PI });
-  else if (h === 6) m.push({ key: "bank_corner_inner", rotation: Math.PI / 2 });
-  else if (h === 12) m.push({ key: "bank_corner_inner", rotation: 0 });
-  else if (h === 9) m.push({ key: "bank_corner_inner", rotation: -Math.PI / 2 });
-  else if (h)
-    for (let S of l) m.push({ ...S, key: g });
+  if (h === 0 && u.length ? m.push({ ...u[0], key: "bank_corner_outer" }) : [1, 2, 4, 8].includes(h) ? m.push({ ...l[0], key: g }) : h === 3 ? m.push({ key: "bank_corner_inner", rotation: Math.PI }) : h === 6 ? m.push({ key: "bank_corner_inner", rotation: Math.PI / 2 }) : h === 12 ? m.push({ key: "bank_corner_inner", rotation: 0 }) : h === 9 && m.push({ key: "bank_corner_inner", rotation: -Math.PI / 2 }), h && !m.length) return [];
   let f = y && !m.length ? [{ key: y, x: 0, y: 0.01, z: 0, rotation: 0 }] : [];
   for (let S of m) f.push({ key: S.key, x: 0, y: 0, z: 0, rotation: S.rotation });
   if (!a && m.length === 1 && m[0].key === "bank_straight") {

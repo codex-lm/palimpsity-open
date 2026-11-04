@@ -75,10 +75,8 @@ export function environmentPlanForCell(terrain, c, r, occupied = () => null) {
   else if (mask === 6) banks.push({ key: "bank_corner_inner", rotation: Math.PI / 2 });
   else if (mask === 12) banks.push({ key: "bank_corner_inner", rotation: 0 });
   else if (mask === 9) banks.push({ key: "bank_corner_inner", rotation: -Math.PI / 2 });
-  else if (mask) {
-    // Opposite, three- and four-sided cells use separate straight banks so every water edge is covered without an arbitrary corner.
-    for (const direction of water) banks.push({ ...direction, key: straightKey });
-  }
+  // Full-footprint banks cannot represent opposite, three- or four-sided water without coplanar overlap.
+  if (mask && !banks.length) return [];
   const modules = groundKey && !banks.length ? [{ key: groundKey, x: 0, y: 0.01, z: 0, rotation: 0 }] : [];
   for (const bank of banks) modules.push({ key: bank.key, x: 0, y: 0, z: 0, rotation: bank.rotation });
   if (!current && banks.length === 1 && banks[0].key === "bank_straight") {

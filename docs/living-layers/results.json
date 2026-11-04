@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-04T10:18:03.876Z",
-  "revision": "a7998e21718efcbfb47a12b3ed538c00ca956bb3",
+  "generatedAt": "2026-11-04T23:00:00.688Z",
+  "revision": "50e382488be8d394b00fa3c80b9c3ad7324ec1a2",
   "machine": {
     "platform": "win32",
     "architecture": "x64",
@@ -44,14 +44,14 @@
   },
   "export": {
     "file": "C:\\dev\\lob7-publication-flow\\.work\\kimi-palimpsity-living-layers\\dist\\palimpsity-mvp.html",
-    "bytes": 16445352,
-    "gzipBytes": 2668053
+    "bytes": 17071612,
+    "gzipBytes": 2772401
   },
   "scenarios": [
     {
       "name": "elevated city",
       "status": "passed",
-      "durationMs": 30614,
+      "durationMs": 37531,
       "details": {
         "placed": {
           "houses": [
@@ -512,7 +512,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -520,7 +520,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 30,
@@ -576,7 +576,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -584,7 +584,7 @@
               "floors": 2,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 55,
@@ -646,7 +646,7 @@
                 "floors": 2,
                 "roof": "garden",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -654,7 +654,7 @@
               "floors": 2,
               "roof": "garden",
               "family": "works",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 12,
@@ -716,7 +716,7 @@
                 "floors": 2,
                 "roof": "garden",
                 "family": "works",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -775,7 +775,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -783,7 +783,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 30,
@@ -839,7 +839,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -847,7 +847,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 45,
@@ -891,7 +891,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "conversion": null
           }
@@ -910,7 +910,7 @@
     {
       "name": "mixed city, two conversions, camera and native viewports",
       "status": "passed",
-      "durationMs": 360926,
+      "durationMs": 373764,
       "details": {
         "placed": {
           "houses": [
@@ -1107,7 +1107,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -1115,7 +1115,7 @@
               "floors": 1,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 55,
@@ -1161,20 +1161,20 @@
               "dpr": 1
             },
             "frames": 30,
-            "meanFrameMs": 259.99333333333345,
-            "fps": 3.8462524680119987,
-            "p50FrameMs": 266.6000000000058,
-            "p95FrameMs": 266.6999999999971,
-            "maxFrameMs": 266.70000000001164,
-            "drawCalls": 905,
-            "triangles": 185424,
+            "meanFrameMs": 304.43666666666684,
+            "fps": 3.284755449956749,
+            "p50FrameMs": 300,
+            "p95FrameMs": 316.70000000001164,
+            "maxFrameMs": 350.09999999999127,
+            "drawCalls": 956,
+            "triangles": 266512,
             "rendererMemory": {
-              "geometries": 139,
+              "geometries": 199,
               "textures": 1,
-              "programs": 7
+              "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 56800000,
+              "usedBytes": 64000000,
               "totalBytes": 72200000,
               "limitBytes": 3760000000
             },
@@ -1195,9 +1195,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 719,
-              "JSHeapUsedSize": 29116188,
-              "JSHeapTotalSize": 40673280
+              "Nodes": 1869,
+              "JSHeapUsedSize": 35031004,
+              "JSHeapTotalSize": 41984000
             }
           },
           {
@@ -1209,20 +1209,20 @@
               "dpr": 2
             },
             "frames": 30,
-            "meanFrameMs": 1131.6366666666668,
-            "fps": 0.883675855913706,
-            "p50FrameMs": 1133.3000000000175,
-            "p95FrameMs": 1183.3999999999942,
-            "maxFrameMs": 1250,
-            "drawCalls": 905,
-            "triangles": 185424,
+            "meanFrameMs": 1090.5233333333338,
+            "fps": 0.91699092484648,
+            "p50FrameMs": 1083.2999999999884,
+            "p95FrameMs": 1150,
+            "maxFrameMs": 1200,
+            "drawCalls": 956,
+            "triangles": 266512,
             "rendererMemory": {
-              "geometries": 139,
+              "geometries": 199,
               "textures": 1,
-              "programs": 7
+              "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 56800000,
+              "usedBytes": 64000000,
               "totalBytes": 72200000,
               "limitBytes": 3760000000
             },
@@ -1243,9 +1243,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 720,
-              "JSHeapUsedSize": 32192700,
-              "JSHeapTotalSize": 40935424
+              "Nodes": 744,
+              "JSHeapUsedSize": 32813656,
+              "JSHeapTotalSize": 43294720
             }
           },
           {
@@ -1257,20 +1257,20 @@
               "dpr": 2
             },
             "frames": 30,
-            "meanFrameMs": 234.43666666666687,
-            "fps": 4.265544354552043,
-            "p50FrameMs": 233.30000000001746,
-            "p95FrameMs": 250,
-            "maxFrameMs": 250,
-            "drawCalls": 914,
-            "triangles": 186580,
+            "meanFrameMs": 265.5466666666674,
+            "fps": 3.765816429001797,
+            "p50FrameMs": 266.6000000000058,
+            "p95FrameMs": 283.3999999999942,
+            "maxFrameMs": 300.1000000000058,
+            "drawCalls": 956,
+            "triangles": 266512,
             "rendererMemory": {
-              "geometries": 139,
+              "geometries": 199,
               "textures": 1,
-              "programs": 7
+              "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 56800000,
+              "usedBytes": 64000000,
               "totalBytes": 72200000,
               "limitBytes": 3760000000
             },
@@ -1291,9 +1291,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 843,
-              "JSHeapUsedSize": 29748636,
-              "JSHeapTotalSize": 34119680
+              "Nodes": 739,
+              "JSHeapUsedSize": 31770412,
+              "JSHeapTotalSize": 36478976
             }
           },
           {
@@ -1305,20 +1305,20 @@
               "dpr": 1
             },
             "frames": 30,
-            "meanFrameMs": 1118.3,
-            "fps": 0.8942144326209426,
-            "p50FrameMs": 1116.600000000035,
-            "p95FrameMs": 1150,
-            "maxFrameMs": 1166.600000000035,
-            "drawCalls": 905,
-            "triangles": 185424,
+            "meanFrameMs": 1104.9666666666667,
+            "fps": 0.9050046758574919,
+            "p50FrameMs": 1100,
+            "p95FrameMs": 1150.100000000035,
+            "maxFrameMs": 1199.9000000000233,
+            "drawCalls": 956,
+            "triangles": 266512,
             "rendererMemory": {
-              "geometries": 139,
+              "geometries": 199,
               "textures": 1,
-              "programs": 7
+              "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 56800000,
+              "usedBytes": 64000000,
               "totalBytes": 72200000,
               "limitBytes": 3760000000
             },
@@ -1339,9 +1339,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 767,
-              "JSHeapUsedSize": 29918496,
-              "JSHeapTotalSize": 39624704
+              "Nodes": 660,
+              "JSHeapUsedSize": 33902636,
+              "JSHeapTotalSize": 40411136
             }
           }
         ],
@@ -1359,7 +1359,7 @@
     {
       "name": "dense city — high and low quality",
       "status": "passed",
-      "durationMs": 118787,
+      "durationMs": 129089,
       "details": {
         "placed": {
           "houses": [
@@ -1805,7 +1805,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -1813,7 +1813,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 30,
@@ -1869,7 +1869,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -1877,7 +1877,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 45,
@@ -1934,7 +1934,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -1942,7 +1942,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 70,
@@ -1999,7 +1999,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -2007,7 +2007,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 55,
@@ -2058,7 +2058,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -2066,7 +2066,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 30,
@@ -2122,7 +2122,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -2130,7 +2130,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 45,
@@ -2187,7 +2187,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -2195,7 +2195,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 70,
@@ -2252,7 +2252,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -2260,7 +2260,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 80,
@@ -2564,7 +2564,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -2572,7 +2572,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 30,
@@ -2628,7 +2628,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -2636,7 +2636,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 45,
@@ -2693,7 +2693,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -2701,7 +2701,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 70,
@@ -2758,7 +2758,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -2766,7 +2766,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 80,
@@ -2817,7 +2817,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -2825,7 +2825,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 30,
@@ -2881,7 +2881,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -2889,7 +2889,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 45,
@@ -2946,7 +2946,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -2954,7 +2954,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 70,
@@ -3011,7 +3011,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -3019,7 +3019,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 55,
@@ -3323,7 +3323,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -3331,7 +3331,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 30,
@@ -3387,7 +3387,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -3395,7 +3395,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 45,
@@ -3452,7 +3452,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -3460,7 +3460,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 70,
@@ -3517,7 +3517,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -3525,7 +3525,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 55,
@@ -3576,7 +3576,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -3584,7 +3584,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 30,
@@ -3640,7 +3640,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -3648,7 +3648,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 45,
@@ -3705,7 +3705,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -3713,7 +3713,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 70,
@@ -3770,7 +3770,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -3778,7 +3778,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 80,
@@ -4082,7 +4082,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -4090,7 +4090,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 30,
@@ -4146,7 +4146,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -4154,7 +4154,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 45,
@@ -4211,7 +4211,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -4219,7 +4219,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 70,
@@ -4276,7 +4276,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 1
               }
             },
             "after": {
@@ -4284,7 +4284,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "cost": {
               "money": 80,
@@ -4335,7 +4335,7 @@
                 "floors": 1,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -4343,7 +4343,7 @@
               "floors": 2,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 30,
@@ -4399,7 +4399,7 @@
                 "floors": 2,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -4407,7 +4407,7 @@
               "floors": 3,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 45,
@@ -4464,7 +4464,7 @@
                 "floors": 3,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -4472,7 +4472,7 @@
               "floors": 4,
               "roof": "traditional",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 70,
@@ -4529,7 +4529,7 @@
                 "floors": 4,
                 "roof": "traditional",
                 "family": "banks",
-                "variant": 0
+                "variant": 2
               }
             },
             "after": {
@@ -4537,7 +4537,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "cost": {
               "money": 55,
@@ -4568,7 +4568,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "conversion": null
           },
@@ -4581,7 +4581,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "conversion": null
           },
@@ -4607,7 +4607,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "conversion": null
           },
@@ -4620,7 +4620,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "conversion": null
           },
@@ -4646,7 +4646,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "conversion": null
           },
@@ -4659,7 +4659,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "conversion": null
           },
@@ -4685,7 +4685,7 @@
               "floors": 4,
               "roof": "productive",
               "family": "banks",
-              "variant": 0
+              "variant": 1
             },
             "conversion": null
           },
@@ -4698,7 +4698,7 @@
               "floors": 4,
               "roof": "garden",
               "family": "banks",
-              "variant": 0
+              "variant": 2
             },
             "conversion": null
           }
@@ -4712,20 +4712,20 @@
             "dpr": 2
           },
           "frames": 30,
-          "meanFrameMs": 1296.0700000000002,
-          "fps": 0.7715632643298587,
-          "p50FrameMs": 1299.9000000000087,
-          "p95FrameMs": 1350,
-          "maxFrameMs": 1400,
-          "drawCalls": 1311,
-          "triangles": 235799,
+          "meanFrameMs": 1402.1800000000003,
+          "fps": 0.7131751986192927,
+          "p50FrameMs": 1400,
+          "p95FrameMs": 1449.8999999999942,
+          "maxFrameMs": 1483.300000000003,
+          "drawCalls": 1353,
+          "triangles": 307743,
           "rendererMemory": {
-            "geometries": 123,
+            "geometries": 197,
             "textures": 1,
-            "programs": 8
+            "programs": 13
           },
           "jsHeap": {
-            "usedBytes": 56800000,
+            "usedBytes": 64000000,
             "totalBytes": 72200000,
             "limitBytes": 3760000000
           },
@@ -4746,9 +4746,9 @@
           },
           "cdpMetrics": {
             "Documents": 1,
-            "Nodes": 711,
-            "JSHeapUsedSize": 31002504,
-            "JSHeapTotalSize": 35954688
+            "Nodes": 735,
+            "JSHeapUsedSize": 32136320,
+            "JSHeapTotalSize": 37265408
           }
         },
         "low": {
@@ -4760,20 +4760,20 @@
             "dpr": 2
           },
           "frames": 30,
-          "meanFrameMs": 273.8799999999998,
-          "fps": 3.651234117131593,
-          "p50FrameMs": 266.70000000001164,
-          "p95FrameMs": 283.40000000000873,
-          "maxFrameMs": 283.5,
-          "drawCalls": 1301,
-          "triangles": 235559,
+          "meanFrameMs": 304.43333333333334,
+          "fps": 3.2847914157451004,
+          "p50FrameMs": 300,
+          "p95FrameMs": 316.70000000001164,
+          "maxFrameMs": 333.5,
+          "drawCalls": 1343,
+          "triangles": 307503,
           "rendererMemory": {
-            "geometries": 123,
+            "geometries": 197,
             "textures": 0,
-            "programs": 15
+            "programs": 21
           },
           "jsHeap": {
-            "usedBytes": 56800000,
+            "usedBytes": 64000000,
             "totalBytes": 72200000,
             "limitBytes": 3760000000
           },
@@ -4794,9 +4794,9 @@
           },
           "cdpMetrics": {
             "Documents": 1,
-            "Nodes": 711,
-            "JSHeapUsedSize": 34360968,
-            "JSHeapTotalSize": 51159040
+            "Nodes": 735,
+            "JSHeapUsedSize": 38455400,
+            "JSHeapTotalSize": 53518336
           }
         },
         "final": {
@@ -4813,7 +4813,7 @@
     {
       "name": "River Pact — Garden commons",
       "status": "passed",
-      "durationMs": 54311,
+      "durationMs": 67118,
       "details": {
         "charter": "gardens",
         "actions": [
@@ -5032,7 +5032,7 @@
     {
       "name": "River Pact — Makers quarter",
       "status": "passed",
-      "durationMs": 55254,
+      "durationMs": 67131,
       "details": {
         "charter": "workshops",
         "actions": [
@@ -5259,20 +5259,20 @@
         "dpr": 1
       },
       "frames": 30,
-      "meanFrameMs": 259.99333333333345,
-      "fps": 3.8462524680119987,
-      "p50FrameMs": 266.6000000000058,
-      "p95FrameMs": 266.6999999999971,
-      "maxFrameMs": 266.70000000001164,
-      "drawCalls": 905,
-      "triangles": 185424,
+      "meanFrameMs": 304.43666666666684,
+      "fps": 3.284755449956749,
+      "p50FrameMs": 300,
+      "p95FrameMs": 316.70000000001164,
+      "maxFrameMs": 350.09999999999127,
+      "drawCalls": 956,
+      "triangles": 266512,
       "rendererMemory": {
-        "geometries": 139,
+        "geometries": 199,
         "textures": 1,
-        "programs": 7
+        "programs": 12
       },
       "jsHeap": {
-        "usedBytes": 56800000,
+        "usedBytes": 64000000,
         "totalBytes": 72200000,
         "limitBytes": 3760000000
       },
@@ -5293,9 +5293,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 719,
-        "JSHeapUsedSize": 29116188,
-        "JSHeapTotalSize": 40673280
+        "Nodes": 1869,
+        "JSHeapUsedSize": 35031004,
+        "JSHeapTotalSize": 41984000
       }
     },
     {
@@ -5307,20 +5307,20 @@
         "dpr": 2
       },
       "frames": 30,
-      "meanFrameMs": 1131.6366666666668,
-      "fps": 0.883675855913706,
-      "p50FrameMs": 1133.3000000000175,
-      "p95FrameMs": 1183.3999999999942,
-      "maxFrameMs": 1250,
-      "drawCalls": 905,
-      "triangles": 185424,
+      "meanFrameMs": 1090.5233333333338,
+      "fps": 0.91699092484648,
+      "p50FrameMs": 1083.2999999999884,
+      "p95FrameMs": 1150,
+      "maxFrameMs": 1200,
+      "drawCalls": 956,
+      "triangles": 266512,
       "rendererMemory": {
-        "geometries": 139,
+        "geometries": 199,
         "textures": 1,
-        "programs": 7
+        "programs": 12
       },
       "jsHeap": {
-        "usedBytes": 56800000,
+        "usedBytes": 64000000,
         "totalBytes": 72200000,
         "limitBytes": 3760000000
       },
@@ -5341,9 +5341,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 720,
-        "JSHeapUsedSize": 32192700,
-        "JSHeapTotalSize": 40935424
+        "Nodes": 744,
+        "JSHeapUsedSize": 32813656,
+        "JSHeapTotalSize": 43294720
       }
     },
     {
@@ -5355,20 +5355,20 @@
         "dpr": 2
       },
       "frames": 30,
-      "meanFrameMs": 234.43666666666687,
-      "fps": 4.265544354552043,
-      "p50FrameMs": 233.30000000001746,
-      "p95FrameMs": 250,
-      "maxFrameMs": 250,
-      "drawCalls": 914,
-      "triangles": 186580,
+      "meanFrameMs": 265.5466666666674,
+      "fps": 3.765816429001797,
+      "p50FrameMs": 266.6000000000058,
+      "p95FrameMs": 283.3999999999942,
+      "maxFrameMs": 300.1000000000058,
+      "drawCalls": 956,
+      "triangles": 266512,
       "rendererMemory": {
-        "geometries": 139,
+        "geometries": 199,
         "textures": 1,
-        "programs": 7
+        "programs": 12
       },
       "jsHeap": {
-        "usedBytes": 56800000,
+        "usedBytes": 64000000,
         "totalBytes": 72200000,
         "limitBytes": 3760000000
       },
@@ -5389,9 +5389,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 843,
-        "JSHeapUsedSize": 29748636,
-        "JSHeapTotalSize": 34119680
+        "Nodes": 739,
+        "JSHeapUsedSize": 31770412,
+        "JSHeapTotalSize": 36478976
       }
     },
     {
@@ -5403,20 +5403,20 @@
         "dpr": 1
       },
       "frames": 30,
-      "meanFrameMs": 1118.3,
-      "fps": 0.8942144326209426,
-      "p50FrameMs": 1116.600000000035,
-      "p95FrameMs": 1150,
-      "maxFrameMs": 1166.600000000035,
-      "drawCalls": 905,
-      "triangles": 185424,
+      "meanFrameMs": 1104.9666666666667,
+      "fps": 0.9050046758574919,
+      "p50FrameMs": 1100,
+      "p95FrameMs": 1150.100000000035,
+      "maxFrameMs": 1199.9000000000233,
+      "drawCalls": 956,
+      "triangles": 266512,
       "rendererMemory": {
-        "geometries": 139,
+        "geometries": 199,
         "textures": 1,
-        "programs": 7
+        "programs": 12
       },
       "jsHeap": {
-        "usedBytes": 56800000,
+        "usedBytes": 64000000,
         "totalBytes": 72200000,
         "limitBytes": 3760000000
       },
@@ -5437,9 +5437,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 767,
-        "JSHeapUsedSize": 29918496,
-        "JSHeapTotalSize": 39624704
+        "Nodes": 660,
+        "JSHeapUsedSize": 33902636,
+        "JSHeapTotalSize": 40411136
       }
     },
     {
@@ -5451,20 +5451,20 @@
         "dpr": 2
       },
       "frames": 30,
-      "meanFrameMs": 1296.0700000000002,
-      "fps": 0.7715632643298587,
-      "p50FrameMs": 1299.9000000000087,
-      "p95FrameMs": 1350,
-      "maxFrameMs": 1400,
-      "drawCalls": 1311,
-      "triangles": 235799,
+      "meanFrameMs": 1402.1800000000003,
+      "fps": 0.7131751986192927,
+      "p50FrameMs": 1400,
+      "p95FrameMs": 1449.8999999999942,
+      "maxFrameMs": 1483.300000000003,
+      "drawCalls": 1353,
+      "triangles": 307743,
       "rendererMemory": {
-        "geometries": 123,
+        "geometries": 197,
         "textures": 1,
-        "programs": 8
+        "programs": 13
       },
       "jsHeap": {
-        "usedBytes": 56800000,
+        "usedBytes": 64000000,
         "totalBytes": 72200000,
         "limitBytes": 3760000000
       },
@@ -5485,9 +5485,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 711,
-        "JSHeapUsedSize": 31002504,
-        "JSHeapTotalSize": 35954688
+        "Nodes": 735,
+        "JSHeapUsedSize": 32136320,
+        "JSHeapTotalSize": 37265408
       }
     },
     {
@@ -5499,20 +5499,20 @@
         "dpr": 2
       },
       "frames": 30,
-      "meanFrameMs": 273.8799999999998,
-      "fps": 3.651234117131593,
-      "p50FrameMs": 266.70000000001164,
-      "p95FrameMs": 283.40000000000873,
-      "maxFrameMs": 283.5,
-      "drawCalls": 1301,
-      "triangles": 235559,
+      "meanFrameMs": 304.43333333333334,
+      "fps": 3.2847914157451004,
+      "p50FrameMs": 300,
+      "p95FrameMs": 316.70000000001164,
+      "maxFrameMs": 333.5,
+      "drawCalls": 1343,
+      "triangles": 307503,
       "rendererMemory": {
-        "geometries": 123,
+        "geometries": 197,
         "textures": 0,
-        "programs": 15
+        "programs": 21
       },
       "jsHeap": {
-        "usedBytes": 56800000,
+        "usedBytes": 64000000,
         "totalBytes": 72200000,
         "limitBytes": 3760000000
       },
@@ -5533,9 +5533,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 711,
-        "JSHeapUsedSize": 34360968,
-        "JSHeapTotalSize": 51159040
+        "Nodes": 735,
+        "JSHeapUsedSize": 38455400,
+        "JSHeapTotalSize": 53518336
       }
     }
   ],
@@ -5543,168 +5543,168 @@
     {
       "name": "elevated-before-general",
       "file": "captures/elevated-before-general.png",
-      "bytes": 320644,
+      "bytes": 377624,
       "width": 1280,
       "height": 720
     },
     {
       "name": "elevated-after-general",
       "file": "captures/elevated-after-general.png",
-      "bytes": 326951,
+      "bytes": 383953,
       "width": 1280,
       "height": 720
     },
     {
       "name": "elevated-after-close-inspector",
       "file": "captures/elevated-after-close-inspector.png",
-      "bytes": 375601,
+      "bytes": 450328,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-before-general",
       "file": "captures/mixed-before-general.png",
-      "bytes": 323164,
+      "bytes": 377906,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-after-general",
       "file": "captures/mixed-after-general.png",
-      "bytes": 326188,
+      "bytes": 384198,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-workshop-repair-close-inspector",
       "file": "captures/mixed-workshop-repair-close-inspector.png",
-      "bytes": 407115,
+      "bytes": 547205,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-warehouse-hall-close-inspector",
       "file": "captures/mixed-warehouse-hall-close-inspector.png",
-      "bytes": 401394,
+      "bytes": 583862,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-after-close-inspector",
       "file": "captures/mixed-after-close-inspector.png",
-      "bytes": 384660,
+      "bytes": 481738,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-1280x720-general",
       "file": "captures/mixed-1280x720-general.png",
-      "bytes": 368671,
+      "bytes": 413780,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-1280x720-close-inspector",
       "file": "captures/mixed-1280x720-close-inspector.png",
-      "bytes": 384660,
+      "bytes": 481738,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-1920x1080-high-general",
       "file": "captures/mixed-1920x1080-high-general.png",
-      "bytes": 1782189,
+      "bytes": 2016591,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "mixed-1920x1080-high-close-inspector",
       "file": "captures/mixed-1920x1080-high-close-inspector.png",
-      "bytes": 1856414,
+      "bytes": 2145795,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "mixed-390x844-high-general",
       "file": "captures/mixed-390x844-high-general.png",
-      "bytes": 327460,
+      "bytes": 363373,
       "width": 780,
       "height": 1688
     },
     {
       "name": "mixed-390x844-high-close-inspector",
       "file": "captures/mixed-390x844-high-close-inspector.png",
-      "bytes": 300569,
+      "bytes": 317656,
       "width": 780,
       "height": 1688
     },
     {
       "name": "mixed-3840x2160-general",
       "file": "captures/mixed-3840x2160-general.png",
-      "bytes": 1633152,
+      "bytes": 1801232,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "mixed-3840x2160-close-inspector",
       "file": "captures/mixed-3840x2160-close-inspector.png",
-      "bytes": 2024458,
+      "bytes": 2480428,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "dense-1920x1080-high-general",
       "file": "captures/dense-1920x1080-high-general.png",
-      "bytes": 1777733,
+      "bytes": 2297421,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "dense-1920x1080-low-general",
       "file": "captures/dense-1920x1080-low-general.png",
-      "bytes": 1584310,
+      "bytes": 2178471,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "river-gardens-before-charter",
       "file": "captures/river-gardens-before-charter.png",
-      "bytes": 192360,
+      "bytes": 174935,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-gardens-after-charter",
       "file": "captures/river-gardens-after-charter.png",
-      "bytes": 304168,
+      "bytes": 343187,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-gardens-success-dialog",
       "file": "captures/river-gardens-success-dialog.png",
-      "bytes": 223817,
+      "bytes": 206369,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-workshops-before-charter",
       "file": "captures/river-workshops-before-charter.png",
-      "bytes": 192360,
+      "bytes": 173201,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-workshops-after-charter",
       "file": "captures/river-workshops-after-charter.png",
-      "bytes": 304416,
+      "bytes": 343912,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-workshops-success-dialog",
       "file": "captures/river-workshops-success-dialog.png",
-      "bytes": 223324,
+      "bytes": 204591,
       "width": 1280,
       "height": 720
     }
@@ -5715,7 +5715,7 @@
     "cdpInterceptionErrors": [],
     "blockedRequests": [],
     "unexpectedRequests": [],
-    "chromeStderrTail": "e server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111851.580:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111852.341:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111852.589:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.192:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.347:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.409:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.828:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111854.358:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111854.439:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111855.247:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111855.386:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111856.259:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111856.396:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111857.273:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111857.412:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111858.281:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111858.420:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111859.295:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111859.433:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111900.311:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111900.435:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111901.312:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111901.437:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111902.325:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111902.450:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111903.338:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111903.463:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:103856:1104/111904.354:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111904.476:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111905.367:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111905.491:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111906.381:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111906.505:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111907.393:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111907.518:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111908.408:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111909.420:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111910.435:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111911.450:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111912.464:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111913.479:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111914.492:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111915.507:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111916.522:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111917.537:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111918.550:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111919.552:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111920.565:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111921.582:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111922.596:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n"
+    "chromeStderrTail": "[88648:35148:1105/000048.460:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000049.180:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000049.474:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.038:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.190:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.253:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.662:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000051.192:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000051.270:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000052.085:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000052.197:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000053.092:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000053.201:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000054.106:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000054.215:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000055.121:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000055.216:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000056.125:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000056.219:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000057.136:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000057.230:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000058.142:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000058.236:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000059.156:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000059.249:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000100.168:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000100.262:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000101.180:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000101.273:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000102.192:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000102.285:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000103.199:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000103.293:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000104.202:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000104.297:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000105.211:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000106.216:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000107.217:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000108.231:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000109.247:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000110.250:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000111.264:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000112.278:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000113.285:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000114.293:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000115.299:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000116.309:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000117.312:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000118.317:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000119.322:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n"
   },
   "browser": {
     "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",

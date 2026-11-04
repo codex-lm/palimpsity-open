@@ -9,6 +9,7 @@ Depuis `game/`, après que le chantier d'intégration a reconstruit `../dist/pal
 ```bash
 node --test test/living-layers-static.mjs
 node test/living-layers-browser.mjs
+node test/d2-performance-comparison.mjs
 ```
 
 `CHROME_EXE` peut désigner un exécutable Chrome, Chromium ou Edge. `LIVING_LAYERS_FRAMES` change le nombre d'intervalles mesurés par vue (30 par défaut, minimum 20). La recette ne reconstruit pas elle-même le livrable afin de tester exactement le fichier autonome présent.
@@ -29,6 +30,7 @@ Les scènes visuelles élevée, mixte et dense préparent explicitement la phase
 ## Résultats
 
 - [`DELIVERY.md`](DELIVERY.md) : synthèse de livraison, architecture, commandes, captures comparables, mesures et limites ;
+- [`d2-performance-comparison.md`](d2-performance-comparison.md) et [`d2-performance-results.json`](d2-performance-results.json) : comparaison séquentielle baseline/courant, au moins 10 s par vue sous SwiftShader, avec deltas p95 et captures séparées ;
 - `results.json` : rapport brut, actions, erreurs, métriques et environnement ;
 - `observed-results.md` : résultats effectivement observés lors de la dernière exécution navigateur ;
 - `static-results.md` : résultats et blocages des contrôles hors navigateur ;

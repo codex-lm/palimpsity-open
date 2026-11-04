@@ -13,7 +13,6 @@ const ENVIRONMENT_KEYS = [
 const keys = plan => plan.map(module => module.key);
 const DIRECTION_VECTORS = { N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] };
 const DIRECTION_NAMES = Object.fromEntries(Object.entries(DIRECTION_VECTORS).map(([name, vector]) => [vector.join(","), name]));
-const CANONICAL_STRAIGHT = [DIRECTION_VECTORS.S];
 const CANONICAL_INNER = [DIRECTION_VECTORS.S, DIRECTION_VECTORS.W];
 
 function directionsAfterRotation(rotation, canonical) {
@@ -55,15 +54,13 @@ test("inner-bank rotations cover the actual NE, ES, SW and WN water directions",
   assert.deepEqual(directionsAfterRotation(real.rotation, CANONICAL_INNER), ["N", "W"]);
 });
 
-test("opposite and three-sided water masks use explicit straight-bank fallbacks", () => {
-  const opposite = environmentPlanForCell(terrainForMask(5), 2, 2).filter(module => module.key === "bank_straight");
-  assert.equal(opposite.length, 2);
-  assert.deepEqual(opposite.flatMap(module => directionsAfterRotation(module.rotation, CANONICAL_STRAIGHT)).sort(), ["N", "S"]);
-  const three = environmentPlanForCell(terrainForMask(7), 2, 2);
-  assert.ok(!keys(three).includes("bank_corner_inner"));
-  const straight = three.filter(module => module.key === "bank_straight");
-  assert.equal(straight.length, 3);
-  assert.deepEqual(straight.flatMap(module => directionsAfterRotation(module.rotation, CANONICAL_STRAIGHT)).sort(), ["E", "N", "S"]);
+test("opposite, three- and four-sided masks keep original terrain without competing modules", () => {
+  for (const mask of [5, 7, 10, 11, 13, 14, 15]) {
+    assert.deepEqual(environmentPlanForCell(terrainForMask(mask), 2, 2), [], `mask ${mask} must not assemble bank, ground or decor`);
+  }
+  for (const [c, r] of [[9, 3], [6, 4], [12, 4]]) {
+    assert.deepEqual(environmentPlanForCell(genTerrain(), c, r), [], `${c},${r} must keep original terrain`);
+  }
 });
 
 test("quays require built context and construction adapts rather than mutating the grid", () => {

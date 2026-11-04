@@ -1,0 +1,727 @@
+{
+  "route": "600 EUR natural, SW then NW, Gardens charter; public place/tick for acceleration; transformations and conversions through UI buttons",
+  "final": {
+    "tick": 161,
+    "status": "success",
+    "finishedAtTick": 161,
+    "droughtHeld": true,
+    "population": 134.80579691382644,
+    "money": 2311.2953377997715,
+    "materials": 0.10552390832980955,
+    "phase": 4
+  },
+  "actions": [
+    {
+      "type": "place",
+      "id": "house",
+      "district": 2,
+      "tick": 0,
+      "c": 0,
+      "r": 7,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 2,
+      "tick": 0,
+      "c": 1,
+      "r": 7,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 2,
+      "tick": 0,
+      "c": 2,
+      "r": 7,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 2,
+      "tick": 0,
+      "c": 3,
+      "r": 7,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 2,
+      "tick": 0,
+      "c": 4,
+      "r": 7,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 2,
+      "tick": 0,
+      "c": 5,
+      "r": 7,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 2,
+      "tick": 0,
+      "c": 0,
+      "r": 8,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 2,
+      "tick": 0,
+      "c": 1,
+      "r": 8,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "market",
+      "district": 2,
+      "tick": 0,
+      "c": 2,
+      "r": 8,
+      "cost": {
+        "money": 60
+      }
+    },
+    {
+      "type": "charter",
+      "id": "gardens",
+      "tick": 9
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 2,
+      "tick": 9,
+      "c": 3,
+      "r": 8,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 2,
+      "tick": 9,
+      "c": 4,
+      "r": 8,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "park",
+      "district": 2,
+      "tick": 9,
+      "c": 5,
+      "r": 8,
+      "cost": {
+        "money": 35
+      }
+    },
+    {
+      "type": "place",
+      "id": "park",
+      "district": 2,
+      "tick": 9,
+      "c": 0,
+      "r": 9,
+      "cost": {
+        "money": 35
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 9,
+      "c": 0,
+      "r": 0,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 9,
+      "c": 1,
+      "r": 0,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 9,
+      "c": 2,
+      "r": 0,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 9,
+      "c": 3,
+      "r": 0,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 9,
+      "c": 4,
+      "r": 0,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 0,
+      "tick": 9,
+      "c": 5,
+      "r": 0,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 0,
+      "tick": 9,
+      "c": 6,
+      "r": 0,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 0,
+      "tick": 9,
+      "c": 7,
+      "r": 0,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 0,
+      "tick": 9,
+      "c": 0,
+      "r": 1,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 0,
+      "tick": 9,
+      "c": 1,
+      "r": 1,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "market",
+      "district": 0,
+      "tick": 13,
+      "c": 2,
+      "r": 1,
+      "cost": {
+        "money": 60
+      }
+    },
+    {
+      "type": "place",
+      "id": "park",
+      "district": 0,
+      "tick": 15,
+      "c": 3,
+      "r": 1,
+      "cost": {
+        "money": 35
+      }
+    },
+    {
+      "type": "place",
+      "id": "park",
+      "district": 0,
+      "tick": 18,
+      "c": 4,
+      "r": 1,
+      "cost": {
+        "money": 35
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 0,
+      "tick": 21,
+      "c": 5,
+      "r": 1,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 0,
+      "tick": 22,
+      "c": 6,
+      "r": 1,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 0,
+      "tick": 22,
+      "c": 7,
+      "r": 1,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 0,
+      "tick": 22,
+      "c": 1,
+      "r": 2,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "market",
+      "district": 0,
+      "tick": 26,
+      "c": 2,
+      "r": 2,
+      "cost": {
+        "money": 60
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 2,
+      "tick": 28,
+      "c": 1,
+      "r": 9,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 2,
+      "tick": 31,
+      "c": 2,
+      "r": 9,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 2,
+      "tick": 33,
+      "c": 3,
+      "r": 9,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 2,
+      "tick": 34,
+      "c": 4,
+      "r": 9,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "market",
+      "district": 2,
+      "tick": 38,
+      "c": 5,
+      "r": 9,
+      "cost": {
+        "money": 60
+      }
+    },
+    {
+      "type": "place",
+      "id": "workshop",
+      "district": 2,
+      "tick": 40,
+      "c": 0,
+      "r": 10,
+      "cost": {
+        "money": 45
+      }
+    },
+    {
+      "type": "place",
+      "id": "warehouse",
+      "district": 2,
+      "tick": 44,
+      "c": 1,
+      "r": 10,
+      "cost": {
+        "money": 90
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 46,
+      "c": 3,
+      "r": 2,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 48,
+      "c": 4,
+      "r": 2,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 49,
+      "c": 5,
+      "r": 2,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 51,
+      "c": 6,
+      "r": 2,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 53,
+      "c": 7,
+      "r": 2,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 54,
+      "c": 0,
+      "r": 3,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 56,
+      "c": 3,
+      "r": 3,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 57,
+      "c": 4,
+      "r": 3,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 59,
+      "c": 5,
+      "r": 3,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "house",
+      "district": 0,
+      "tick": 60,
+      "c": 0,
+      "r": 4,
+      "cost": {
+        "money": 40
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 0,
+      "tick": 62,
+      "c": 6,
+      "r": 4,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 0,
+      "tick": 63,
+      "c": 0,
+      "r": 5,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 0,
+      "tick": 64,
+      "c": 1,
+      "r": 5,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 0,
+      "tick": 65,
+      "c": 2,
+      "r": 5,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "place",
+      "id": "farm",
+      "district": 2,
+      "tick": 67,
+      "c": 2,
+      "r": 10,
+      "cost": {
+        "money": 50
+      }
+    },
+    {
+      "type": "place",
+      "id": "well",
+      "district": 2,
+      "tick": 68,
+      "c": 3,
+      "r": 10,
+      "cost": {
+        "money": 30
+      }
+    },
+    {
+      "type": "transformation",
+      "id": "add_floor",
+      "tick": 70,
+      "architecture": {
+        "base": "residential",
+        "floors": 2,
+        "roof": "traditional",
+        "family": "banks",
+        "variant": 2
+      },
+      "money": 49.49594131927009,
+      "materials": 18.056017151869675
+    },
+    {
+      "type": "transformation",
+      "id": "base_shop",
+      "tick": 70,
+      "architecture": {
+        "base": "shop",
+        "floors": 2,
+        "roof": "traditional",
+        "family": "banks",
+        "variant": 2
+      },
+      "money": 14.495941319270088,
+      "materials": 12.056017151869675
+    },
+    {
+      "type": "place",
+      "id": "generator",
+      "district": 0,
+      "tick": 74,
+      "c": 3,
+      "r": 5,
+      "cost": {
+        "money": 120
+      }
+    },
+    {
+      "type": "transformation",
+      "id": "add_floor",
+      "tick": 76,
+      "architecture": {
+        "base": "shop",
+        "floors": 3,
+        "roof": "traditional",
+        "family": "banks",
+        "variant": 2
+      },
+      "money": 24.536708289961737,
+      "materials": 8.536687423512788
+    },
+    {
+      "type": "transformation",
+      "id": "add_floor",
+      "tick": 82,
+      "architecture": {
+        "base": "shop",
+        "floors": 4,
+        "roof": "traditional",
+        "family": "banks",
+        "variant": 2
+      },
+      "money": 151.53937359957757,
+      "materials": 0.1801219092528683
+    },
+    {
+      "type": "place",
+      "id": "commons",
+      "district": 2,
+      "tick": 88,
+      "c": 4,
+      "r": 10,
+      "cost": {
+        "money": 105,
+        "materials": 8
+      }
+    },
+    {
+      "type": "transformation",
+      "id": "roof_productive",
+      "tick": 102,
+      "architecture": {
+        "base": "shop",
+        "floors": 4,
+        "roof": "productive",
+        "family": "banks",
+        "variant": 2
+      },
+      "money": 646.1702183673864,
+      "materials": 0.45688725209263836
+    },
+    {
+      "type": "conversion",
+      "id": "workshop_repair",
+      "tick": 159,
+      "history": {
+        "tick": 159,
+        "type": "conversion",
+        "label": "Maintenance workshop"
+      }
+    },
+    {
+      "type": "conversion",
+      "id": "warehouse_hall",
+      "tick": 159,
+      "history": {
+        "tick": 159,
+        "type": "conversion",
+        "label": "Neighborhood hall"
+      }
+    }
+  ]
+}
