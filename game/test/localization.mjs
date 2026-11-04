@@ -106,6 +106,7 @@ test('Living Layers shop profiles, tags and controls have complete French copy',
   assert.equal(translate('dense', 'fr'), 'densifié');
   assert.equal(translate('Living Layers', 'fr'), 'Couches vivantes');
   assert.equal(translate('Pause', 'fr'), 'Pause');
+  assert.equal(translate('This civic building cannot be expanded.', 'fr'), 'Ce bâtiment civique ne peut pas être agrandi.');
   assert.equal(translate('Apply changes', 'fr'), 'Appliquer les modifications');
   assert.equal(translate('Maintenance demand (engine units)', 'fr'), 'Demande d’entretien (unités moteur)');
   assert.equal(translate('Maintenance provided (engine units)', 'fr'), 'Entretien fourni (unités moteur)');
@@ -122,6 +123,9 @@ test('Living Layers shop profiles, tags and controls have complete French copy',
   assert.equal(translate('No economic changes.', 'fr'), 'Aucun changement économique.');
   assert.equal(translate('Unchanged values (3)', 'fr'), 'Valeurs inchangées (3)');
   assert.equal(translate('1–2 of 7 · Scroll for more', 'fr'), '1–2 sur 7 · Faire défiler');
+  const commons = BUILDINGS.commons;
+  assert.equal(translate(`${commons.name}, 105 € + 8 materials. ${commons.desc}`, 'fr'), `Communs, 105 € + 8 matériaux. ${translate(commons.desc, 'fr')}`);
+  assert.equal(translate(`${commons.desc} Cost: 105 € + 8 materials`, 'fr'), `${translate(commons.desc, 'fr')} Coût : 105 € + 8 matériaux`);
 });
 
 class TextBoundary {

@@ -450,10 +450,12 @@ export const EXACT_FR = {
   "Civic details": "Détails civiques",
   "Apply a third set of architectural details without changing the building's function.": "Applique un troisième jeu de détails architecturaux sans changer la fonction du bâtiment.",
   "This building cannot be transformed.": "Ce bâtiment ne peut pas être transformé.",
+  "This civic building cannot be expanded.": "Ce bâtiment civique ne peut pas être agrandi.",
   "A reconverted building cannot be transformed.": "Un bâtiment reconverti ne peut pas être transformé.",
   "This transformation is not available for this building.": "Cette transformation n’est pas disponible pour ce bâtiment.",
   "This building already has four floors.": "Ce bâtiment a déjà quatre niveaux.",
   "This transformation is already applied.": "Cette transformation est déjà appliquée.",
+  "This variant assembles the same building modules.": "Cette variante assemble les mêmes modules du bâtiment.",
   "Neighborhood hall": "Maison de quartier",
   "Turn an aging central warehouse into a staffed neighborhood hall, giving up central storage for local services and trust.": "Transforme un vieil entrepôt central en maison de quartier avec du personnel, en remplaçant le stockage central par des services locaux et de la confiance.",
   "The former warehouse now hosts neighborhood services. It has no central storage capacity and relies on food, staff and funding.": "L’ancien entrepôt accueille désormais des services de quartier. Il n’a plus de capacité de stockage central et dépend de nourriture, de personnel et de financement.",
@@ -669,6 +671,14 @@ export const TEMPLATES_FR = [
   {
     "en": "{0} Cost: {1} €",
     "fr": "{0} Coût : {1} €"
+  },
+  {
+    "en": "{0}, {1}. {2}",
+    "fr": "{0}, {1}. {2}"
+  },
+  {
+    "en": "{0} Cost: {1}",
+    "fr": "{0} Coût : {1}"
   },
   {
     "en": "Age: {0} turns · {1} · local heat: {2}",

@@ -33,6 +33,17 @@ const cloneProfile = profile => {
   return copy;
 };
 
+const architectureModuleKeys = architecture => {
+  const { base, floors, roof, family, variant } = architecture;
+  const baseKey = base === "residential" ? `base_house_${family}_${variant % 3}`
+    : base === "workshop" ? `base_workshop_${family}_${variant % 2}`
+      : base === "warehouse" || base === "shop" ? `base_${base}_${family}` : "base_civic";
+  const keys = [baseKey];
+  for (let level = 1; level < floors; level++) keys.push(`floor_${family}_${variant % 3}`);
+  keys.push(roof === "traditional" ? `roof_traditional_${family}_${variant % 2}` : `roof_${roof}_${family}`);
+  return keys;
+};
+
 export const VICTORY_POP = 180; // cible MVP (la spec vise 5000 pour le jeu complet ; ici calibré à l'échelle du moteur)
 
 export class CityEngine {
@@ -172,7 +183,7 @@ export class CityEngine {
       if (shop) {
         profile.tags.push("distribution", "social", "commercial");
         profile.ext.distribution = 4 + extra * 0.5;
-        profile.ext.congestion += 1;
+        profile.ext.congestion = (profile.ext.congestion || 0) + 1;
       }
       if (homes > 0) profile.tags.push("residential");
       if (floors >= 3) profile.tags.push("dense");
@@ -249,6 +260,9 @@ export class CityEngine {
     if (!spec) return "This transformation is not available for this building.";
     if (id === "add_floor" && before.floors >= 4) return "This building already has four floors.";
     if (Object.keys(before).every(key => before[key] === spec.after[key])) return "This transformation is already applied.";
+    if (id.startsWith("variant_") && JSON.stringify(architectureModuleKeys(before)) === JSON.stringify(architectureModuleKeys(spec.after))) {
+      return "This variant assembles the same building modules.";
+    }
     if (this.state.phase < spec.phase) return `Available in phase ${spec.phase}.`;
     if (this.state.res.money < spec.cost.money) return "Not enough money.";
     if (this.state.res.materials < spec.cost.materials) return "Not enough materials.";

@@ -58,6 +58,7 @@ export function environmentPlanForCell(terrain, c, r, occupied = () => null) {
   const built = building => !!building && !ENVIRONMENT_TRANSPORT.has(building.def?.id);
   const builtContext = built(current) || ENVIRONMENT_DIRECTIONS.some(({ dc, dr }) => built(buildingAt(dc, dr)));
   const water = ENVIRONMENT_DIRECTIONS.filter(({ dc, dr }) => at(dc, dr) === 1);
+  const mask = (at(0, -1) === 1 ? 1 : 0) | (at(1, 0) === 1 ? 2 : 0) | (at(0, 1) === 1 ? 4 : 0) | (at(-1, 0) === 1 ? 8 : 0);
   const diagonalWater = ENVIRONMENT_DIAGONALS.filter(({ dc, dr }) => at(dc, dr) === 1);
   const transportNear = ENVIRONMENT_TRANSPORT.has(current?.def?.id)
     || ENVIRONMENT_DIRECTIONS.some(({ dc, dr }) => ENVIRONMENT_TRANSPORT.has(buildingAt(dc, dr)?.def?.id));
@@ -66,25 +67,31 @@ export function environmentPlanForCell(terrain, c, r, occupied = () => null) {
     : current ? "ground_soil"
       : terrain[r][c] === 2 || ENVIRONMENT_DIRECTIONS.some(({ dc, dr }) => at(dc, dr) === 2) ? "ground_fertile"
         : terrain[r][c] === 4 || greenNear ? "ground_planted" : builtContext ? "ground_soil" : null;
-  const modules = groundKey ? [{ key: groundKey, x: 0, y: 0.01, z: 0, rotation: 0 }] : [];
-  let bank = null;
-  if (water.length === 1) bank = { ...water[0], key: builtContext ? "quay_straight" : "bank_straight" };
-  else if (water.length >= 2) bank = { ...water[0], key: "bank_corner_inner" };
-  else if (diagonalWater.length) bank = { ...diagonalWater[0], key: "bank_corner_outer" };
-  if (bank) {
-    modules.push({ key: bank.key, x: 0, y: 0, z: 0, rotation: bank.rotation });
-    if (!current && bank.key === "bank_straight") {
-      modules.push({ key: "vegetation_reeds", x: bank.dc * 0.3, y: 0, z: bank.dr * 0.3, rotation: bank.rotation });
-    }
+  const straightKey = builtContext ? "quay_straight" : "bank_straight";
+  const banks = [];
+  if (mask === 0 && diagonalWater.length) banks.push({ ...diagonalWater[0], key: "bank_corner_outer" });
+  else if ([1, 2, 4, 8].includes(mask)) banks.push({ ...water[0], key: straightKey });
+  else if (mask === 3) banks.push({ key: "bank_corner_inner", rotation: Math.PI });
+  else if (mask === 6) banks.push({ key: "bank_corner_inner", rotation: Math.PI / 2 });
+  else if (mask === 12) banks.push({ key: "bank_corner_inner", rotation: 0 });
+  else if (mask === 9) banks.push({ key: "bank_corner_inner", rotation: -Math.PI / 2 });
+  else if (mask) {
+    // Opposite, three- and four-sided cells use separate straight banks so every water edge is covered without an arbitrary corner.
+    for (const direction of water) banks.push({ ...direction, key: straightKey });
   }
-  if (!current && (groundKey === "ground_fertile" || groundKey === "ground_planted") && terrain[r][c] !== 4) {
+  const modules = groundKey && !banks.length ? [{ key: groundKey, x: 0, y: 0.01, z: 0, rotation: 0 }] : [];
+  for (const bank of banks) modules.push({ key: bank.key, x: 0, y: 0, z: 0, rotation: bank.rotation });
+  if (!current && banks.length === 1 && banks[0].key === "bank_straight") {
+    const bank = banks[0];
+    modules.push({ key: "vegetation_reeds", x: bank.dc * 0.3, y: 0, z: bank.dr * 0.3, rotation: bank.rotation });
+  }
+  if (!current && !banks.length && (groundKey === "ground_fertile" || groundKey === "ground_planted") && terrain[r][c] !== 4) {
     modules.push({ key: "vegetation_flowers", x: 0.22, y: 0, z: -0.18, rotation: (c + r) * Math.PI / 2 });
   }
   const civicOrParkNear = ENVIRONMENT_DIRECTIONS.some(({ dc, dr }) => ["commons", "park"].includes(buildingAt(dc, dr)?.def?.id));
-  if (!current && (civicOrParkNear || bank?.key === "quay_straight")) {
-    if ((c + r) % 2 === 0) modules.push({ key: "furniture_bench", x: -0.2, y: 0, z: 0.18, rotation: bank?.rotation || 0 });
+  if (!current && !banks.length && civicOrParkNear) {
+    if ((c + r) % 2 === 0) modules.push({ key: "furniture_bench", x: -0.2, y: 0, z: 0.18, rotation: 0 });
     else modules.push({ key: "furniture_planter", x: -0.2, y: 0, z: 0.18, rotation: 0 });
-    if (bank?.key === "quay_straight") modules.push({ key: "furniture_lamp", x: 0.28, y: 0, z: -0.24, rotation: bank.rotation });
   }
   return modules;
 }

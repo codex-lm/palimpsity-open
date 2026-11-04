@@ -37,7 +37,7 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const setHTML = (node, html) => { if (node.__h !== html) { node.__h = html; node.innerHTML = html; } localizeDOM(node); };
 const floorText = value => `${value} ${value === 1 ? "floor" : "floors"}`;
 const materialText = value => `${value} ${value === 1 ? "material" : "materials"}`;
-const costText = cost => `${cost?.money || 0} € + ${materialText(cost?.materials || 0)}`;
+const costText = cost => cost?.materials ? `${cost?.money || 0} € + ${materialText(cost.materials)}` : `${cost?.money || 0} €`;
 const flowText = (flows, sign) => Object.entries(flows || {}).filter(([, value]) => value).map(([key, value]) => `${sign}${value} ${key === "materials" && value === 1 ? "material" : FLOW_NAMES[key] || key}`).join("<br>") || "—";
 export const RESOURCE_COLORS = { population: "#F0EEE9", money: "#E6A461", materials: "#c5a985", heat: "#ff8066", congestion: "#df9275" };
 const resourceColor = key => RESOURCE_COLORS[key] || RES_META[key].col;
@@ -122,6 +122,14 @@ export class UI {
     this.buildPanelTools();
     this.applyDisplayPreferences();
     this.$.palette.addEventListener("scroll", () => this.renderPaletteHint(), { passive: true });
+    this.onViewportResize = () => {
+      if (!this.transformPreview || this.resizeFrame) return;
+      this.resizeFrame = globalThis.requestAnimationFrame(() => {
+        this.resizeFrame = null;
+        this.$.inspector.querySelector(".transform-preview")?.scrollIntoView({ block: "nearest", inline: "nearest" });
+      });
+    };
+    globalThis.addEventListener("resize", this.onViewportResize);
     this.renderPalette();
     this.renderRegimes();
   }
@@ -336,14 +344,16 @@ export class UI {
       if (!state.unlocked.has(id)) continue;
       const def = BUILDINGS[id];
       const cost = def.cost?.money || 0;
-      const afford = state.res.money >= cost;
+      const materials = def.cost?.materials || 0;
+      const afford = state.res.money >= cost && state.res.materials >= materials;
       const isNew = state.newlyUnlocked.includes(id);
+      const costLabel = costText(def.cost);
       const button = el("button", "build" + (this.selected === id ? " on" : "") + (afford ? "" : " poor") + (isNew ? " fresh" : ""));
       button.dataset.id = id;
       button.style.color = def.color;
-      button.innerHTML = `${buildingIcon(id)}<span class="bname">${def.name}</span><span class="bcost">${cost} €</span>`;
-      button.title = `${def.desc} Cost: ${cost} €`;
-      button.setAttribute("aria-label", `${def.name}, ${cost} euros. ${def.desc}`);
+      button.innerHTML = `${buildingIcon(id)}<span class="bname">${def.name}</span><span class="bcost">${costLabel}</span>`;
+      button.title = `${def.desc} Cost: ${costLabel}`;
+      button.setAttribute("aria-label", `${def.name}, ${costLabel}. ${def.desc}`);
       button.setAttribute("aria-pressed", String(this.selected === id));
       button.onclick = () => {
         this.bulldoze = false;
@@ -377,7 +387,8 @@ export class UI {
   refreshPaletteAfford() {
     const state = this.engine.state;
     for (const button of this.$.palette.querySelectorAll("[data-id]")) {
-      button.classList.toggle("poor", state.res.money < (BUILDINGS[button.dataset.id].cost?.money || 0));
+      const cost = BUILDINGS[button.dataset.id].cost || {};
+      button.classList.toggle("poor", state.res.money < (cost.money || 0) || state.res.materials < (cost.materials || 0));
     }
   }
 
@@ -621,7 +632,8 @@ export class UI {
     const districtName = DISTRICT_NAMES[districtOf(building.c, building.r)];
     html += `<div class="insp-age">Age: ${building.age} turns · ${districtName} · local heat: ${heat.toFixed(1)}</div></div>`;
 
-    const transformations = this.engine.transformationOptions?.(building) || [];
+    if (building.def.id === "commons") html += `<div class="insp-disabled">${this.engine.transformationBlockReason(building, "add_floor")}</div>`;
+    const transformations = building.def.id === "commons" ? [] : this.engine.transformationOptions?.(building) || [];
     if (transformations.length) {
       if (this.transformPreview?.building !== building || !transformations.some(option => option.id === this.transformPreview.id)) this.transformPreview = null;
       if (this.transformPreview) this.layerGroup = groupOf(this.transformPreview.id).id;
@@ -645,7 +657,7 @@ export class UI {
     html += `<div class="inspector-collapsed">`;
     const options = this.engine.conversionOptions(building);
     if (building.conversion) {
-      html += `<div class="insp-conversion converted" tabindex="-1"><strong>✓ ${def.name}</strong><p>${def.desc}</p></div>`;
+      html += `<div class="insp-conversion converted" tabindex="-1"><strong><span class="conversion-check" aria-hidden="true">✓</span> <span class="converted-name">${def.name}</span></strong><p>${def.desc}</p></div>`;
     } else if (options.length) {
       html += `<div class="insp-conversion"><div class="conversion-kicker">Give this building a new role</div>${options.map(option => `<div class="conversion-offer"><strong>${option.name}</strong><p>${option.desc}</p><p class="conversion-cost">${costText(option.cost)}</p><button type="button" data-conversion="${option.id}" ${option.reason ? "disabled" : ""}>Confirm repurposing</button><p class="conversion-condition">${option.reason || `Available from phase ${option.phase}, after ${option.minAge} turns.`}</p></div>`).join("")}</div>`;
     }

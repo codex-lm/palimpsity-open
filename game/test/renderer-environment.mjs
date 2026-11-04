@@ -3,6 +3,7 @@ import test from "node:test";
 import * as THREE from "three";
 import { Renderer3D } from "../src/render3d.js";
 import { environmentPlanForCell } from "../src/diorama-assets.js";
+import { genTerrain } from "../src/data.js";
 
 const ENVIRONMENT_KEYS = [
   "bank_straight", "bank_corner_inner", "bank_corner_outer", "quay_straight",
@@ -10,6 +11,23 @@ const ENVIRONMENT_KEYS = [
   "vegetation_reeds", "vegetation_flowers", "furniture_bench", "furniture_lamp", "furniture_planter",
 ];
 const keys = plan => plan.map(module => module.key);
+const DIRECTION_VECTORS = { N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] };
+const DIRECTION_NAMES = Object.fromEntries(Object.entries(DIRECTION_VECTORS).map(([name, vector]) => [vector.join(","), name]));
+const CANONICAL_STRAIGHT = [DIRECTION_VECTORS.S];
+const CANONICAL_INNER = [DIRECTION_VECTORS.S, DIRECTION_VECTORS.W];
+
+function directionsAfterRotation(rotation, canonical) {
+  const cosine = Math.round(Math.cos(rotation)), sine = Math.round(Math.sin(rotation));
+  return canonical.map(([x, z]) => DIRECTION_NAMES[`${Math.round(x * cosine + z * sine)},${Math.round(-x * sine + z * cosine)}`]).sort();
+}
+
+function terrainForMask(mask) {
+  const terrain = Array.from({ length: 5 }, () => Array(5).fill(0));
+  for (const [name, [dc, dr]] of Object.entries(DIRECTION_VECTORS)) {
+    if (mask & ({ N: 1, E: 2, S: 4, W: 8 })[name]) terrain[2 + dr][2 + dc] = 1;
+  }
+  return terrain;
+}
 
 test("environment banks use water-neighbor shapes and rotations", () => {
   const terrain = Array.from({ length: 5 }, () => Array(5).fill(0));
@@ -25,6 +43,29 @@ test("environment banks use water-neighbor shapes and rotations", () => {
   assert.equal(environmentPlanForCell(diagonal, 1, 1).find(module => module.key === "bank_corner_outer")?.rotation, -Math.PI / 2);
 });
 
+test("inner-bank rotations cover the actual NE, ES, SW and WN water directions", () => {
+  for (const [mask, expected] of [[3, ["E", "N"]], [6, ["E", "S"]], [12, ["S", "W"]], [9, ["N", "W"]]]) {
+    const plan = environmentPlanForCell(terrainForMask(mask), 2, 2);
+    const bank = plan.find(module => module.key === "bank_corner_inner");
+    assert.ok(bank, `Inner bank missing for mask ${mask}`);
+    assert.deepEqual(directionsAfterRotation(bank.rotation, CANONICAL_INNER), expected);
+  }
+  const real = environmentPlanForCell(genTerrain(), 8, 4).find(module => module.key === "bank_corner_inner");
+  assert.equal(real.rotation, -Math.PI / 2);
+  assert.deepEqual(directionsAfterRotation(real.rotation, CANONICAL_INNER), ["N", "W"]);
+});
+
+test("opposite and three-sided water masks use explicit straight-bank fallbacks", () => {
+  const opposite = environmentPlanForCell(terrainForMask(5), 2, 2).filter(module => module.key === "bank_straight");
+  assert.equal(opposite.length, 2);
+  assert.deepEqual(opposite.flatMap(module => directionsAfterRotation(module.rotation, CANONICAL_STRAIGHT)).sort(), ["N", "S"]);
+  const three = environmentPlanForCell(terrainForMask(7), 2, 2);
+  assert.ok(!keys(three).includes("bank_corner_inner"));
+  const straight = three.filter(module => module.key === "bank_straight");
+  assert.equal(straight.length, 3);
+  assert.deepEqual(straight.flatMap(module => directionsAfterRotation(module.rotation, CANONICAL_STRAIGHT)).sort(), ["E", "N", "S"]);
+});
+
 test("quays require built context and construction adapts rather than mutating the grid", () => {
   const terrain = Array.from({ length: 5 }, () => Array(5).fill(0));
   terrain[2][2] = 1;
@@ -33,17 +74,21 @@ test("quays require built context and construction adapts rather than mutating t
   const empty = environmentPlanForCell(terrain, 2, 1);
   assert.ok(keys(empty).includes("bank_straight"));
   assert.ok(!keys(empty).includes("quay_straight"));
-  assert.ok(keys(empty).includes("ground_fertile"));
+  assert.ok(!keys(empty).includes("ground_fertile"));
+  assert.ok(!keys(empty).includes("vegetation_flowers"));
   const house = { def: { id: "house" }, architecture: { base: "residential" } };
   const built = environmentPlanForCell(terrain, 2, 1, (c, r) => c === 2 && r === 1 ? house : null);
   assert.ok(keys(built).includes("quay_straight"));
-  assert.ok(keys(built).includes("ground_soil"));
+  assert.ok(!keys(built).includes("ground_soil"));
   assert.ok(!keys(built).includes("vegetation_reeds"));
   assert.ok(!keys(built).includes("vegetation_flowers"));
   assert.equal(JSON.stringify(terrain), original);
   const path = environmentPlanForCell(terrain, 2, 1, (c, r) => c === 2 && r === 1 ? { def: { id: "path" } } : null);
-  assert.ok(keys(path).includes("ground_path"));
+  assert.ok(!keys(path).includes("ground_path"));
   assert.ok(!keys(path).includes("quay_straight"));
+  const dryPath = environmentPlanForCell(Array.from({ length: 3 }, () => Array(3).fill(0)), 1, 1,
+    (c, r) => c === 1 && r === 1 ? { def: { id: "path" } } : null);
+  assert.ok(keys(dryPath).includes("ground_path"));
 });
 
 test("civic plaza is limited to the Commons cell", () => {
@@ -52,6 +97,18 @@ test("civic plaza is limited to the Commons cell", () => {
   const occupied = (c, r) => c === 1 && r === 1 ? commons : null;
   assert.deepEqual(environmentPlanForCell(terrain, 1, 1, occupied), [{ key: "civic_plaza", x: 0, y: 0.01, z: 0, rotation: 0 }]);
   assert.ok(!keys(environmentPlanForCell(terrain, 0, 1, occupied)).includes("civic_plaza"));
+});
+
+test("bank cells never compose full ground, flowers or furniture over module water", () => {
+  const terrain = genTerrain();
+  for (const [c, r] of [[3, 6], [4, 6]]) {
+    const plan = environmentPlanForCell(terrain, c, r);
+    assert.ok(plan.some(module => module.key.startsWith("bank_") || module.key.startsWith("quay_")), `${c},${r} needs a bank`);
+    assert.ok(!keys(plan).includes("ground_fertile"), `${c},${r} must not grow furrows through water`);
+    assert.ok(!plan.some(module => module.key.startsWith("ground_")), `${c},${r} must not compose a competing full ground`);
+    assert.ok(!keys(plan).includes("vegetation_flowers"));
+    assert.ok(!plan.some(module => module.key.startsWith("furniture_")));
+  }
 });
 
 function batchFixture() {

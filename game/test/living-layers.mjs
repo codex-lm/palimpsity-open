@@ -3,7 +3,23 @@ import assert from 'node:assert/strict';
 import { CityEngine } from '../src/engine.js';
 import { RiverCityEngine } from '../src/river-pact.js';
 import { layerPlanForBuilding } from '../src/diorama-assets.js';
+import { translate } from '../src/localization.js';
 import { ARCHITECTURE_DEFAULTS, BUILDINGS, BUILDING_TRANSFORMATIONS } from '../src/data.js';
+import { expectedModuleKeys } from './helpers-living-layers.mjs';
+
+const layers = {
+  floorHeight: 0.48,
+  modules: Object.fromEntries(expectedModuleKeys().map(key => [key, { file: `layers/${key}.glb` }])),
+};
+const assembledModules = plan => [plan.baseKey,
+  ...Array.from({ length: plan.floors - 1 }, () => plan.floorKey), plan.roofKey].filter(Boolean);
+const modulesOf = building => assembledModules(layerPlanForBuilding(building, layers));
+function assertFiniteNumbers(value, path = 'profile') {
+  for (const [key, entry] of Object.entries(value || {})) {
+    if (typeof entry === 'number') assert.ok(Number.isFinite(entry), `${path}.${key} must be finite`);
+    else if (entry && typeof entry === 'object') assertFiniteNumbers(entry, `${path}.${key}`);
+  }
+}
 
 function funded(phase = 4) {
   const engine = new CityEngine();
@@ -170,6 +186,33 @@ test('residential floors and a ground-floor shop change capacity, demand and loc
   assert.equal(engine.profileOf(house).outputs.population, 18);
 });
 
+test('shop congestion stays finite at every height, on return to housing and in River Pact', () => {
+  for (let floors = 1; floors <= 4; floors++) {
+    const engine = funded(4);
+    const house = engine.place('house', 0, 0);
+    for (let level = 1; level < floors; level++) assert.equal(engine.transformBuilding(house, 'add_floor'), true);
+    assert.equal(engine.transformBuilding(house, 'base_shop'), true);
+    const shop = engine.profileOf(house);
+    assert.ok(Math.abs(shop.ext.congestion - (1 + 0.3 * (floors - 1))) < 1e-8);
+    assertFiniteNumbers(shop, `shop floor ${floors}`);
+    assert.equal(engine.transformBuilding(house, 'base_residential'), true);
+    assertFiniteNumbers(engine.profileOf(house), `housing floor ${floors}`);
+    assert.equal(engine.profileOf(house).outputs.population, floors * 6);
+  }
+  const river = new RiverCityEngine();
+  river.state.phase = 4;
+  river.state.res.materials = 100;
+  const house = river.place('house', 0, 0);
+  assert.equal(river.transformBuilding(house, 'base_shop'), true);
+  river.state.tick = 120;
+  river.tick();
+  assertFiniteNumbers(river.profileOf(house), 'River shop');
+  assert.ok(Number.isFinite(river.state.res.congestion));
+  assert.ok(river.congField.flat().every(Number.isFinite));
+  assert.equal(river.transformBuilding(house, 'base_residential'), true);
+  assertFiniteNumbers(river.profileOf(house), 'River housing');
+});
+
 test('a shop has real consumption, sales income and district distribution in simulation', () => {
   const engine = funded(4);
   engine.state.unlocked.add('generator');
@@ -211,6 +254,65 @@ test('a mixed-use shop gates sales and distribution on energy without suppressin
   assert.ok(shop.flowOutput.sales > 0);
   assert.ok(shop.flowOutput.rent > 0);
   assert.ok(engine.state.districts[0].distribution > 0);
+});
+
+test('variant offers and transactions match the modules actually assembled', () => {
+  const reason = 'This variant assembles the same building modules.';
+  assert.notEqual(translate(reason, 'fr'), reason, 'The no-op refusal is localized');
+  const check = (engine, building, id, visible) => {
+    const option = engine.transformationOptions(building).find(offer => offer.id === id);
+    const before = modulesOf(building);
+    const after = assembledModules(layerPlanForBuilding({ ...building, architecture: option.after.architecture }, layers));
+    if (!visible) {
+      assert.deepEqual(after, before, `${id}: fixture must represent identical modules`);
+      assert.equal(option.reason, reason);
+      const state = snapshot(engine, building);
+      assert.equal(engine.transformBuilding(building, id), false);
+      assert.equal(snapshot(engine, building), state, `${id}: refusal is atomic`);
+    } else {
+      assert.notDeepEqual(after, before, `${id}: accepted variant changes assembled modules`);
+      assert.equal(option.reason, null);
+      assert.equal(engine.transformBuilding(building, id), true);
+      assert.notDeepEqual(modulesOf(building), before);
+    }
+  };
+
+  let engine = funded(4), building = engine.place('workshop', 0, 0);
+  check(engine, building, 'variant_2', false);
+  check(engine, building, 'variant_1', true);
+
+  engine = funded(4);
+  engine.state.unlocked.add('warehouse');
+  building = engine.place('warehouse', 0, 0);
+  check(engine, building, 'variant_2', false);
+  check(engine, building, 'variant_1', true);
+
+  for (const type of ['warehouse', 'shop']) for (const roof of ['garden', 'productive']) {
+    engine = funded(4);
+    engine.state.unlocked.add('warehouse');
+    building = engine.place(type === 'shop' ? 'house' : 'warehouse', 0, 0);
+    if (type === 'shop') assert.equal(engine.transformBuilding(building, 'base_shop'), true);
+    assert.equal(engine.transformBuilding(building, `roof_${roof}`), true);
+    check(engine, building, 'variant_1', false);
+    check(engine, building, 'variant_2', false);
+  }
+
+  engine = funded(4);
+  engine.state.unlocked.add('warehouse');
+  building = engine.place('warehouse', 0, 0);
+  assert.equal(engine.transformBuilding(building, 'add_floor'), true);
+  assert.equal(engine.transformBuilding(building, 'roof_garden'), true);
+  check(engine, building, 'variant_2', true);
+  check(engine, building, 'variant_1', true);
+
+  engine = funded(4);
+  building = engine.place('workshop', 0, 0);
+  assert.equal(engine.transformBuilding(building, 'add_floor'), true);
+  check(engine, building, 'variant_2', true);
+
+  engine = funded(4);
+  building = engine.place('house', 0, 0);
+  check(engine, building, 'variant_2', true);
 });
 
 test('garden and productive roofs have distinct real effects and gardens are not parks', () => {

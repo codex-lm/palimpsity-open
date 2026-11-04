@@ -63,6 +63,17 @@ test('l’inspecteur explique la condition bloquante et désactive la rénovatio
   assert.equal(inspector.querySelectorAll('[data-conversion]')[0].disabled, true);
 });
 
+test('NILO-003 Commons affiche le blocage exact sans offres de travaux', () => {
+  const { engine, inspector, ui } = fixture();
+  engine.state.phase = 3; engine.state.res.money = 1000; engine.state.res.materials = 20;
+  engine.state.unlocked.add('commons');
+  const commons = engine.place('commons', 0, 0);
+  assert.ok(commons);
+  ui.showInspector(commons);
+  assert.ok(inspector.innerHTML.includes('This civic building cannot be expanded.'));
+  assert.doesNotMatch(inspector.innerHTML, /living-layers|data-transform-preview|data-transform-confirm/);
+});
+
 test('la commande de rénovation paie le moteur, actualise le profil et conserve le modèle', () => {
   const { engine, workshop, inspector, ui, syncs } = fixture();
   engine.state.phase = 3; workshop.age = 30; engine.state.res.materials = 40;
@@ -78,6 +89,20 @@ test('la commande de rénovation paie le moteur, actualise le profil et conserve
   assert.equal(inspector.querySelectorAll('[data-conversion]').length, 0);
   assert.equal(document.activeElement, inspector.converted);
   assert.equal(syncs(), 1);
+});
+
+test('NILO-007 les deux bannières séparent la coche et le nom converti', () => {
+  const { engine, workshop, inspector, ui } = fixture();
+  engine.state.phase = 3; workshop.age = 30; engine.state.res.materials = 100; engine.state.res.money = 1000;
+  engine.convertBuilding(workshop, 'workshop_repair');
+  ui.showInspector(workshop);
+  assert.match(inspector.innerHTML, /class="conversion-check" aria-hidden="true">✓<\/span> <span class="converted-name">Maintenance workshop/);
+  engine.state.unlocked.add('warehouse');
+  const warehouse = engine.place('warehouse', 2, 7);
+  warehouse.age = 20;
+  engine.convertBuilding(warehouse, 'warehouse_hall');
+  ui.showInspector(warehouse);
+  assert.match(inspector.innerHTML, /class="conversion-check" aria-hidden="true">✓<\/span> <span class="converted-name">Neighborhood hall/);
 });
 
 test('un contrôle devenu périmé ne rénove pas un bâtiment démoli', () => {
