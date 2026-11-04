@@ -1,25 +1,60 @@
 {
   "game": "Palimpsity",
-  "version": "0.1.1-neighbourhood",
+  "version": "living-layers",
+  "parent": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
+  "source": "a7998e2",
   "artifact": "dist/palimpsity-mvp.html",
-  "artifactSha256": "4f559952ed9b897c2d0efc34fab70f400204b8cf10fd6983d99ed5acded80f9b",
-  "artifactBytes": 13301869,
-  "models": 18,
-  "referencedGlbs": 39,
-  "publicationFilesAreExplicitExport": true,
+  "artifactSha256": "49fba91a84a7c44da980f0bc228c2c0e04e49ab84e2fc666aef5ff3b2e64f4f0",
+  "artifactBytes": 16445352,
+  "legacyModels": 18,
+  "livingLayersModules": 45,
+  "referencedGlbs": 84,
+  "publicationFilesAreExplicitExport": false,
   "sourceChecks": {
-    "nodeTestsPassed": 55,
-    "embeddedGlbsParsedWithoutFetch": 39,
+    "nodeTestsPassed": 100,
+    "embeddedGlbsParsedWithoutFetch": 84,
     "sourceArtifactMatch": true
   },
   "browserValidation": {
-    "scope": "isolated headless Chromium, normal UI and canvas keyboard only",
-    "challengeCompletedAtTick": 13,
-    "timeoutAtTick": 120,
-    "bestSurvivesReload": true,
-    "classicReset": true,
-    "frenchResult": true,
-    "pageErrors": 0
+    "scope": "isolated headless Chrome 156, SwiftShader, standalone offline, real public UI and engine actions",
+    "report": "docs/living-layers/observed-results.md",
+    "status": "passed",
+    "scenariosPassed": 5,
+    "elevatedCity": true,
+    "mixedCityConversions": [
+      "workshop_repair",
+      "warehouse_hall"
+    ],
+    "cameraInspectionCycles": 3,
+    "nativeViewports": [
+      "1280x720@1",
+      "1920x1080@2",
+      "390x844@2",
+      "3840x2160@1"
+    ],
+    "denseHigh": {
+      "fps": 0.77,
+      "meanFrameMs": 1296.07,
+      "p95FrameMs": 1350.0,
+      "drawCalls": 1311,
+      "triangles": 235799,
+      "drawingBuffer": "3840x2160"
+    },
+    "denseLow": {
+      "fps": 3.65,
+      "meanFrameMs": 273.88,
+      "p95FrameMs": 283.4,
+      "drawCalls": 1301,
+      "triangles": 235559,
+      "drawingBuffer": "1920x1080"
+    },
+    "riverCharters": {
+      "gardensCompletedAtTick": 161,
+      "workshopsCompletedAtTick": 161,
+      "naturalBudgetEur": 600
+    },
+    "pageErrors": 0,
+    "externalRequests": 0
   },
   "buildFormat": "readable whitespace; compact identifiers and expressions"
 }

@@ -57,7 +57,7 @@ async function validateOutputs() {
   assert(JSON.stringify(gameMap.terrain) === JSON.stringify(genTerrain()), "game-map.json ne correspond pas à genTerrain()");
 
   const manifest = JSON.parse(await readFile(path.join(outputDir, "asset-manifest.json"), "utf8"));
-  assert(Object.keys(manifest).sort().join(",") === "decor,models,terrain,transportVariants", "Manifeste: structure racine invalide");
+  assert(Object.keys(manifest).sort().join(",") === "decor,layers,models,terrain,transportVariants", "Manifeste: structure racine invalide");
   assert(manifest.terrain === "terrain-game.glb", "Manifeste: terrain invalide");
   assert(Object.keys(manifest.models).length === 18 && catalogModelIds.every((id) => id in manifest.models), "Manifeste: les 18 ids sont requis");
   for (const [id, entry] of Object.entries(manifest.models)) {
@@ -74,9 +74,26 @@ async function validateOutputs() {
   }
   assert(manifest.decor.forest === "forest.glb" && manifest.decor.hill === "hill.glb" && manifest.decor.fertile === "fertile.glb", "Manifeste: décors invalides");
 
+  const families = ["banks", "works", "gardens"];
+  const layerKeys = [
+    ...families.flatMap((family) => [0, 1, 2].map((variant) => `base_house_${family}_${variant}`)),
+    ...families.flatMap((family) => [0, 1].map((variant) => `base_workshop_${family}_${variant}`)),
+    ...families.map((family) => `base_warehouse_${family}`),
+    ...families.map((family) => `base_shop_${family}`),
+    "base_civic",
+    ...families.flatMap((family) => [0, 1, 2].map((variant) => `floor_${family}_${variant}`)),
+    ...families.flatMap((family) => [0, 1].map((variant) => `roof_traditional_${family}_${variant}`)),
+    ...families.map((family) => `roof_garden_${family}`),
+    ...families.map((family) => `roof_productive_${family}`),
+    "conversion_workshop_repair", "conversion_warehouse_hall",
+  ];
+  assert(layerKeys.length === 45 && manifest.layers?.floorHeight === 0.48, "Manifeste: contrat layers invalide");
+  assert(Object.keys(manifest.layers.modules ?? {}).sort().join(",") === [...layerKeys].sort().join(","), "Manifeste: les 45 modules layers sont requis");
+  for (const key of layerKeys) assert(manifest.layers.modules[key].file === `layers/${key}.glb`, `Manifeste: module ${key} invalide`);
+
   const glbFiles = collectGlbFiles(manifest);
   glbFiles.add("terrain.glb");
-  assert(glbFiles.size === 40, `40 GLB attendus, ${glbFiles.size} trouvés`);
+  assert(glbFiles.size === 85, `85 GLB attendus, ${glbFiles.size} trouvés`);
   for (const file of [...glbFiles, "palimpsity-diorama.blend", "preview.png", "assets-preview.png", "assets-preview-18.png", "game-terrain-preview.png", "vegetation-preview.png", "rear-preview.png"]) {
     const info = await stat(path.join(outputDir, file));
     assert(info.size >= 1024, `${file} est vide ou incomplet.`);
@@ -85,16 +102,13 @@ async function validateOutputs() {
     const data = await readFile(path.join(outputDir, file));
     assert(data.toString("ascii", 0, 4) === "glTF" && data.readUInt32LE(4) === 2 && data.readUInt32LE(8) === data.length, `${file} n'est pas un GLB 2.0 valide.`);
   }
-  console.log(`Contrôle Node réussi: 18 modèles, 15 variantes, ${glbFiles.size} GLB, manifeste, cartes et six rendus.`);
+  console.log(`Contrôle Node réussi: 18 modèles, 15 variantes, 45 modules layers, ${glbFiles.size} GLB, manifeste, cartes et six rendus.`);
 }
 
-async function run() {
-  assert(typeof blender === "string" && existsSync(blender), "Set BLENDER_EXE to the absolute path of your Blender executable.");
-  assert(existsSync(script), `Script de génération introuvable: ${script}`);
-  await writeGameMap();
-  console.log(`Blender: ${blender}`);
+async function runBlender(scriptPath, extraArgs = []) {
+  assert(existsSync(scriptPath), `Script de génération introuvable: ${scriptPath}`);
   const code = await new Promise((resolve, reject) => {
-    const child = spawn(blender, ["--background", "--factory-startup", "--python-exit-code", "1", "--python", script], {
+    const child = spawn(blender, ["--background", "--factory-startup", "--python-exit-code", "1", "--python", scriptPath, ...extraArgs], {
       cwd: gameDir,
       stdio: "inherit",
       shell: false,
@@ -103,6 +117,14 @@ async function run() {
     child.on("exit", (code, signal) => signal ? reject(new Error(`Blender interrompu par ${signal}`)) : resolve(code));
   });
   assert(code === 0, `Blender a échoué avec le code ${code}.`);
+}
+
+async function run() {
+  assert(typeof blender === "string" && existsSync(blender), "Set BLENDER_EXE to the absolute path of your Blender executable.");
+  await writeGameMap();
+  console.log(`Blender: ${blender}`);
+  await runBlender(script);
+  await runBlender(path.join(gameDir, "art", "living-layers", "build_living_layers.py"), ["--", "--skip-render"]);
   await validateOutputs();
   console.log(`Assets prêts dans ${outputDir}`);
 }

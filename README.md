@@ -55,6 +55,30 @@ remain available, and returning to Classic city starts a fresh original game.
 This independent scenario was automatically produced by LOB7 Enhancement,
 with a bounded Kimi K3 implementation reviewed and integrated by Nilo.
 
+## Living Layers
+
+Transformable buildings keep their own architecture and history. Houses,
+workshops and warehouses can reach **four total levels**, houses can open a ground-floor shop,
+and traditional, garden and productive roofs have distinct appearances and
+simulation effects. Banks, Works and Gardens families offer three facade
+variants; style choices do not replace the building's actual economic role.
+
+From phase 3, an old workshop can become a **Maintenance workshop** and a
+central warehouse a **Neighborhood hall**. **Commons** adds a standalone civic
+building with local services; its clock-tower model is not stacked with generic
+floors or roofs. Inspect a building to preview complete before/after effects
+before confirming a transformation.
+
+The inspector's **Focus building** button frames the selected structure. The
+**Display & photo** panel provides High / Balanced / Low quality, Reduced
+effects and modular-roof visibility. Photo mode hides the interface and offers
+Day, Golden hour, Evening and Night lighting; Escape restores the interface.
+
+The standalone contains 18 legacy building models, 45 architectural modules and
+**84 embedded GLBs**. See the [player guide](game/README.md), the
+[asset catalogue and regeneration guide](game/art/LIVING_LAYERS.md), and the
+[delivery notes with native captures and measurements](docs/living-layers/DELIVERY.md).
+
 ## Develop
 
 Use Node.js 22 or newer. From `game/`, run:
@@ -73,7 +97,8 @@ Blender generator and active game tests. Historical prototypes are not part of
 this distribution. No private project history is included.
 
 The standalone loader parses embedded GLBs directly from memory, without fetching
-data URLs. `npm test` verifies all 39 models with network requests disabled.
+data URLs. The current `npm test` run passes **100 tests**, including parsing all
+84 embedded GLBs with network requests disabled.
 The export keeps readable JavaScript whitespace so static analyzers can parse
 conditional decimal expressions without confusing them with optional chaining.
 

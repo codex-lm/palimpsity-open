@@ -17,7 +17,10 @@ assert.ok(start >= 0 && middle > start && end > middle, 'Offline asset data must
 const embeddedManifest = JSON.parse(source.slice(start + prefix.length, middle));
 const assets = JSON.parse(source.slice(middle + separator.length, end));
 assert.deepEqual(embeddedManifest, manifest, 'The deliverable embeds the current manifest');
-assert.equal(Object.keys(manifest.models).length, 18);
+const legacyModels = Object.keys(manifest.models || {});
+assert.ok(legacyModels.length > 0, 'Legacy buildings retain their models');
+assert.equal(manifest.models.commons, undefined, 'Commons is intentionally modular rather than legacy');
+assert.match(manifest.layers?.modules?.base_civic?.file || '', /\.glb$/i, 'Commons has a civic base module');
 const files = new Set();
 function collect(value) {
   if (typeof value === 'string' && /\.glb$/i.test(value)) files.add(value);
@@ -51,4 +54,4 @@ const bundle = await esbuild.build({
 const js = bundle.outputFiles[0].text.replace(/<\/script/gi, '<\\/script').replace(/[ \t]+$/gm, '');
 assert.ok(!js.includes('./art/diorama/'), 'Standalone code must not retain development asset URLs');
 assert.ok(source.includes(`<script type="module">\n${js}\n</script>`), 'The actual delivered code exactly matches the current source bundle');
-console.log(JSON.stringify({ result: 'PASS', sourceBundleMatches: true, models: 18, embeddedGLBs: files.size, bytes: Buffer.byteLength(source), sha256: createHash('sha256').update(source).digest('hex'), browserValidation: false }, null, 2));
+console.log(JSON.stringify({ result: 'PASS', sourceBundleMatches: true, legacyModels: legacyModels.length, modular: !manifest.models.commons, embeddedGLBs: files.size, bytes: Buffer.byteLength(source), sha256: createHash('sha256').update(source).digest('hex'), browserValidation: false }, null, 2));

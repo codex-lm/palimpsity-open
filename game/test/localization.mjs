@@ -79,7 +79,7 @@ test('locale subscribers can update the current screen and unsubscribe', () => {
 });
 
 test('the whole building catalog and dynamic messages have French equivalents', () => {
-  const expected = ['Maison', 'Puits', 'Ferme', 'Atelier', 'Marché local', 'Chemin', 'Parc', 'Route', 'Centrale thermique', 'Usine', 'Entrepôt central', "Station d'eau", 'Immeuble dense', 'Dépôt local', 'Tram', 'Centre de maintenance', 'Serre chauffée', 'Centre de recyclage'];
+  const expected = ['Maison', 'Puits', 'Ferme', 'Atelier', 'Marché local', 'Chemin', 'Parc', 'Route', 'Centrale thermique', 'Usine', 'Entrepôt central', "Station d'eau", 'Immeuble dense', 'Dépôt local', 'Tram', 'Communs', 'Centre de maintenance', 'Serre chauffée', 'Centre de recyclage'];
   assert.deepEqual(Object.values(BUILDINGS).map(building => translate(building.name, 'fr')), expected);
   for (const building of Object.values(BUILDINGS)) assert.notEqual(translate(building.desc, 'fr'), building.desc, `${building.id} description needs French copy`);
   assert.equal(translate('Choose a tile for house · R to rotate', 'fr'), 'Choisis une case pour maison · R pour pivoter');
@@ -89,6 +89,23 @@ test('the whole building catalog and dynamic messages have French equivalents', 
   assert.equal(translate('65 € + 20 materials', 'fr'), '65 € + 20 matériaux');
   assert.equal(translate('An unfamiliar technical error', 'fr'), 'An unfamiliar technical error');
   assert.equal(translate('House', 'en'), 'House');
+});
+
+test('Living Layers shop profiles, tags and controls have complete French copy', () => {
+  const engine = new CityEngine();
+  engine.state.phase = 4;
+  engine.state.res.money = 1000;
+  engine.state.res.materials = 100;
+  const building = engine.place('house', 0, 0);
+  assert.equal(engine.transformBuilding(building, 'base_shop'), true);
+  const profile = engine.profileOf(building);
+  assert.equal(profile.name, 'Ground-floor shop');
+  assert.equal(translate(profile.name, 'fr'), 'Boutique au rez-de-chaussée');
+  assert.equal(translate(profile.desc, 'fr'), 'Une boutique au rez-de-chaussée avec du personnel, des livraisons locales et des logements aux étages. Ses besoins en nourriture, eau et énergie sont réels.');
+  assert.equal(translate('commercial', 'fr'), 'marchand');
+  assert.equal(translate('dense', 'fr'), 'densifié');
+  assert.equal(translate('Living Layers', 'fr'), 'Couches vivantes');
+  assert.equal(translate('Pause', 'fr'), 'Pause');
 });
 
 class TextBoundary {

@@ -1,0 +1,5729 @@
+{
+  "generatedAt": "2026-11-04T10:18:03.876Z",
+  "revision": "a7998e21718efcbfb47a12b3ed538c00ca956bb3",
+  "machine": {
+    "platform": "win32",
+    "architecture": "x64",
+    "node": "v24.22.1",
+    "processor": "AMD Ryzen 9 5950X 16-Core Processor            ",
+    "logicalProcessors": 32,
+    "totalMemoryBytes": 68645154816
+  },
+  "conditions": {
+    "browserMode": "isolated temporary Chrome profile, new headless mode, offline network emulation",
+    "renderer": "SwiftShader requested with --use-angle=swiftshader; not a hardware-GPU benchmark",
+    "simulation": "paused for visual measurements; elevated/mixed/dense fixtures explicitly prepare phase 4, 5000 EUR and 500 materials; transformations and conversions use real public APIs; River Pact routes retain natural 600 EUR starts",
+    "sampleFrames": 30,
+    "viewports": [
+      {
+        "id": "1280x720",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      {
+        "id": "1920x1080-high",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      {
+        "id": "390x844-high",
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      {
+        "id": "3840x2160",
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1
+      }
+    ],
+    "note": "390 px is CSS viewport width; high profiles use DPR 2 and screenshots retain physical pixels."
+  },
+  "export": {
+    "file": "C:\\dev\\lob7-publication-flow\\.work\\kimi-palimpsity-living-layers\\dist\\palimpsity-mvp.html",
+    "bytes": 16445352,
+    "gzipBytes": 2668053
+  },
+  "scenarios": [
+    {
+      "name": "elevated city",
+      "status": "passed",
+      "durationMs": 30614,
+      "details": {
+        "placed": {
+          "houses": [
+            {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 2,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 3,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 4,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 5,
+              "r": 6
+            }
+          ],
+          "wells": [
+            {
+              "id": "well",
+              "c": 6,
+              "r": 6
+            },
+            {
+              "id": "well",
+              "c": 7,
+              "r": 6
+            },
+            {
+              "id": "well",
+              "c": 0,
+              "r": 7
+            }
+          ],
+          "farms": [
+            {
+              "id": "farm",
+              "c": 1,
+              "r": 7
+            },
+            {
+              "id": "farm",
+              "c": 2,
+              "r": 7
+            }
+          ],
+          "workshops": [
+            {
+              "id": "workshop",
+              "c": 3,
+              "r": 7
+            }
+          ],
+          "markets": [
+            {
+              "id": "market",
+              "c": 4,
+              "r": 7
+            }
+          ],
+          "parks": [
+            {
+              "id": "park",
+              "c": 5,
+              "r": 7
+            }
+          ]
+        },
+        "actions": [
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            "id": "family_gardens",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense",
+                "green",
+                "cooling",
+                "low_heat"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 4
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6,
+                "trust": 1
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5,
+                "cooling": 4,
+                "ecology": 1
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "garden",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "garden",
+              "family": "gardens",
+              "variant": 0
+            },
+            "cost": {
+              "money": 12,
+              "materials": 2
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            "id": "variant_1",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense",
+                "green",
+                "cooling",
+                "low_heat"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 4
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6,
+                "trust": 1
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5,
+                "cooling": 4,
+                "ecology": 1
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "garden",
+                "family": "gardens",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "garden",
+              "family": "gardens",
+              "variant": 1
+            },
+            "cost": {
+              "money": 8,
+              "materials": 1
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            "id": "family_works",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "green",
+                "cooling",
+                "low_heat"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 3
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4,
+                "trust": 1
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25,
+                "cooling": 4,
+                "ecology": 1
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "garden",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "garden",
+              "family": "works",
+              "variant": 0
+            },
+            "cost": {
+              "money": 12,
+              "materials": 2
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            "id": "variant_2",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "green",
+                "cooling",
+                "low_heat"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 3
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4,
+                "trust": 1
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25,
+                "cooling": 4,
+                "ecology": 1
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "garden",
+                "family": "works",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "garden",
+              "family": "works",
+              "variant": 2
+            },
+            "cost": {
+              "money": 8,
+              "materials": 1
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 2,
+              "r": 6
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 2,
+              "r": 6
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          }
+        ],
+        "architecture": [
+          {
+            "id": "house",
+            "c": 0,
+            "r": 6,
+            "architecture": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "garden",
+              "family": "gardens",
+              "variant": 1
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 1,
+            "r": 6,
+            "architecture": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "garden",
+              "family": "works",
+              "variant": 2
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 2,
+            "r": 6,
+            "architecture": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          }
+        ],
+        "final": {
+          "tick": 12,
+          "phase": 4,
+          "outcome": null,
+          "money": 4670,
+          "materials": 446,
+          "population": 35.06930363715081,
+          "buildings": 14
+        }
+      }
+    },
+    {
+      "name": "mixed city, two conversions, camera and native viewports",
+      "status": "passed",
+      "durationMs": 360926,
+      "details": {
+        "placed": {
+          "houses": [
+            {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 2,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 3,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 4,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 5,
+              "r": 6
+            }
+          ],
+          "wells": [
+            {
+              "id": "well",
+              "c": 6,
+              "r": 6
+            },
+            {
+              "id": "well",
+              "c": 7,
+              "r": 6
+            },
+            {
+              "id": "well",
+              "c": 0,
+              "r": 7
+            }
+          ],
+          "farms": [
+            {
+              "id": "farm",
+              "c": 1,
+              "r": 7
+            },
+            {
+              "id": "farm",
+              "c": 2,
+              "r": 7
+            }
+          ],
+          "workshops": [
+            {
+              "id": "workshop",
+              "c": 3,
+              "r": 7
+            }
+          ],
+          "markets": [
+            {
+              "id": "market",
+              "c": 4,
+              "r": 7
+            }
+          ],
+          "parks": [
+            {
+              "id": "park",
+              "c": 5,
+              "r": 7
+            }
+          ],
+          "warehouses": [
+            {
+              "id": "warehouse",
+              "c": 6,
+              "r": 7
+            }
+          ]
+        },
+        "transformations": [
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            "id": "base_shop",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "shop",
+              "floors": 1,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 35,
+              "materials": 6
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 1,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          }
+        ],
+        "conversions": [
+          {
+            "cell": {
+              "id": "workshop",
+              "c": 3,
+              "r": 7
+            },
+            "id": "workshop_repair",
+            "cost": {
+              "money": 65,
+              "materials": 20
+            },
+            "conversion": "workshop_repair"
+          },
+          {
+            "cell": {
+              "id": "warehouse",
+              "c": 6,
+              "r": 7
+            },
+            "id": "warehouse_hall",
+            "cost": {
+              "money": 70,
+              "materials": 12
+            },
+            "conversion": "warehouse_hall"
+          }
+        ],
+        "measurements": [
+          {
+            "label": "mixed-1280x720-general",
+            "viewport": {
+              "id": "1280x720",
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            },
+            "frames": 30,
+            "meanFrameMs": 259.99333333333345,
+            "fps": 3.8462524680119987,
+            "p50FrameMs": 266.6000000000058,
+            "p95FrameMs": 266.6999999999971,
+            "maxFrameMs": 266.70000000001164,
+            "drawCalls": 905,
+            "triangles": 185424,
+            "rendererMemory": {
+              "geometries": 139,
+              "textures": 1,
+              "programs": 7
+            },
+            "jsHeap": {
+              "usedBytes": 56800000,
+              "totalBytes": 72200000,
+              "limitBytes": 3760000000
+            },
+            "css": {
+              "width": 1280,
+              "height": 720
+            },
+            "canvasCss": {
+              "width": 1280,
+              "height": 720
+            },
+            "devicePixelRatio": 1,
+            "quality": "high",
+            "rendererPixelRatio": 1,
+            "drawingBuffer": {
+              "width": 1280,
+              "height": 720
+            },
+            "cdpMetrics": {
+              "Documents": 1,
+              "Nodes": 719,
+              "JSHeapUsedSize": 29116188,
+              "JSHeapTotalSize": 40673280
+            }
+          },
+          {
+            "label": "mixed-1920x1080-high-general",
+            "viewport": {
+              "id": "1920x1080-high",
+              "width": 1920,
+              "height": 1080,
+              "dpr": 2
+            },
+            "frames": 30,
+            "meanFrameMs": 1131.6366666666668,
+            "fps": 0.883675855913706,
+            "p50FrameMs": 1133.3000000000175,
+            "p95FrameMs": 1183.3999999999942,
+            "maxFrameMs": 1250,
+            "drawCalls": 905,
+            "triangles": 185424,
+            "rendererMemory": {
+              "geometries": 139,
+              "textures": 1,
+              "programs": 7
+            },
+            "jsHeap": {
+              "usedBytes": 56800000,
+              "totalBytes": 72200000,
+              "limitBytes": 3760000000
+            },
+            "css": {
+              "width": 1920,
+              "height": 1080
+            },
+            "canvasCss": {
+              "width": 1920,
+              "height": 1080
+            },
+            "devicePixelRatio": 2,
+            "quality": "high",
+            "rendererPixelRatio": 2,
+            "drawingBuffer": {
+              "width": 3840,
+              "height": 2160
+            },
+            "cdpMetrics": {
+              "Documents": 1,
+              "Nodes": 720,
+              "JSHeapUsedSize": 32192700,
+              "JSHeapTotalSize": 40935424
+            }
+          },
+          {
+            "label": "mixed-390x844-high-general",
+            "viewport": {
+              "id": "390x844-high",
+              "width": 390,
+              "height": 844,
+              "dpr": 2
+            },
+            "frames": 30,
+            "meanFrameMs": 234.43666666666687,
+            "fps": 4.265544354552043,
+            "p50FrameMs": 233.30000000001746,
+            "p95FrameMs": 250,
+            "maxFrameMs": 250,
+            "drawCalls": 914,
+            "triangles": 186580,
+            "rendererMemory": {
+              "geometries": 139,
+              "textures": 1,
+              "programs": 7
+            },
+            "jsHeap": {
+              "usedBytes": 56800000,
+              "totalBytes": 72200000,
+              "limitBytes": 3760000000
+            },
+            "css": {
+              "width": 390,
+              "height": 844
+            },
+            "canvasCss": {
+              "width": 390,
+              "height": 844
+            },
+            "devicePixelRatio": 2,
+            "quality": "high",
+            "rendererPixelRatio": 2,
+            "drawingBuffer": {
+              "width": 780,
+              "height": 1688
+            },
+            "cdpMetrics": {
+              "Documents": 1,
+              "Nodes": 843,
+              "JSHeapUsedSize": 29748636,
+              "JSHeapTotalSize": 34119680
+            }
+          },
+          {
+            "label": "mixed-3840x2160-general",
+            "viewport": {
+              "id": "3840x2160",
+              "width": 3840,
+              "height": 2160,
+              "dpr": 1
+            },
+            "frames": 30,
+            "meanFrameMs": 1118.3,
+            "fps": 0.8942144326209426,
+            "p50FrameMs": 1116.600000000035,
+            "p95FrameMs": 1150,
+            "maxFrameMs": 1166.600000000035,
+            "drawCalls": 905,
+            "triangles": 185424,
+            "rendererMemory": {
+              "geometries": 139,
+              "textures": 1,
+              "programs": 7
+            },
+            "jsHeap": {
+              "usedBytes": 56800000,
+              "totalBytes": 72200000,
+              "limitBytes": 3760000000
+            },
+            "css": {
+              "width": 3840,
+              "height": 2160
+            },
+            "canvasCss": {
+              "width": 3840,
+              "height": 2160
+            },
+            "devicePixelRatio": 1,
+            "quality": "high",
+            "rendererPixelRatio": 1,
+            "drawingBuffer": {
+              "width": 3840,
+              "height": 2160
+            },
+            "cdpMetrics": {
+              "Documents": 1,
+              "Nodes": 767,
+              "JSHeapUsedSize": 29918496,
+              "JSHeapTotalSize": 39624704
+            }
+          }
+        ],
+        "final": {
+          "tick": 30,
+          "phase": 4,
+          "outcome": null,
+          "money": 4857.273195012261,
+          "materials": 368,
+          "population": 23.142875289165783,
+          "buildings": 15
+        }
+      }
+    },
+    {
+      "name": "dense city — high and low quality",
+      "status": "passed",
+      "durationMs": 118787,
+      "details": {
+        "placed": {
+          "houses": [
+            {
+              "id": "house",
+              "c": 0,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 1,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 2,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 3,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 4,
+              "r": 6
+            },
+            {
+              "id": "house",
+              "c": 5,
+              "r": 6
+            }
+          ],
+          "wells": [
+            {
+              "id": "well",
+              "c": 6,
+              "r": 6
+            },
+            {
+              "id": "well",
+              "c": 7,
+              "r": 6
+            },
+            {
+              "id": "well",
+              "c": 0,
+              "r": 7
+            }
+          ],
+          "farms": [
+            {
+              "id": "farm",
+              "c": 1,
+              "r": 7
+            },
+            {
+              "id": "farm",
+              "c": 2,
+              "r": 7
+            }
+          ],
+          "workshops": [
+            {
+              "id": "workshop",
+              "c": 3,
+              "r": 7
+            }
+          ],
+          "markets": [
+            {
+              "id": "market",
+              "c": 4,
+              "r": 7
+            }
+          ],
+          "parks": [
+            {
+              "id": "park",
+              "c": 5,
+              "r": 7
+            }
+          ],
+          "denseHouses": [
+            {
+              "id": "house",
+              "c": 0,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 1,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 2,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 3,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 4,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 5,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 6,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 7,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 8,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 9,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 10,
+              "r": 0
+            },
+            {
+              "id": "house",
+              "c": 11,
+              "r": 0
+            }
+          ]
+        },
+        "actions": [
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 0,
+              "r": 0
+            },
+            "id": "roof_productive",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 80,
+              "materials": 16
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 1,
+              "r": 0
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 2,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 2,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 2,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 2,
+              "r": 0
+            },
+            "id": "roof_productive",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 80,
+              "materials": 16
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 3,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 3,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 3,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 3,
+              "r": 0
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 4,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 4,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 4,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 4,
+              "r": 0
+            },
+            "id": "roof_productive",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 80,
+              "materials": 16
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 5,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 5,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 5,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 5,
+              "r": 0
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 6,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 6,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 6,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 6,
+              "r": 0
+            },
+            "id": "roof_productive",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 80,
+              "materials": 16
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 7,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 7,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 7,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 7,
+              "r": 0
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 8,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 8,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 8,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 8,
+              "r": 0
+            },
+            "id": "roof_productive",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 80,
+              "materials": 16
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 9,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 9,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 9,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 9,
+              "r": 0
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 10,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 10,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 10,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 10,
+              "r": 0
+            },
+            "id": "roof_productive",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 80,
+              "materials": 16
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 11,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 1,
+                "water": 1
+              },
+              "outputs": {
+                "population": 6,
+                "workers": 3,
+                "money": 2
+              },
+              "ext": {},
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.25,
+              "architecture": {
+                "base": "residential",
+                "floors": 1,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 2,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 30,
+              "materials": 4
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 11,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential"
+              ],
+              "inputs": {
+                "food": 2,
+                "water": 2
+              },
+              "outputs": {
+                "population": 12,
+                "workers": 6,
+                "money": 4
+              },
+              "ext": {
+                "heat": 0.35,
+                "congestion": 0.3,
+                "density": 1,
+                "maintenance": 0.25
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.5,
+              "architecture": {
+                "base": "residential",
+                "floors": 2,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 3,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 45,
+              "materials": 8
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 11,
+              "r": 0
+            },
+            "id": "add_floor",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 3,
+                "water": 3
+              },
+              "outputs": {
+                "population": 18,
+                "workers": 9,
+                "money": 6
+              },
+              "ext": {
+                "heat": 0.7,
+                "congestion": 0.6,
+                "density": 2,
+                "maintenance": 0.5
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 0.75,
+              "architecture": {
+                "base": "residential",
+                "floors": 3,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "traditional",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 70,
+              "materials": 14
+            }
+          },
+          {
+            "cell": {
+              "id": "house",
+              "c": 11,
+              "r": 0
+            },
+            "id": "roof_garden",
+            "before": {
+              "id": "house",
+              "name": "House",
+              "color": "#c9a36b",
+              "cost": {
+                "money": 40
+              },
+              "tags": [
+                "local",
+                "low_energy",
+                "repairable",
+                "residential",
+                "dense"
+              ],
+              "inputs": {
+                "food": 4,
+                "water": 4
+              },
+              "outputs": {
+                "population": 24,
+                "workers": 12,
+                "money": 8
+              },
+              "ext": {
+                "heat": 1.0499999999999998,
+                "congestion": 0.8999999999999999,
+                "density": 3,
+                "maintenance": 0.75
+              },
+              "desc": "Homes for your residents. The foundation of the city, with low maintenance needs and little heat.",
+              "mods": {
+                "survival": 1,
+                "production": 1,
+                "logistics": 1,
+                "maintenance_heat": 1
+              },
+              "phase": 1,
+              "upkeep": 1,
+              "architecture": {
+                "base": "residential",
+                "floors": 4,
+                "roof": "traditional",
+                "family": "banks",
+                "variant": 0
+              }
+            },
+            "after": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "cost": {
+              "money": 55,
+              "materials": 10
+            }
+          }
+        ],
+        "architecture": [
+          {
+            "id": "house",
+            "c": 0,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 1,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 2,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 3,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 4,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 5,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 6,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 7,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 8,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 9,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 10,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "productive",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          },
+          {
+            "id": "house",
+            "c": 11,
+            "r": 0,
+            "architecture": {
+              "base": "residential",
+              "floors": 4,
+              "roof": "garden",
+              "family": "banks",
+              "variant": 0
+            },
+            "conversion": null
+          }
+        ],
+        "high": {
+          "label": "dense-1920x1080-high",
+          "viewport": {
+            "id": "1920x1080-high",
+            "width": 1920,
+            "height": 1080,
+            "dpr": 2
+          },
+          "frames": 30,
+          "meanFrameMs": 1296.0700000000002,
+          "fps": 0.7715632643298587,
+          "p50FrameMs": 1299.9000000000087,
+          "p95FrameMs": 1350,
+          "maxFrameMs": 1400,
+          "drawCalls": 1311,
+          "triangles": 235799,
+          "rendererMemory": {
+            "geometries": 123,
+            "textures": 1,
+            "programs": 8
+          },
+          "jsHeap": {
+            "usedBytes": 56800000,
+            "totalBytes": 72200000,
+            "limitBytes": 3760000000
+          },
+          "css": {
+            "width": 1920,
+            "height": 1080
+          },
+          "canvasCss": {
+            "width": 1920,
+            "height": 1080
+          },
+          "devicePixelRatio": 2,
+          "quality": "high",
+          "rendererPixelRatio": 2,
+          "drawingBuffer": {
+            "width": 3840,
+            "height": 2160
+          },
+          "cdpMetrics": {
+            "Documents": 1,
+            "Nodes": 711,
+            "JSHeapUsedSize": 31002504,
+            "JSHeapTotalSize": 35954688
+          }
+        },
+        "low": {
+          "label": "dense-1920x1080-low",
+          "viewport": {
+            "id": "1920x1080-high",
+            "width": 1920,
+            "height": 1080,
+            "dpr": 2
+          },
+          "frames": 30,
+          "meanFrameMs": 273.8799999999998,
+          "fps": 3.651234117131593,
+          "p50FrameMs": 266.70000000001164,
+          "p95FrameMs": 283.40000000000873,
+          "maxFrameMs": 283.5,
+          "drawCalls": 1301,
+          "triangles": 235559,
+          "rendererMemory": {
+            "geometries": 123,
+            "textures": 0,
+            "programs": 15
+          },
+          "jsHeap": {
+            "usedBytes": 56800000,
+            "totalBytes": 72200000,
+            "limitBytes": 3760000000
+          },
+          "css": {
+            "width": 1920,
+            "height": 1080
+          },
+          "canvasCss": {
+            "width": 1920,
+            "height": 1080
+          },
+          "devicePixelRatio": 2,
+          "quality": "low",
+          "rendererPixelRatio": 1,
+          "drawingBuffer": {
+            "width": 1920,
+            "height": 1080
+          },
+          "cdpMetrics": {
+            "Documents": 1,
+            "Nodes": 711,
+            "JSHeapUsedSize": 34360968,
+            "JSHeapTotalSize": 51159040
+          }
+        },
+        "final": {
+          "tick": 12,
+          "phase": 4,
+          "outcome": null,
+          "money": 1970,
+          "materials": 32,
+          "population": 35.06930363715081,
+          "buildings": 26
+        }
+      }
+    },
+    {
+      "name": "River Pact — Garden commons",
+      "status": "passed",
+      "durationMs": 54311,
+      "details": {
+        "charter": "gardens",
+        "actions": [
+          {
+            "id": "house",
+            "c": 0,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 1,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 2,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 3,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 4,
+            "r": 6
+          },
+          {
+            "id": "well",
+            "c": 5,
+            "r": 6
+          },
+          {
+            "id": "well",
+            "c": 6,
+            "r": 6
+          },
+          {
+            "id": "farm",
+            "c": 0,
+            "r": 7
+          },
+          {
+            "id": "market",
+            "c": 7,
+            "r": 6
+          },
+          {
+            "id": "well",
+            "c": 1,
+            "r": 7
+          },
+          {
+            "id": "farm",
+            "c": 2,
+            "r": 7
+          },
+          {
+            "id": "park",
+            "c": 3,
+            "r": 7
+          },
+          {
+            "id": "park",
+            "c": 4,
+            "r": 7
+          },
+          {
+            "id": "house",
+            "c": 0,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 1,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 2,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 3,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 4,
+            "r": 0
+          },
+          {
+            "id": "well",
+            "c": 5,
+            "r": 0
+          },
+          {
+            "id": "well",
+            "c": 6,
+            "r": 0
+          },
+          {
+            "id": "well",
+            "c": 7,
+            "r": 0
+          },
+          {
+            "id": "farm",
+            "c": 0,
+            "r": 1
+          },
+          {
+            "id": "farm",
+            "c": 1,
+            "r": 1
+          },
+          {
+            "id": "market",
+            "c": 2,
+            "r": 1
+          },
+          {
+            "id": "park",
+            "c": 3,
+            "r": 1
+          },
+          {
+            "id": "park",
+            "c": 4,
+            "r": 1
+          }
+        ],
+        "progress": {
+          "stage": 2,
+          "stageTitle": "Keep the river pact",
+          "stageDescription": "Act 3 of 3 — Keep the river pact. Drought at turns 120–149: water output at 55%. Hold 12 consecutive drought turns with 36+ residents and both districts supplied, then reach 48 residents for 12 consecutive turns. Finish by turn 240.",
+          "status": "success",
+          "charter": "gardens",
+          "awaitingCharter": false,
+          "weather": {
+            "kind": "recovery",
+            "multiplier": 1,
+            "startsAt": 120,
+            "endsAt": 150
+          },
+          "droughtHeld": true,
+          "streak": 12,
+          "tick": 161,
+          "deadlineTicks": 240,
+          "finishedAtTick": 161,
+          "failReason": null,
+          "rows": [
+            {
+              "key": "drought-hold",
+              "label": "Hold 12 consecutive drought turns (turns 120–149)",
+              "met": true,
+              "detail": "Achieved — the city stayed supplied through the drought"
+            },
+            {
+              "key": "population",
+              "label": "Reach 48 residents after the drought",
+              "met": true,
+              "detail": "65 / 48 residents"
+            },
+            {
+              "key": "districts",
+              "label": "Keep both districts supplied and the charter standing",
+              "met": true,
+              "detail": "2 / 2 qualifying districts"
+            },
+            {
+              "key": "charter-parks",
+              "label": "Garden commons: 2 active parks per district",
+              "met": true,
+              "detail": "NW: 2/2 · SW: 2/2"
+            },
+            {
+              "key": "charter-wells",
+              "label": "Garden commons: 2 active wells per district",
+              "met": true,
+              "detail": "NW: 3/2 · SW: 3/2"
+            },
+            {
+              "key": "money",
+              "label": "Keep finances non-negative",
+              "met": true,
+              "detail": "Balance 2398 €"
+            },
+            {
+              "key": "hold",
+              "label": "Hold 12 consecutive turns after the drought",
+              "met": true,
+              "detail": "12 / 12 consecutive recovery turns"
+            },
+            {
+              "key": "deadline",
+              "label": "Finish by turn 240",
+              "met": true,
+              "detail": "Turn 161 / 240 · one turn is 0.6 s of simulation; pauses are free"
+            }
+          ]
+        },
+        "final": {
+          "tick": 161,
+          "phase": 2,
+          "outcome": null,
+          "money": 2398.001175746969,
+          "materials": 0,
+          "population": 64.79995790841959,
+          "buildings": 26
+        }
+      }
+    },
+    {
+      "name": "River Pact — Makers quarter",
+      "status": "passed",
+      "durationMs": 55254,
+      "details": {
+        "charter": "workshops",
+        "actions": [
+          {
+            "id": "house",
+            "c": 0,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 1,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 2,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 3,
+            "r": 6
+          },
+          {
+            "id": "house",
+            "c": 4,
+            "r": 6
+          },
+          {
+            "id": "well",
+            "c": 5,
+            "r": 6
+          },
+          {
+            "id": "well",
+            "c": 6,
+            "r": 6
+          },
+          {
+            "id": "farm",
+            "c": 0,
+            "r": 7
+          },
+          {
+            "id": "market",
+            "c": 7,
+            "r": 6
+          },
+          {
+            "id": "well",
+            "c": 1,
+            "r": 7
+          },
+          {
+            "id": "farm",
+            "c": 2,
+            "r": 7
+          },
+          {
+            "id": "park",
+            "c": 3,
+            "r": 7
+          },
+          {
+            "id": "workshop",
+            "c": 4,
+            "r": 7
+          },
+          {
+            "id": "house",
+            "c": 0,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 1,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 2,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 3,
+            "r": 0
+          },
+          {
+            "id": "house",
+            "c": 4,
+            "r": 0
+          },
+          {
+            "id": "well",
+            "c": 5,
+            "r": 0
+          },
+          {
+            "id": "well",
+            "c": 6,
+            "r": 0
+          },
+          {
+            "id": "well",
+            "c": 7,
+            "r": 0
+          },
+          {
+            "id": "farm",
+            "c": 0,
+            "r": 1
+          },
+          {
+            "id": "farm",
+            "c": 1,
+            "r": 1
+          },
+          {
+            "id": "market",
+            "c": 2,
+            "r": 1
+          },
+          {
+            "id": "park",
+            "c": 3,
+            "r": 1
+          },
+          {
+            "id": "workshop",
+            "c": 4,
+            "r": 1
+          }
+        ],
+        "progress": {
+          "stage": 2,
+          "stageTitle": "Keep the river pact",
+          "stageDescription": "Act 3 of 3 — Keep the river pact. Drought at turns 120–149: water output at 55%. Hold 12 consecutive drought turns with 36+ residents and both districts supplied, then reach 48 residents for 12 consecutive turns. Finish by turn 240.",
+          "status": "success",
+          "charter": "workshops",
+          "awaitingCharter": false,
+          "weather": {
+            "kind": "recovery",
+            "multiplier": 1,
+            "startsAt": 120,
+            "endsAt": 150
+          },
+          "droughtHeld": true,
+          "streak": 12,
+          "tick": 161,
+          "deadlineTicks": 240,
+          "finishedAtTick": 161,
+          "failReason": null,
+          "rows": [
+            {
+              "key": "drought-hold",
+              "label": "Hold 12 consecutive drought turns (turns 120–149)",
+              "met": true,
+              "detail": "Achieved — the city stayed supplied through the drought"
+            },
+            {
+              "key": "population",
+              "label": "Reach 48 residents after the drought",
+              "met": true,
+              "detail": "65 / 48 residents"
+            },
+            {
+              "key": "districts",
+              "label": "Keep both districts supplied and the charter standing",
+              "met": true,
+              "detail": "2 / 2 qualifying districts"
+            },
+            {
+              "key": "charter-workshops",
+              "label": "Makers quarter: an active workshop per district",
+              "met": true,
+              "detail": "NW: 1/1 · SW: 1/1"
+            },
+            {
+              "key": "charter-markets",
+              "label": "Makers quarter: a local market per district",
+              "met": true,
+              "detail": "NW: 1/1 · SW: 1/1"
+            },
+            {
+              "key": "money",
+              "label": "Keep finances non-negative",
+              "met": true,
+              "detail": "Balance 2621 €"
+            },
+            {
+              "key": "hold",
+              "label": "Hold 12 consecutive turns after the drought",
+              "met": true,
+              "detail": "12 / 12 consecutive recovery turns"
+            },
+            {
+              "key": "deadline",
+              "label": "Finish by turn 240",
+              "met": true,
+              "detail": "Turn 161 / 240 · one turn is 0.6 s of simulation; pauses are free"
+            }
+          ]
+        },
+        "final": {
+          "tick": 161,
+          "phase": 2,
+          "outcome": null,
+          "money": 2620.818061795656,
+          "materials": 63.59003768264509,
+          "population": 64.79996418109599,
+          "buildings": 26
+        }
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "label": "mixed-1280x720-general",
+      "viewport": {
+        "id": "1280x720",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "frames": 30,
+      "meanFrameMs": 259.99333333333345,
+      "fps": 3.8462524680119987,
+      "p50FrameMs": 266.6000000000058,
+      "p95FrameMs": 266.6999999999971,
+      "maxFrameMs": 266.70000000001164,
+      "drawCalls": 905,
+      "triangles": 185424,
+      "rendererMemory": {
+        "geometries": 139,
+        "textures": 1,
+        "programs": 7
+      },
+      "jsHeap": {
+        "usedBytes": 56800000,
+        "totalBytes": 72200000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 1280,
+        "height": 720
+      },
+      "canvasCss": {
+        "width": 1280,
+        "height": 720
+      },
+      "devicePixelRatio": 1,
+      "quality": "high",
+      "rendererPixelRatio": 1,
+      "drawingBuffer": {
+        "width": 1280,
+        "height": 720
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 719,
+        "JSHeapUsedSize": 29116188,
+        "JSHeapTotalSize": 40673280
+      }
+    },
+    {
+      "label": "mixed-1920x1080-high-general",
+      "viewport": {
+        "id": "1920x1080-high",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "frames": 30,
+      "meanFrameMs": 1131.6366666666668,
+      "fps": 0.883675855913706,
+      "p50FrameMs": 1133.3000000000175,
+      "p95FrameMs": 1183.3999999999942,
+      "maxFrameMs": 1250,
+      "drawCalls": 905,
+      "triangles": 185424,
+      "rendererMemory": {
+        "geometries": 139,
+        "textures": 1,
+        "programs": 7
+      },
+      "jsHeap": {
+        "usedBytes": 56800000,
+        "totalBytes": 72200000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "quality": "high",
+      "rendererPixelRatio": 2,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 720,
+        "JSHeapUsedSize": 32192700,
+        "JSHeapTotalSize": 40935424
+      }
+    },
+    {
+      "label": "mixed-390x844-high-general",
+      "viewport": {
+        "id": "390x844-high",
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "frames": 30,
+      "meanFrameMs": 234.43666666666687,
+      "fps": 4.265544354552043,
+      "p50FrameMs": 233.30000000001746,
+      "p95FrameMs": 250,
+      "maxFrameMs": 250,
+      "drawCalls": 914,
+      "triangles": 186580,
+      "rendererMemory": {
+        "geometries": 139,
+        "textures": 1,
+        "programs": 7
+      },
+      "jsHeap": {
+        "usedBytes": 56800000,
+        "totalBytes": 72200000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasCss": {
+        "width": 390,
+        "height": 844
+      },
+      "devicePixelRatio": 2,
+      "quality": "high",
+      "rendererPixelRatio": 2,
+      "drawingBuffer": {
+        "width": 780,
+        "height": 1688
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 843,
+        "JSHeapUsedSize": 29748636,
+        "JSHeapTotalSize": 34119680
+      }
+    },
+    {
+      "label": "mixed-3840x2160-general",
+      "viewport": {
+        "id": "3840x2160",
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1
+      },
+      "frames": 30,
+      "meanFrameMs": 1118.3,
+      "fps": 0.8942144326209426,
+      "p50FrameMs": 1116.600000000035,
+      "p95FrameMs": 1150,
+      "maxFrameMs": 1166.600000000035,
+      "drawCalls": 905,
+      "triangles": 185424,
+      "rendererMemory": {
+        "geometries": 139,
+        "textures": 1,
+        "programs": 7
+      },
+      "jsHeap": {
+        "usedBytes": 56800000,
+        "totalBytes": 72200000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 3840,
+        "height": 2160
+      },
+      "canvasCss": {
+        "width": 3840,
+        "height": 2160
+      },
+      "devicePixelRatio": 1,
+      "quality": "high",
+      "rendererPixelRatio": 1,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 767,
+        "JSHeapUsedSize": 29918496,
+        "JSHeapTotalSize": 39624704
+      }
+    },
+    {
+      "label": "dense-1920x1080-high",
+      "viewport": {
+        "id": "1920x1080-high",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "frames": 30,
+      "meanFrameMs": 1296.0700000000002,
+      "fps": 0.7715632643298587,
+      "p50FrameMs": 1299.9000000000087,
+      "p95FrameMs": 1350,
+      "maxFrameMs": 1400,
+      "drawCalls": 1311,
+      "triangles": 235799,
+      "rendererMemory": {
+        "geometries": 123,
+        "textures": 1,
+        "programs": 8
+      },
+      "jsHeap": {
+        "usedBytes": 56800000,
+        "totalBytes": 72200000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "quality": "high",
+      "rendererPixelRatio": 2,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 711,
+        "JSHeapUsedSize": 31002504,
+        "JSHeapTotalSize": 35954688
+      }
+    },
+    {
+      "label": "dense-1920x1080-low",
+      "viewport": {
+        "id": "1920x1080-high",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "frames": 30,
+      "meanFrameMs": 273.8799999999998,
+      "fps": 3.651234117131593,
+      "p50FrameMs": 266.70000000001164,
+      "p95FrameMs": 283.40000000000873,
+      "maxFrameMs": 283.5,
+      "drawCalls": 1301,
+      "triangles": 235559,
+      "rendererMemory": {
+        "geometries": 123,
+        "textures": 0,
+        "programs": 15
+      },
+      "jsHeap": {
+        "usedBytes": 56800000,
+        "totalBytes": 72200000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "quality": "low",
+      "rendererPixelRatio": 1,
+      "drawingBuffer": {
+        "width": 1920,
+        "height": 1080
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 711,
+        "JSHeapUsedSize": 34360968,
+        "JSHeapTotalSize": 51159040
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "elevated-before-general",
+      "file": "captures/elevated-before-general.png",
+      "bytes": 320644,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "elevated-after-general",
+      "file": "captures/elevated-after-general.png",
+      "bytes": 326951,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "elevated-after-close-inspector",
+      "file": "captures/elevated-after-close-inspector.png",
+      "bytes": 375601,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-before-general",
+      "file": "captures/mixed-before-general.png",
+      "bytes": 323164,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-after-general",
+      "file": "captures/mixed-after-general.png",
+      "bytes": 326188,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-workshop-repair-close-inspector",
+      "file": "captures/mixed-workshop-repair-close-inspector.png",
+      "bytes": 407115,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-warehouse-hall-close-inspector",
+      "file": "captures/mixed-warehouse-hall-close-inspector.png",
+      "bytes": 401394,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-after-close-inspector",
+      "file": "captures/mixed-after-close-inspector.png",
+      "bytes": 384660,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-1280x720-general",
+      "file": "captures/mixed-1280x720-general.png",
+      "bytes": 368671,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-1280x720-close-inspector",
+      "file": "captures/mixed-1280x720-close-inspector.png",
+      "bytes": 384660,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "mixed-1920x1080-high-general",
+      "file": "captures/mixed-1920x1080-high-general.png",
+      "bytes": 1782189,
+      "width": 3840,
+      "height": 2160
+    },
+    {
+      "name": "mixed-1920x1080-high-close-inspector",
+      "file": "captures/mixed-1920x1080-high-close-inspector.png",
+      "bytes": 1856414,
+      "width": 3840,
+      "height": 2160
+    },
+    {
+      "name": "mixed-390x844-high-general",
+      "file": "captures/mixed-390x844-high-general.png",
+      "bytes": 327460,
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "name": "mixed-390x844-high-close-inspector",
+      "file": "captures/mixed-390x844-high-close-inspector.png",
+      "bytes": 300569,
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "name": "mixed-3840x2160-general",
+      "file": "captures/mixed-3840x2160-general.png",
+      "bytes": 1633152,
+      "width": 3840,
+      "height": 2160
+    },
+    {
+      "name": "mixed-3840x2160-close-inspector",
+      "file": "captures/mixed-3840x2160-close-inspector.png",
+      "bytes": 2024458,
+      "width": 3840,
+      "height": 2160
+    },
+    {
+      "name": "dense-1920x1080-high-general",
+      "file": "captures/dense-1920x1080-high-general.png",
+      "bytes": 1777733,
+      "width": 3840,
+      "height": 2160
+    },
+    {
+      "name": "dense-1920x1080-low-general",
+      "file": "captures/dense-1920x1080-low-general.png",
+      "bytes": 1584310,
+      "width": 3840,
+      "height": 2160
+    },
+    {
+      "name": "river-gardens-before-charter",
+      "file": "captures/river-gardens-before-charter.png",
+      "bytes": 192360,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "river-gardens-after-charter",
+      "file": "captures/river-gardens-after-charter.png",
+      "bytes": 304168,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "river-gardens-success-dialog",
+      "file": "captures/river-gardens-success-dialog.png",
+      "bytes": 223817,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "river-workshops-before-charter",
+      "file": "captures/river-workshops-before-charter.png",
+      "bytes": 192360,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "river-workshops-after-charter",
+      "file": "captures/river-workshops-after-charter.png",
+      "bytes": 304416,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "river-workshops-success-dialog",
+      "file": "captures/river-workshops-success-dialog.png",
+      "bytes": 223324,
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "diagnostics": {
+    "exceptions": [],
+    "pageErrors": [],
+    "cdpInterceptionErrors": [],
+    "blockedRequests": [],
+    "unexpectedRequests": [],
+    "chromeStderrTail": "e server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111851.580:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111852.341:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111852.589:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.192:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.347:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.409:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111853.828:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111854.358:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111854.439:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111855.247:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111855.386:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111856.259:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111856.396:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111857.273:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111857.412:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111858.281:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111858.420:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111859.295:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111859.433:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111900.311:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111900.435:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111901.312:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111901.437:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111902.325:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111902.450:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111903.338:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111903.463:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:103856:1104/111904.354:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111904.476:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111905.367:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111905.491:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111906.381:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111906.505:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111907.393:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111907.518:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111908.408:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111909.420:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111910.435:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111911.450:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111912.464:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111913.479:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111914.492:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111915.507:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111916.522:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111917.537:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111918.550:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111919.552:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111920.565:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111921.582:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n[5976:75124:1104/111922.596:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 25692: Access is denied. (0x5)\r\n"
+  },
+  "browser": {
+    "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.80",
+    "revision": "@fb096c0011f9d50f0a264a9376420cdea9c421e3",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.27"
+  },
+  "status": "passed"
+}

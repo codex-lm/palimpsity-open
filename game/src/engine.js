@@ -18,10 +18,20 @@
 import {
   COLS, ROWS, districtOf, DISTRICT_NAMES, genTerrain,
   BUILDINGS, REGIMES, REGIME_TAG_BONUS, INITIAL_UNLOCKED, UPKEEP, BUILDING_CONVERSIONS,
+  ARCHITECTURE_DEFAULTS, BUILDING_TRANSFORMATIONS,
 } from "./data.js";
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 export { clamp };
+
+const cloneProfile = profile => {
+  if (!profile) return profile;
+  const copy = { ...profile };
+  for (const key of ["cost", "inputs", "outputs", "ext", "mods"]) if (profile[key]) copy[key] = { ...profile[key] };
+  for (const key of ["tags", "prefer"]) if (profile[key]) copy[key] = [...profile[key]];
+  if (profile.architecture) copy.architecture = { ...profile.architecture };
+  return copy;
+};
 
 export const VICTORY_POP = 180; // cible MVP (la spec vise 5000 pour le jeu complet ; ici calibré à l'échelle du moteur)
 
@@ -79,16 +89,22 @@ export class CityEngine {
     if (!this.state.unlocked.has(id)) return "Not unlocked yet.";
     if (this.occ[r][c]) return "This tile is already occupied.";
     if (this.terrain[r][c] === 1) return "You cannot build on the river.";
-    const cost = BUILDINGS[id].cost?.money || 0;
-    if (this.state.res.money < cost) return "Not enough money.";
+    const def = BUILDINGS[id];
+    if (this.state.res.money < (def.cost?.money || 0)) return "Not enough money.";
+    if (this.state.res.materials < (def.cost?.materials || 0)) return "Not enough materials.";
     return null;
   }
 
   place(id, c, r) {
     if (!this.canPlace(id, c, r)) return null;
-    const def = BUILDINGS[id];
-    this.state.res.money -= (def.cost?.money || 0);
-    const b = { def, c, r, age: 0, localHeat: 0, localCong: 0, disabled: false };
+    const def = BUILDINGS[id], money = def.cost?.money || 0, materials = def.cost?.materials || 0;
+    this.state.res.money -= money;
+    this.state.res.materials -= materials;
+    const b = {
+      def, c, r, age: 0, localHeat: 0, localCong: 0, disabled: false,
+      createdAt: this.state.tick, investedMoney: money, history: [],
+    };
+    if (ARCHITECTURE_DEFAULTS[id]) b.architecture = { ...ARCHITECTURE_DEFAULTS[id] };
     this.state.buildings.push(b);
     this.occ[r][c] = b;
     this.recomputeFields();
@@ -100,12 +116,171 @@ export class CityEngine {
     if (!b) return false;
     this.state.buildings = this.state.buildings.filter(x => x !== b);
     this.occ[r][c] = null;
-    this.state.res.money += (b.def.cost?.money || 0) * 0.4; // remboursement partiel
+    const invested = Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0);
+    this.state.res.money += invested * 0.4;
     this.recomputeFields();
     return true;
   }
 
-  profileOf(b) { return BUILDING_CONVERSIONS[b?.conversion]?.profile || b?.def; }
+  architectureOf(b) {
+    const defaults = ARCHITECTURE_DEFAULTS[b?.def?.id];
+    if (!defaults) return null;
+    const a = b.architecture || {};
+    return {
+      base: ["residential", "shop", "workshop", "warehouse", "civic"].includes(a.base) ? a.base : defaults.base,
+      floors: clamp(Number.isInteger(a.floors) ? a.floors : defaults.floors, 1, 4),
+      roof: ["traditional", "garden", "productive"].includes(a.roof) ? a.roof : defaults.roof,
+      family: ["banks", "works", "gardens"].includes(a.family) ? a.family : defaults.family,
+      variant: clamp(Number.isInteger(a.variant) ? a.variant : defaults.variant, 0, 2),
+    };
+  }
+  ensureArchitecture(b) {
+    if (!b) return null;
+    const architecture = this.architectureOf(b);
+    if (architecture && (!b.architecture || Object.keys(architecture).some(key => b.architecture[key] !== architecture[key]))) {
+      b.architecture = architecture;
+    }
+    return architecture;
+  }
+  architectureProfile(b, architecture) {
+    const a = { ...architecture }, source = b.def, floors = a.floors, extra = floors - 1;
+    let profile;
+    if (a.base === "residential" || a.base === "shop") {
+      const shop = a.base === "shop", homes = shop ? extra : floors;
+      profile = {
+        ...source,
+        name: shop ? "Ground-floor shop" : source.name,
+        color: shop ? "#cf8fb3" : source.color,
+        tags: shop ? source.tags.filter(tag => tag !== "residential") : [...source.tags],
+        inputs: shop
+          ? { food: Math.max(1, floors), water: floors, energy: 1, workers: 2 }
+          : { food: floors, water: floors },
+        outputs: shop
+          ? { population: homes * 6, workers: homes * 3, money: 6 + homes * 2 }
+          : { population: floors * 6, workers: floors * 3, money: floors * 2 },
+        ext: extra ? { heat: extra * 0.35, congestion: extra * 0.3, density: extra, maintenance: extra * 0.25 } : {},
+        mods: { ...source.mods },
+        upkeep: shop ? 0.45 + floors * 0.2 : floors * 0.25,
+        desc: shop
+          ? "A staffed ground-floor shop with local deliveries and upper-floor homes. Its food, water and energy needs are real."
+          : source.desc,
+      };
+      if (shop) {
+        profile.tags.push("distribution", "social", "commercial");
+        profile.ext.distribution = 4 + extra * 0.5;
+        profile.ext.congestion += 1;
+      }
+      if (homes > 0) profile.tags.push("residential");
+      if (floors >= 3) profile.tags.push("dense");
+    } else if (a.base === "workshop") {
+      profile = {
+        ...source, tags: [...source.tags], mods: { ...source.mods },
+        inputs: { workers: floors * 2 }, outputs: { materials: floors * 4, money: floors * 2 },
+        ext: { heat: extra * 0.3, congestion: extra * 0.4, maintenance: extra * 0.3 }, upkeep: floors * 0.4,
+      };
+    } else if (a.base === "warehouse") {
+      profile = {
+        ...source, tags: [...source.tags], mods: { ...source.mods },
+        inputs: { workers: floors * 2 }, outputs: {},
+        ext: { capacity: floors * 4, distribution: floors * 5, centralization: 4, congestion: floors * 2, maintenance: extra * 0.2 },
+        upkeep: floors * 1.2,
+      };
+    } else if (a.base === "civic") {
+      profile = {
+        ...source, tags: [...source.tags], mods: { ...source.mods },
+        inputs: { workers: floors * 2, money: floors, water: floors }, outputs: { trust: floors * 3 },
+        ext: { distribution: floors * 3, maintenance: floors * -3, cooling: 2, congestion: floors * -2 },
+        upkeep: floors * 0.9,
+      };
+    } else profile = cloneProfile(source);
+    profile.architecture = a;
+    if (a.roof === "garden") {
+      profile.inputs = { ...profile.inputs, water: (profile.inputs?.water || 0) + 1 };
+      profile.outputs = { ...profile.outputs, trust: (profile.outputs?.trust || 0) + 1 };
+      profile.ext = { ...profile.ext, cooling: (profile.ext?.cooling || 0) + 4, ecology: (profile.ext?.ecology || 0) + 1 };
+      profile.tags.push("green", "cooling", "low_heat");
+      profile.upkeep += 0.25;
+    } else if (a.roof === "productive") {
+      profile.inputs = { ...profile.inputs, water: (profile.inputs?.water || 0) + 2 };
+      profile.outputs = { ...profile.outputs, food: (profile.outputs?.food || 0) + 5, energy: (profile.outputs?.energy || 0) + 2 };
+      profile.tags.push("green", "food", "local", "low_heat");
+      profile.upkeep += 0.6;
+    }
+    profile.tags = [...new Set(profile.tags)];
+    return profile;
+  }
+  profileOf(b) {
+    const conversion = BUILDING_CONVERSIONS[b?.conversion]?.profile;
+    if (conversion) return conversion;
+    const architecture = this.ensureArchitecture(b);
+    return architecture ? this.architectureProfile(b, architecture) : b?.def;
+  }
+
+  transformationSpec(b, id, architecture = this.architectureOf(b)) {
+    const definition = BUILDING_TRANSFORMATIONS[id];
+    if (!definition || !architecture) return null;
+    let after = { ...architecture }, phase = definition.phase, cost = definition.cost;
+    if (id === "add_floor") {
+      const target = architecture.floors + 1;
+      after.floors = Math.min(4, target);
+      phase = Math.min(4, target);
+      cost = definition.costs[target] || { money: 0, materials: 0 };
+    } else if (id === "base_residential" || id === "base_shop") {
+      if (b.def.id !== "house" || !["residential", "shop"].includes(architecture.base)) return null;
+      after.base = id.slice(5);
+    } else if (id.startsWith("roof_")) after.roof = id.slice(5);
+    else if (id.startsWith("family_")) after.family = id.slice(7);
+    else if (id.startsWith("variant_")) after.variant = Number(id.slice(8));
+    else return null;
+    return { id, name: definition.name, desc: definition.desc, cost: { ...cost }, phase, after };
+  }
+  transformationBlockReason(b, id) {
+    if (!b || !this.state.buildings.includes(b)) return "This building no longer exists.";
+    if (!ARCHITECTURE_DEFAULTS[b.def?.id]) return "This building cannot be transformed.";
+    if (this.state.outcome) return "The game has ended.";
+    if (b.conversion) return "A reconverted building cannot be transformed.";
+    if (b.disabled) return "Wait until the building is back in service.";
+    const before = this.architectureOf(b), spec = this.transformationSpec(b, id, before);
+    if (!spec) return "This transformation is not available for this building.";
+    if (id === "add_floor" && before.floors >= 4) return "This building already has four floors.";
+    if (Object.keys(before).every(key => before[key] === spec.after[key])) return "This transformation is already applied.";
+    if (this.state.phase < spec.phase) return `Available in phase ${spec.phase}.`;
+    if (this.state.res.money < spec.cost.money) return "Not enough money.";
+    if (this.state.res.materials < spec.cost.materials) return "Not enough materials.";
+    return null;
+  }
+  transformationOptions(b) {
+    if (!ARCHITECTURE_DEFAULTS[b?.def?.id] || b.conversion) return [];
+    const architecture = this.architectureOf(b), before = cloneProfile(this.profileOf(b));
+    return Object.keys(BUILDING_TRANSFORMATIONS).map(id => {
+      const spec = this.transformationSpec(b, id, architecture);
+      if (!spec) return null;
+      const after = this.architectureProfile(b, spec.after);
+      return {
+        id, name: spec.name, desc: spec.desc, cost: spec.cost,
+        reason: this.transformationBlockReason(b, id), before: cloneProfile(before), after: cloneProfile(after), phase: spec.phase,
+      };
+    }).filter(Boolean);
+  }
+  transformBuilding(b, id) {
+    if (this.transformationBlockReason(b, id)) return false;
+    const spec = this.transformationSpec(b, id);
+    this.state.res.money -= spec.cost.money;
+    this.state.res.materials -= spec.cost.materials;
+    b.architecture = { ...spec.after };
+    b.investedMoney = (Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0)) + spec.cost.money;
+    this.recordEvent(b, "transformation", spec.name);
+    this.recomputeFields();
+    this.toast(`${spec.name}: transformation complete.`);
+    return true;
+  }
+
+  recordEvent(b, type, label) {
+    if (!Array.isArray(b.history)) b.history = [];
+    if (!Number.isFinite(b.createdAt)) b.createdAt = Math.max(0, this.state.tick - (b.age || 0));
+    b.history.push({ tick: this.state.tick, type, label });
+    if (b.history.length > 60) b.history.splice(0, b.history.length - 60);
+  }
   conversionBlockReason(b, id) {
     const c = BUILDING_CONVERSIONS[id];
     if (!b || !this.state.buildings.includes(b)) return "This building no longer exists.";
@@ -114,7 +289,10 @@ export class CityEngine {
     if (b.conversion) return "This building has already been converted.";
     if (b.disabled) return "Wait until the building is back in service.";
     if (this.state.phase < c.phase) return `Available in phase ${c.phase}.`;
-    if (b.age < c.minAge) return `The workshop must be at least ${c.minAge} turns old (${b.age}/${c.minAge}).`;
+    if (b.age < c.minAge) {
+      const name = b.def.id === "workshop" ? "The workshop" : "This building";
+      return `${name} must be at least ${c.minAge} turns old (${b.age}/${c.minAge}).`;
+    }
     if (this.state.res.money < c.cost.money) return "Not enough money.";
     if (this.state.res.materials < c.cost.materials) return "Not enough materials.";
     return null;
@@ -130,8 +308,10 @@ export class CityEngine {
     this.state.res.materials -= c.cost.materials;
     b.conversion = id;
     b.convertedAt = this.state.tick;
+    b.investedMoney = (Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0)) + c.cost.money;
+    this.recordEvent(b, "conversion", c.name);
     this.recomputeFields();
-    this.toast(`${c.name}: the old building now maintains its district.`);
+    this.toast(`${c.name}: conversion complete.`);
     return true;
   }
 
@@ -203,8 +383,9 @@ export class CityEngine {
     // (avant leur prélèvement), puis prélevé — l'externalité devient ressource
     // pour de vrai, et la serre refroidit sa case de ce qu'elle consomme.
     for (const b of this.state.buildings) {
-      if (b.disabled || !b.def.needsHeat) continue;
-      const need = (b.def.inputs && b.def.inputs.heat) || 4;
+      const p = this.profileOf(b);
+      if (b.disabled || !p.needsHeat) continue;
+      const need = (p.inputs && p.inputs.heat) || 4;
       const lh = heatField[b.r][b.c];
       b.heatFuelLh = lh;
       heatField[b.r][b.c] = Math.max(0, lh - need);
@@ -247,7 +428,7 @@ export class CityEngine {
     let housingPotential = 0, workersPotential = 0, workersDemand = 0, upkeep = 0, totalCong = 0;
     for (const b of s.buildings) {
       const p = this.profileOf(b);
-      upkeep += UPKEEP[b.def.id] || 0;
+      upkeep += p.upkeep ?? UPKEEP[b.def.id] ?? 0;
       if (b.disabled) continue;
       housingPotential += p.outputs?.population || 0;
       workersPotential += p.outputs?.workers || 0;
@@ -272,19 +453,42 @@ export class CityEngine {
       const heatFuel = p.needsHeat ? clamp((b.heatFuelLh || 0) / (inp.heat || 4), 0, 1) : 1;
       const terrBonus = (p.prefer || []).includes(this.terrain[b.r][b.c]) ? 1.25 : 1;
       const labor = inp.workers ? workerR : 1;
-      // Une usine privée d'électricité ne continue plus à vendre normalement.
-      let inputsAvailable = 1;
-      for (const key of ["food", "water", "energy"]) if (inp[key] && !out.population) {
+      const isShop = b.architecture?.base === "shop" && !b.conversion;
+      const productiveRoof = b.architecture?.roof === "productive" && !b.conversion;
+      const inputAvailability = key => {
         const sourceExists = s.buildings.some(source => !source.disabled && (this.profileOf(source).outputs?.[key] || 0) > 0);
-        inputsAvailable = Math.min(inputsAvailable, clamp(previousRatios[key + "R"] ?? (sourceExists ? 1 : 0), 0, 1));
+        let available = clamp(previousRatios[key + "R"] ?? (sourceExists ? 1 : 0), 0, 1);
         if (key !== "energy") {
           const local = s.districts[districtOf(b.c, b.r)];
-          inputsAvailable = Math.min(inputsAvailable, clamp(local[key + "Coverage"], 0, 1));
+          available = Math.min(available, clamp(local[key + "Coverage"], 0, 1));
         }
+        return available;
+      };
+      // Une activité commerciale privée d'intrants ne continue plus à vendre,
+      // même lorsque ses étages conservent leur capacité de logement.
+      let inputsAvailable = 1;
+      for (const key of ["food", "water", "energy"]) if (inp[key] && (!out.population || isShop)) {
+        inputsAvailable = Math.min(inputsAvailable, inputAvailability(key));
       }
       b.activity = labor * inputsAvailable * heatPenalty * heatFuel;
+      const residentialActivity = isShop ? heatPenalty * heatFuel : b.activity;
+      b.annexActivity = productiveRoof && out.population && !isShop
+        ? b.activity * inputAvailability("water") : b.activity;
       for (const [key, value] of Object.entries(out)) if (key in prod) {
-        const amount = value * eff * b.activity * terrBonus;
+        let amount;
+        if (key === "money") {
+          const homes = isShop ? Math.max(0, b.architecture.floors - 1) : 0;
+          const rent = isShop ? homes * 2 : out.population ? value : 0;
+          const sales = isShop ? Math.max(0, value - rent) : out.population ? 0 : value;
+          const rentFlow = rent * eff * residentialActivity * terrBonus;
+          const salesFlow = sales * eff * b.activity * terrBonus;
+          b.flowOutput.rent = rentFlow; b.flowOutput.sales = salesFlow;
+          amount = rentFlow + salesFlow;
+        } else {
+          const activity = isShop && (key === "population" || key === "workers") ? residentialActivity
+            : productiveRoof && out.population && !isShop && (key === "food" || key === "energy") ? b.annexActivity : b.activity;
+          amount = value * eff * activity * terrBonus;
+        }
         b.flowOutput[key] = amount;
         if (key !== "money") prod[key] += amount;
       }
@@ -327,16 +531,16 @@ export class CityEngine {
     const pop = r.population;
     this.peakPop = Math.max(this.peakPop, pop);
 
-    // Les ventes et impôts suivent les ménages réellement installés et servis.
-    // Les dépenses restent dues même lorsqu'un équipement est sous-utilisé.
+    // Loyers et ventes suivent respectivement les ménages installés et la
+    // clientèle commerciale. Les dépenses restent dues en cas de sous-activité.
     const occupancy = clamp(pop / Math.max(1, housing), 0, 1);
     const servedOccupancy = clamp(pop / Math.max(1, servedHousing), 0, 1);
     const customers = clamp(pop / 36, 0, 1);
     for (const b of s.buildings) {
       const p = this.profileOf(b);
-      const sales = b.flowOutput.money || 0;
+      const rent = b.flowOutput.rent || 0, sales = b.flowOutput.sales || 0;
       b.occupancy = p.outputs?.population ? servedOccupancy * b.served : 0;
-      const incomeFlow = sales * essential * (p.outputs?.population ? b.occupancy : b.served * customers);
+      const incomeFlow = essential * (rent * b.occupancy + sales * b.served * customers);
       b.income = incomeFlow * 0.6;
       prod.money += incomeFlow;
     }
@@ -547,7 +751,7 @@ export class CityEngine {
       if (this.calmSustain >= 12) {
         s.phase = 4;
         const calmUnlocks = ["maint_center", "greenhouse", "recycler"];
-        if (!s.events.logisticsFired) calmUnlocks.push("depot", "tram");
+        if (!s.events.logisticsFired) calmUnlocks.push("depot", "tram", "commons");
         this.unlock(calmUnlocks);
         this.advisor("City planner", "Your city has matured without overheating. Maintenance, greenhouses and recycling are now available — resilience can grow without a crisis.", "");
         this.report("calm", "Year " + s.year + " — Urban maturity",
@@ -575,7 +779,7 @@ export class CityEngine {
     const s = this.state;
     s.events.logisticsFired = true;
     s.phase = Math.max(s.phase, 3);
-    this.unlock(["depot", "tram"]);
+    this.unlock(["depot", "tram", "commons"]);
     this.advisor("Logistics adviser", "Growth is putting distribution under pressure. Check water, food and delivery capacity in every inhabited district.", "warn");
     this.toast("Logistics crisis: producing goods is not the same as delivering them.");
     this.report("logi", "Year " + s.year + " — Logistics revealed",
@@ -588,7 +792,7 @@ export class CityEngine {
     s.events.heatFired = true;
     if (s.phase < 4) s.phase = 4;
     const heatUnlocks = ["maint_center", "greenhouse", "recycler"];
-    if (!s.events.logisticsFired) heatUnlocks.push("depot", "tram");
+    if (!s.events.logisticsFired) heatUnlocks.push("depot", "tram", "commons");
     this.unlock(heatUnlocks);
     this.advisor("Public health adviser", "Heat wave. Dense districts without parks suffer most. Heat is more than a number: it is a local side effect of industry.", "bad");
     this.toast("Heat wave: older green buildings are gaining value again.");
@@ -604,9 +808,10 @@ export class CityEngine {
     // (congestion locale + poids de centralisation), pas le premier posé.
     let hub = null, hubScore = -1;
     for (const b of this.state.buildings) {
-      if (!b.def.tags.includes("centralized")) continue;
+      const p = this.profileOf(b);
+      if (!p.tags.includes("centralized")) continue;
       if (b.def.id !== "generator" && b.def.id !== "warehouse" && b.def.id !== "water_plant") continue;
-      const score = this.localCongAt(b.c, b.r) + (b.def.ext?.centralization || 0);
+      const score = this.localCongAt(b.c, b.r) + (p.ext?.centralization || 0);
       if (score > hubScore) { hubScore = score; hub = b; }
     }
     if (hub) { hub.disabled = true; hub._reenableAt = s.tick + 5; }
@@ -675,8 +880,10 @@ export class CityEngine {
     if (this.byId("well") > 0) helpful.push(`Wells providing backup water: ${this.byId("well")}`);
     if (this.byId("market") + this.byId("depot") > 0) helpful.push(`local markets and depots reduce shortages`);
     if (green > 0) helpful.push(`Green buildings helping limit heat: ${green}`);
-    const repaired = s.buildings.filter(b => b.conversion && !b.disabled).length;
+    const repaired = s.buildings.filter(b => b.conversion === "workshop_repair" && !b.disabled).length;
+    const halls = s.buildings.filter(b => b.conversion === "warehouse_hall" && !b.disabled).length;
     if (repaired) helpful.push(`Converted workshops maintaining their district: ${repaired}`);
+    if (halls) helpful.push(`Neighborhood halls providing local services: ${halls}`);
     if (this.byId("workshop") > repaired) helpful.push("production workshops supply materials for repairs");
 
     return { problem, causes, helpful, actions };

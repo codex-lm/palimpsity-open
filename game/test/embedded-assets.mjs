@@ -8,7 +8,8 @@ import * as esbuild from 'esbuild';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Renderer3D } from '../src/render3d.js';
-import { decodeEmbeddedGLB, loadDioramaManifest, loadDioramaGLB } from '../src/diorama-assets.js';
+import { decodeEmbeddedGLB, layerPlanForBuilding, loadDioramaManifest, loadDioramaGLB } from '../src/diorama-assets.js';
+import { ARCHITECTURE_DEFAULTS, BUILDINGS } from '../src/data.js';
 import { translate } from '../src/localization.js';
 
 const assetRoot = new URL('../art/diorama/', import.meta.url);
@@ -19,9 +20,11 @@ function collect(value) {
   else if (value && typeof value === 'object') Object.values(value).forEach(collect);
 }
 collect(manifest);
+const keyForFile = file => file.split(/[\\/]/).pop().replace(/\.glb$/i, '');
 const bytesByFile = new Map([...files].map(file => [file, readFileSync(new URL(file, assetRoot))]));
 const embedded = Object.fromEntries([...bytesByFile].map(([file, bytes]) =>
-  [file.replace(/\.glb$/i, ''), 'data:model/gltf-binary;base64,' + bytes.toString('base64')]));
+  [keyForFile(file), 'data:model/gltf-binary;base64,' + bytes.toString('base64')]));
+assert.equal(Object.keys(embedded).length, files.size, 'Every referenced GLB needs a unique embedded basename');
 const { outputFiles } = await esbuild.build({
   entryPoints: [fileURLToPath(new URL('../src/diorama-assets.js', import.meta.url))],
   bundle: true, format: 'esm', write: false, minify: true,
@@ -56,7 +59,7 @@ function assertModel(gltf, file) {
 
 test('embedded GLB decoding preserves bytes and rejects malformed model data', () => {
   const [file, bytes] = bytesByFile.entries().next().value;
-  assert.deepEqual(Buffer.from(decodeEmbeddedGLB(embedded[file.replace(/\.glb$/i, '')])), bytes);
+  assert.deepEqual(Buffer.from(decodeEmbeddedGLB(embedded[keyForFile(file)])), bytes);
   for (const bad of [null, '', 'https://example.invalid/model.glb', 'data:model/gltf-binary;base64,!', 'data:model/gltf-binary;base64,YWJj']) {
     assert.throws(() => decodeEmbeddedGLB(bad), /Invalid embedded model data/);
   }
@@ -86,14 +89,16 @@ test('standalone compilation removes development URLs and reports missing embedd
   }
 });
 
-test('the standalone loader parses all 39 actual embedded GLBs without a single fetch', async () => {
-  assert.equal(files.size, 39);
+test('the standalone loader parses every manifest-referenced embedded GLB without a single fetch', async () => {
+  const moduleFiles = Object.values(manifest.layers?.modules || {}).map(module => module.file);
+  assert.ok(moduleFiles.length > 0, 'The modular building assets are part of the manifest');
+  for (const file of moduleFiles) assert.ok(files.has(file), `Every modular file is collected: ${file}`);
   let requests = 0;
   await withGlobals({ fetch() { requests++; throw new Error('CSP blocks all fetch in this test'); } }, async () => {
     const loader = new GLTFLoader();
     for (const file of files) assertModel(await standalone.loadDioramaGLB(loader, file, embedded), file);
     const file = files.values().next().value;
-    assertModel(await standalone.loadDioramaGLB(loader, file, { [file]: embedded[file.replace(/\.glb$/i, '')] }), file);
+    assertModel(await standalone.loadDioramaGLB(loader, file, { [keyForFile(file)]: embedded[keyForFile(file)] }), file);
   });
   assert.equal(requests, 0);
 });
@@ -109,13 +114,25 @@ test('the renderer loads its full embedded diorama through the real parser witho
     sync() { syncs++; },
     getDebugInfo() { return { loaded: this._loaded, models: this.glbTemplates.size }; },
   };
+  const legacyModels = Object.keys(manifest.models || {});
   await withGlobals({
     window: { __PALIMPSITY_ASSET_MANIFEST: manifest, __PALIMPSITY_ASSETS: embedded },
     fetch() { requests++; throw new Error('CSP blocks all fetch in this test'); },
   }, async () => {
-    assert.deepEqual(await Renderer3D.prototype._loadAssets.call(renderer), { loaded: true, models: 18 });
+    assert.deepEqual(await Renderer3D.prototype._loadAssets.call(renderer), { loaded: true, models: legacyModels.length });
   });
-  assert.equal(renderer._templatesByFile.size, 39);
+  assert.equal(renderer._templatesByFile.size, files.size);
+  assert.deepEqual([...renderer.glbTemplates.keys()].sort(), legacyModels.sort(), 'Only actual legacy models populate the legacy template map');
+  assert.equal(renderer.glbTemplates.has('commons'), false, 'Commons does not need a legacy model');
+  const commons = { def: BUILDINGS.commons, architecture: { ...ARCHITECTURE_DEFAULTS.commons } };
+  const plan = layerPlanForBuilding(commons, manifest.layers);
+  assert.ok(plan, 'Commons resolves to a complete modular plan');
+  assert.equal(plan.baseKey, 'base_civic');
+  const modular = Renderer3D.prototype.buildLayerMesh.call(renderer, commons, plan);
+  assert.equal(modular.model.children.length, plan.floors + (plan.roofKey ? 1 : 0), 'Commons assembles every module in its plan');
+  if (plan.roofKey) assert.ok(modular.roof, 'A planned roof is assembled');
+  else assert.equal(modular.roof, null, 'A standalone civic module needs no separate roof');
+  assert.equal(modular.layerSignature, plan.signature);
   assert.equal(renderer.terrainRoot.children.length, 1);
   assert.ok(renderer._ownedGeometries.size > 0);
   assert.ok(renderer._ownedMaterials.size > 0);
@@ -126,7 +143,7 @@ test('the renderer loads its full embedded diorama through the real parser witho
   assert.equal(requests, 0);
 });
 
-test('development still fetches the local manifest and parses all 39 actual GLBs via loadAsync', async () => {
+test('development fetches only the local manifest and every referenced GLB via loadAsync', async () => {
   const base = 'https://palimpsity.test/game/';
   const NativeRequest = globalThis.Request;
   const requests = [];
@@ -150,8 +167,8 @@ test('development still fetches the local manifest and parses all 39 actual GLBs
     assert.deepEqual(await loadDioramaManifest({}), manifest);
     const loader = new GLTFLoader();
     for (const file of files) assertModel(await loadDioramaGLB(loader, file), file);
-    assert.equal(requests.length, 40);
-    assert.equal(new Set(requests).size, 40);
+    assert.equal(requests.length, files.size + 1);
+    assert.equal(new Set(requests).size, files.size + 1);
     await withGlobals({ fetch: async () => new Response('', { status: 404 }) }, async () => {
       await assert.rejects(loadDioramaManifest({}), /Missing asset manifest \(404\)/);
     });

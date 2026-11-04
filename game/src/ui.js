@@ -2,18 +2,68 @@ import {
   ORDER, BUILDINGS, RES_VISIBLE, RES_HIDDEN, RES_META,
   REGIMES, REGIME_META, districtOf, DISTRICT_NAMES,
 } from "./data.js";
-import { buildingIcon } from "./icons.js";
+import { buildingIcon, uiIcon } from "./icons.js";
 import { localizeDOM } from "./localization.js";
 import { CHALLENGE, formatSimTime } from "./challenge.js";
 
 const SEASONS = ["Spring", "Summer", "Autumn", "Winter"];
 const FLOW_NAMES = { food: "food", water: "water", energy: "energy", materials: "materials", workers: "workers", population: "residents", money: "€", heat: "heat", trust: "trust" };
+const QUALITY_LEVELS = ["high", "balanced", "low"];
+const PHOTO_TIMES = ["day", "golden", "evening", "night"];
+const DISPLAY_STORAGE_KEY = "palimpsity.display";
+const ARCHITECTURE_NAMES = {
+  base: { residential: "Housing", shop: "Shop", workshop: "Workshop", warehouse: "Warehouse", civic: "Civic" },
+  roof: { traditional: "Traditional roof", garden: "Garden roof", productive: "Productive roof" },
+  family: { banks: "Banks", works: "Works", gardens: "Gardens" },
+};
+const OUTPUT_LABELS = {
+  population: "Housing capacity", workers: "Worker capacity", money: "Income",
+  food: "Food production", water: "Water production", energy: "Energy production",
+  materials: "Materials production", trust: "Trust services",
+};
+const INPUT_LABELS = { food: "Food need", water: "Water need", energy: "Energy need", materials: "Materials need", workers: "Worker need", money: "Money need", heat: "Heat need" };
+const EXTERNAL_LABELS = { heat: "Heat output", cooling: "Cooling", maintenance: "Maintenance service", distribution: "Distribution service", capacity: "Distribution capacity", congestion: "Congestion" };
 const tagText = tag => tag.replace(/_/g, " ");
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const setHTML = (node, html) => { if (node.__h !== html) { node.__h = html; node.innerHTML = html; } localizeDOM(node); };
 const flowText = (flows, sign) => Object.entries(flows || {}).filter(([, value]) => value).map(([key, value]) => `${sign}${value} ${FLOW_NAMES[key] || key}`).join("<br>") || "—";
 const resourceColor = key => key === "population" ? "#263c35" : key === "money" ? "#9a7625" : RES_META[key].col;
+const metricValue = value => Number.isFinite(value) ? String(Math.round(value * 10) / 10) : "—";
+const metricAt = (profile, group, key) => profile?.[group]?.[key];
+const readDisplayPreferences = () => {
+  try {
+    const saved = JSON.parse(globalThis.localStorage?.getItem(DISPLAY_STORAGE_KEY) || "null");
+    return saved && typeof saved === "object" ? saved : {};
+  } catch { return {}; }
+};
+
+function focusVisible(...candidates) {
+  for (const candidate of candidates) {
+    if (!candidate?.isConnected || candidate.closest?.("[hidden]")) continue;
+    if (candidate.getClientRects && candidate.getClientRects().length === 0) continue;
+    const view = candidate.ownerDocument?.defaultView || globalThis;
+    const style = view.getComputedStyle?.(candidate);
+    if (style && (style.display === "none" || style.visibility === "hidden")) continue;
+    candidate.focus({ preventScroll: true });
+    return candidate;
+  }
+  return null;
+}
+
+function comparisonRows(before, after) {
+  const rows = [];
+  const add = (label, left, right) => {
+    if (left == null && right == null) return;
+    rows.push({ label, left: metricValue(left ?? 0), right: metricValue(right ?? 0) });
+  };
+  add("Floors", before?.architecture?.floors, after?.architecture?.floors);
+  for (const key of Object.keys(OUTPUT_LABELS)) add(OUTPUT_LABELS[key], metricAt(before, "outputs", key), metricAt(after, "outputs", key));
+  for (const key of Object.keys(INPUT_LABELS)) add(INPUT_LABELS[key], metricAt(before, "inputs", key), metricAt(after, "inputs", key));
+  for (const key of Object.keys(EXTERNAL_LABELS)) add(EXTERNAL_LABELS[key], metricAt(before, "ext", key), metricAt(after, "ext", key));
+  add("Upkeep", before?.upkeep ?? metricAt(before, "ext", "upkeep"), after?.upkeep ?? metricAt(after, "ext", "upkeep"));
+  return rows;
+}
 
 export class UI {
   constructor(engine, renderer, handlers) {
@@ -24,17 +74,142 @@ export class UI {
     this.bulldoze = false;
     this.lens = "none";
     this.inspectBuilding = null;
+    this.transformPreview = null;
+    this.photoMode = false;
+    this.photoTime = "day";
+    this.sideOpen = false;
     this.lastReportId = null;
     this.challenge = null;         // posé par main.js quand le défi tourne
+    const savedDisplay = readDisplayPreferences();
+    this.displayPrefs = {
+      quality: QUALITY_LEVELS.includes(savedDisplay.quality) ? savedDisplay.quality : "high",
+      reducedEffects: typeof savedDisplay.reducedEffects === "boolean" ? savedDisplay.reducedEffects : !!globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches,
+      showRoofs: typeof savedDisplay.showRoofs === "boolean" ? savedDisplay.showRoofs : true,
+      photoTime: PHOTO_TIMES.includes(savedDisplay.photoTime) ? savedDisplay.photoTime : "day",
+    };
+    this.photoTime = this.displayPrefs.photoTime;
     this.$ = {};
-    for (const id of ["hud-res", "regimes", "clock", "speed", "palette", "advisors", "diagnostic", "inspector", "lenses", "modal", "toast", "end", "camera-home", "objectives-summary", "objectives-list", "challenge", "challenge-end"]) {
+    for (const id of ["hud-res", "regimes", "clock", "speed", "palette", "advisors", "diagnostic", "inspector", "side", "side-toggle", "side-close", "lenses", "modal", "toast", "end", "camera-home", "objectives-summary", "objectives-list", "challenge", "challenge-end", "display-toggle", "display-panel", "display-close", "reduced-effects", "roof-visibility", "photo-controls", "photo-exit"]) {
       this.$[id] = document.getElementById(id);
     }
     this.buildSpeed();
     this.buildLenses();
     this.buildCameraTools();
+    this.buildDisplayTools();
+    this.buildPanelTools();
+    this.applyDisplayPreferences();
     this.renderPalette();
     this.renderRegimes();
+  }
+
+  buildDisplayTools() {
+    this.$["display-toggle"].onclick = () => this.toggleDisplay();
+    this.$["display-close"].onclick = () => this.toggleDisplay(false);
+    for (const button of document.querySelectorAll("[data-quality]")) button.onclick = () => this.setQuality(button.dataset.quality);
+    for (const button of document.querySelectorAll("[data-photo-time]")) button.onclick = () => this.setPhotoTime(button.dataset.photoTime);
+    this.$["reduced-effects"].onchange = () => this.setReducedEffects(this.$["reduced-effects"].checked);
+    this.$["roof-visibility"].onchange = () => this.setRoofsVisible(this.$["roof-visibility"].checked);
+    document.getElementById("photo-enter").onclick = () => this.setPhotoMode(true);
+    this.$["photo-exit"].onclick = () => this.setPhotoMode(false);
+    this.renderDisplayTools();
+  }
+
+  buildPanelTools() {
+    this.$["side-toggle"].onclick = () => this.setSideOpen(!this.sideOpen);
+    this.$["side-close"].onclick = () => this.setSideOpen(false);
+  }
+
+  saveDisplayPreferences() {
+    try { globalThis.localStorage?.setItem(DISPLAY_STORAGE_KEY, JSON.stringify(this.displayPrefs)); } catch { /* Storage can be unavailable in private or file browsing. */ }
+  }
+
+  applyDisplayPreferences() {
+    document.body.classList.toggle("reduced-effects", this.displayPrefs.reducedEffects);
+    this.renderer.setQuality?.(this.displayPrefs.quality);
+    this.renderer.setReducedEffects?.(this.displayPrefs.reducedEffects);
+    this.renderer.toggleRoof?.(this.displayPrefs.showRoofs);
+    this.renderDisplayTools();
+  }
+
+  renderDisplayTools() {
+    for (const button of document.querySelectorAll("[data-quality]")) {
+      const active = button.dataset.quality === this.displayPrefs.quality;
+      button.classList.toggle("on", active);
+      button.setAttribute("aria-pressed", String(active));
+    }
+    for (const button of document.querySelectorAll("[data-photo-time]")) {
+      const active = button.dataset.photoTime === this.photoTime;
+      button.classList.toggle("on", active);
+      button.setAttribute("aria-pressed", String(active));
+    }
+    this.$["reduced-effects"].checked = this.displayPrefs.reducedEffects;
+    this.$["roof-visibility"].checked = this.displayPrefs.showRoofs;
+  }
+
+  setQuality(value) {
+    if (!QUALITY_LEVELS.includes(value)) return;
+    this.displayPrefs.quality = value;
+    this.renderer.setQuality?.(value);
+    this.saveDisplayPreferences();
+    this.renderDisplayTools();
+  }
+
+  setReducedEffects(value) {
+    this.displayPrefs.reducedEffects = !!value;
+    document.body.classList.toggle("reduced-effects", this.displayPrefs.reducedEffects);
+    this.renderer.setReducedEffects?.(this.displayPrefs.reducedEffects);
+    this.saveDisplayPreferences();
+    this.renderDisplayTools();
+  }
+
+  setRoofsVisible(visible) {
+    this.displayPrefs.showRoofs = !!visible;
+    this.renderer.toggleRoof?.(this.displayPrefs.showRoofs);
+    this.saveDisplayPreferences();
+    this.renderDisplayTools();
+  }
+
+  setPhotoTime(value) {
+    if (!PHOTO_TIMES.includes(value)) return;
+    this.photoTime = this.displayPrefs.photoTime = value;
+    if (this.photoMode) this.renderer.setPhotoMode?.(true, value);
+    this.saveDisplayPreferences();
+    this.renderDisplayTools();
+  }
+
+  toggleDisplay(open = this.$["display-panel"].hidden) {
+    this.$["display-panel"].hidden = !open;
+    this.$["display-toggle"].setAttribute("aria-expanded", String(open));
+    if (open) this.$["display-close"].focus({ preventScroll: true });
+    else this.$["display-toggle"].focus({ preventScroll: true });
+  }
+
+  setSideOpen(open) {
+    const wasOpen = this.sideOpen;
+    this.sideOpen = !!open;
+    document.body?.classList.toggle("side-open", this.sideOpen);
+    this.$["side-toggle"]?.setAttribute("aria-expanded", String(this.sideOpen));
+    if (wasOpen && !this.sideOpen) focusVisible(this.$["side-toggle"], document.getElementById("cv"));
+  }
+
+  setPhotoMode(enabled) {
+    enabled = !!enabled;
+    if (this.photoMode === enabled) return;
+    if (enabled) this.photoReturnFocus = document.activeElement;
+    this.photoMode = enabled;
+    document.body.classList.toggle("photo-mode", enabled);
+    this.$["photo-controls"].hidden = !enabled;
+    this.$["display-toggle"].setAttribute("aria-pressed", String(enabled));
+    this.renderer.setPhotoMode?.(enabled, this.photoTime);
+    this.h.onPhotoMode?.(enabled);
+    if (enabled) {
+      this.$["display-panel"].hidden = true;
+      this.$["display-toggle"].setAttribute("aria-expanded", "false");
+      this.setSideOpen(false);
+      this.$["photo-exit"].focus({ preventScroll: true });
+    } else {
+      focusVisible(this.photoReturnFocus, this.$["display-toggle"], document.getElementById("cv"));
+    }
   }
 
   buildSpeed() {
@@ -248,30 +423,75 @@ export class UI {
     localizeDOM(box);
   }
 
+  renderTransformationPreview(option) {
+    const rows = comparisonRows(option.before, option.after);
+    const aesthetic = option.id.startsWith("family_") || option.id.startsWith("variant_");
+    const condition = option.reason || (option.phase ? `Available from phase ${option.phase}.` : "Available now.");
+    const architecture = option.after?.architecture;
+    const result = architecture ? [
+      `${architecture.floors} floors`, ARCHITECTURE_NAMES.base[architecture.base], ARCHITECTURE_NAMES.roof[architecture.roof],
+      ARCHITECTURE_NAMES.family[architecture.family], `Variant ${architecture.variant + 1}`,
+    ].join(" · ") : "";
+    return `<section class="transform-preview" aria-label="Transformation preview">
+      <div class="preview-heading"><div><span class="section-kicker">Before confirmation</span><h3>${option.name}</h3></div><button type="button" class="icon-button" data-transform-cancel aria-label="Close preview">${uiIcon("close")}</button></div>
+      <p>${option.desc || ""}</p>
+      ${result ? `<p class="preview-architecture"><b>After</b> · ${result}</p>` : ""}
+      <p class="conversion-cost">Cost: ${option.cost?.money || 0} € + ${option.cost?.materials || 0} materials</p>
+      ${aesthetic ? '<p class="aesthetic-note">Appearance only · no economic advantage.</p>' : ""}
+      ${rows.length ? `<table class="profile-diff"><thead><tr><th scope="col">Effect</th><th scope="col">Before</th><th scope="col">After</th></tr></thead><tbody>${rows.map(row => `<tr><th scope="row">${row.label}</th><td>${row.left}</td><td>${row.right}</td></tr>`).join("")}</tbody></table>` : '<p class="aesthetic-note">No capacity, needs, production or service changes.</p>'}
+      <p class="conversion-condition">${condition}</p>
+      <button type="button" class="confirm-transform" data-transform-confirm="${option.id}" ${option.reason ? "disabled" : ""}>Confirm transformation</button>
+    </section>`;
+  }
+
   showInspector(building) {
     const changed = this.inspectBuilding !== building;
     const active = document.activeElement;
-    const focusedAction = this.$.inspector.contains(active)
-      ? active.id === "close-inspector" ? "#close-inspector" : active.dataset?.conversion ? `[data-conversion="${active.dataset.conversion}"]` : null
-      : null;
+    let focusedAction = null;
+    if (this.$.inspector.contains(active)) {
+      if (active.id === "close-inspector") focusedAction = "#close-inspector";
+      else if (active.dataset?.conversion) focusedAction = `[data-conversion="${active.dataset.conversion}"]`;
+      else if (active.dataset?.transformPreview) focusedAction = `[data-transform-preview="${active.dataset.transformPreview}"]`;
+      else if (active.dataset?.transformConfirm) focusedAction = `[data-transform-confirm="${active.dataset.transformConfirm}"]`;
+      else if (active.hasAttribute?.("data-transform-cancel")) focusedAction = "[data-transform-cancel]";
+      else if (active.hasAttribute?.("data-focus-building")) focusedAction = "[data-focus-building]";
+    }
     this.inspectBuilding = building;
     if (!building || !this.engine.state.buildings.includes(building)) {
       this.inspectBuilding = null;
+      this.transformPreview = null;
       setHTML(this.$.inspector, "");
       this.$.inspector.classList.remove("on");
+      this.$.side?.classList.remove("has-inspector");
+      this.setSideOpen?.(false);
       return;
     }
+    if (changed) {
+      this.transformPreview = null;
+      this.setSideOpen?.(true);
+    }
+    this.$.side?.classList.add("has-inspector");
     const def = this.engine.profileOf(building);
     const value = this.engine.buildingValue(building);
     const pct = clamp((value - 0.4) / 2 * 100, 0, 100);
     const revalued = this.engine.belongsToDominant(building);
     const bonusTags = this.engine.tagBonusFor(building);
     const heat = this.engine.localHeatAt(building.c, building.r);
-    let html = `<div class="insp-h"><span>${def.name}${revalued ? ' <span class="reval">⬆ renewed value</span>' : ""}</span><button type="button" id="close-inspector" aria-label="Close inspector">×</button></div>`;
+    const canFocus = typeof this.renderer.focusBuilding === "function";
+    let html = `<div class="insp-h"><span>${def.name}${revalued ? ' <span class="reval">⬆ renewed value</span>' : ""}</span><div class="insp-actions"><button type="button" class="icon-button" data-focus-building aria-label="Focus building" title="Focus building" ${canFocus ? "" : "disabled"}>${uiIcon("focus")}</button><button type="button" class="icon-button" id="close-inspector" aria-label="Close inspector">${uiIcon("close")}</button></div></div>`;
     if (building.disabled) html += `<div class="insp-disabled">OUT OF SERVICE — this building is temporarily disabled.</div>`;
     html += `<div class="insp-d">${def.desc}</div>`;
+    const architecture = building.architecture || def.architecture;
+    if (architecture) {
+      const summary = [
+        architecture.floors ? `${architecture.floors} floors` : null,
+        ARCHITECTURE_NAMES.base[architecture.base], ARCHITECTURE_NAMES.roof[architecture.roof],
+        ARCHITECTURE_NAMES.family[architecture.family], Number.isInteger(architecture.variant) ? `Variant ${architecture.variant + 1}` : null,
+      ].filter(Boolean).join(" · ");
+      html += `<div class="architecture-summary">${summary}</div>`;
+    }
     html += `<div class="insp-val">Value in the current regime<span class="vbar"><span style="width:${pct}%"></span></span><b>${value.toFixed(2)}×</b></div>`;
-    html += `<div class="insp-io"><div class="io-box"><b>Base output</b>${flowText(def.outputs, "+")}</div><div class="io-box"><b>Base needs</b>${flowText(def.inputs, "−")}</div></div>`;
+    html += `<div class="insp-io"><div class="io-box"><b>Current output</b>${flowText(def.outputs, "+")}</div><div class="io-box"><b>Current needs</b>${flowText(def.inputs, "−")}</div></div>`;
     if (this.engine.state.tick > 0) {
       const inhabited = def.tags.includes("residential");
       const activity = inhabited ? building.occupancy ?? 0 : building.activity ?? 0;
@@ -282,16 +502,58 @@ export class UI {
     if (bonusTags.length) html += `<div class="insp-note">The <b>${REGIME_META[this.engine.dominantRegime().key].lbl}</b> regime values: ${bonusTags.map(tagText).join(", ")}.</div>`;
     const districtName = DISTRICT_NAMES[districtOf(building.c, building.r)];
     html += `<div class="insp-age">Age: ${building.age} turns · ${districtName} · local heat: ${heat.toFixed(1)}</div>`;
+
+    const transformations = this.engine.transformationOptions?.(building) || [];
+    if (transformations.length) {
+      if (this.transformPreview?.building !== building || !transformations.some(option => option.id === this.transformPreview.id)) this.transformPreview = null;
+      html += `<section class="living-layers"><div class="section-kicker">Living Layers</div><h2>Transform this building</h2><p class="section-help">Review every effect before spending anything.</p><div class="transformation-list">${transformations.map(option => `<article class="transformation-offer${this.transformPreview?.id === option.id ? " selected" : ""}"><div class="offer-heading"><strong>${option.name}</strong><span>${option.cost?.money || 0} € · ${option.cost?.materials || 0} materials</span></div><p>${option.desc || ""}</p><button type="button" data-transform-preview="${option.id}" aria-expanded="${this.transformPreview?.id === option.id}">Preview transformation</button></article>`).join("")}</div>`;
+      const preview = transformations.find(option => option.id === this.transformPreview?.id);
+      if (preview) html += this.renderTransformationPreview(preview);
+      html += "</section>";
+    } else this.transformPreview = null;
+
     const options = this.engine.conversionOptions(building);
     if (building.conversion) {
-      html += `<div class="insp-conversion converted" tabindex="-1"><strong>✓ Workshop repurposed</strong><p>Maintains the ${districtName}. This service replaces materials production.</p></div>`;
+      html += `<div class="insp-conversion converted" tabindex="-1"><strong>✓ ${def.name}</strong><p>${def.desc}</p></div>`;
     } else if (options.length) {
-      html += `<div class="insp-conversion"><div class="conversion-kicker">Give this building a new role</div>${options.map(option => `<div class="conversion-offer"><strong>${option.name}</strong><p>Maintains the ${districtName}. Replaces the workshop's materials production and sales income.</p><p class="conversion-cost">${option.cost.money} € + ${option.cost.materials} materials</p><button type="button" data-conversion="${option.id}" ${option.reason ? "disabled" : ""}>Renovate this workshop</button><p class="conversion-condition">${option.reason || `Available from phase ${option.phase}, after ${option.minAge} turns.`}</p></div>`).join("")}</div>`;
+      html += `<div class="insp-conversion"><div class="conversion-kicker">Give this building a new role</div>${options.map(option => `<div class="conversion-offer"><strong>${option.name}</strong><p>${option.desc}</p><p class="conversion-cost">${option.cost.money} € + ${option.cost.materials} materials</p><button type="button" data-conversion="${option.id}" ${option.reason ? "disabled" : ""}>Confirm repurposing</button><p class="conversion-condition">${option.reason || `Available from phase ${option.phase}, after ${option.minAge} turns.`}</p></div>`).join("")}</div>`;
     }
+
+    const history = Array.isArray(building.history) ? building.history : [];
+    html += `<details class="insp-history"><summary>Building history</summary>${Number.isFinite(building.createdAt) ? `<p>Built on turn ${building.createdAt}</p>` : ""}${history.length ? `<ol>${history.map(event => `<li><span>Turn ${event.tick}</span><p>${event.label}</p></li>`).join("")}</ol>` : "<p>No transformations recorded yet.</p>"}</details>`;
     setHTML(this.$.inspector, html);
     this.$.inspector.classList.add("on");
     const close = document.getElementById("close-inspector");
     if (close) close.onclick = () => this.showInspector(null);
+    this.$.inspector.querySelector("[data-focus-building]")?.addEventListener?.("click", () => {
+      this.renderer.focusBuilding?.(building);
+      this.setSideOpen?.(false);
+    });
+    for (const button of this.$.inspector.querySelectorAll("[data-transform-preview]")) {
+      button.onclick = () => {
+        this.transformPreview = { building, id: button.dataset.transformPreview };
+        this.showInspector(building);
+      };
+    }
+    this.$.inspector.querySelector("[data-transform-cancel]")?.addEventListener?.("click", () => {
+      const id = this.transformPreview?.id;
+      this.transformPreview = null;
+      this.showInspector(building);
+      if (id) this.$.inspector.querySelector(`[data-transform-preview="${id}"]`)?.focus({ preventScroll: true });
+    });
+    for (const button of this.$.inspector.querySelectorAll("[data-transform-confirm]")) {
+      button.onclick = () => {
+        const id = button.dataset.transformConfirm;
+        const reason = this.engine.transformationBlockReason(building, id);
+        if (reason) { this.engine.toast(reason); this.update(); return; }
+        if (this.engine.transformBuilding(building, id)) {
+          this.transformPreview = null;
+          this.renderer.sync();
+          this.update();
+          this.$.inspector.querySelector("#close-inspector")?.focus({ preventScroll: true });
+        }
+      };
+    }
     for (const button of this.$.inspector.querySelectorAll("[data-conversion]")) {
       button.onclick = () => {
         const id = button.dataset.conversion;

@@ -2,6 +2,40 @@
    a CSP connect-src exception. The development build keeps its local URLs. */
 const EMBEDDED_HEADER = "data:model/gltf-binary;base64,";
 const INVALID_EMBEDDED_MODEL = "Invalid embedded model data. Rebuild the standalone game.";
+const ARCHITECTURE_BASES = new Set(["residential", "shop", "workshop", "warehouse", "civic"]);
+const ARCHITECTURE_ROOFS = new Set(["traditional", "garden", "productive"]);
+const ARCHITECTURE_FAMILIES = new Set(["banks", "works", "gardens"]);
+
+export function layerPlanForBuilding(building, layers, roofsVisible = true) {
+  const architecture = building?.architecture;
+  if (!architecture || !layers?.modules) return null;
+  const { base, floors, roof, family, variant } = architecture;
+  if (!ARCHITECTURE_BASES.has(base) || !Number.isInteger(floors) || floors < 1 || floors > 4
+    || !ARCHITECTURE_ROOFS.has(roof) || !ARCHITECTURE_FAMILIES.has(family)
+    || !Number.isInteger(variant) || variant < 0 || variant > 2) return null;
+  const floorHeight = Number(layers.floorHeight);
+  if (!Number.isFinite(floorHeight) || floorHeight <= 0) return null;
+  if (base === "civic") {
+    if (!layers.modules.base_civic?.file) return null;
+    return {
+      baseKey: "base_civic", floorKey: null, roofKey: null, floors: 1, floorHeight,
+      roofsVisible: true, height: 1.08, signature: "base_civic|standalone",
+    };
+  }
+  let baseKey = base === "residential" ? `base_house_${family}_${variant % 3}`
+    : base === "workshop" ? `base_workshop_${family}_${variant % 2}`
+      : base === "warehouse" || base === "shop" ? `base_${base}_${family}` : "base_civic";
+  const conversionKey = building.conversion ? `conversion_${building.conversion}` : null;
+  if (conversionKey && layers.modules[conversionKey]?.file) baseKey = conversionKey;
+  const floorKey = `floor_${family}_${variant % 3}`;
+  const roofKey = roof === "traditional" ? `roof_traditional_${family}_${variant % 2}` : `roof_${roof}_${family}`;
+  const keys = [baseKey, ...Array.from({ length: floors - 1 }, () => floorKey), roofKey];
+  if (keys.some(key => !layers.modules[key]?.file)) return null;
+  return {
+    baseKey, floorKey, roofKey, floors, floorHeight, roofsVisible,
+    signature: [baseKey, floors, floorKey, roofKey, roofsVisible].join("|"),
+  };
+}
 
 export function decodeEmbeddedGLB(uri) {
   if (typeof uri !== "string" || !uri.startsWith(EMBEDDED_HEADER)) throw new Error(INVALID_EMBEDDED_MODEL);

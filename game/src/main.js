@@ -23,10 +23,11 @@ const loading = document.getElementById("loading");
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 let engine = new CityEngine();
 let renderer, ui;
-onLocaleChange(() => ui?.riverView?.render());
+onLocaleChange(() => { ui?.riverView?.render(); ui?.update(); });
 let mode = "classic";              // classic | challenge | river
 let challenge = null;
 let river = null;
+let speedBeforePhoto = null;
 const challengeStorage = (() => { try { return globalThis.localStorage || null; } catch { return null; } })();
 let selected = null, bulldoze = false, selectedRotation = 0, lastTool = null;
 let keyboardCell = { c: Math.floor(COLS / 2), r: Math.floor(ROWS / 2) };
@@ -61,6 +62,19 @@ const handlers = {
   onSpeed: () => {
     if (river && !river.canAdvance) { engine.state.speed = 0; ui.buildSpeed(); }
     clock.acc = 0;
+  },
+  onPhotoMode: enabled => {
+    if (enabled) {
+      speedBeforePhoto = engine.state.speed;
+      engine.state.speed = 0;
+    } else {
+      const canResume = !engine.state.outcome && (!challenge || challenge.status === "running") && (!river || river.canAdvance);
+      if (canResume && speedBeforePhoto != null) engine.state.speed = speedBeforePhoto;
+      speedBeforePhoto = null;
+    }
+    clock.acc = 0;
+    clock.last = performance.now();
+    ui.buildSpeed();
   },
   onRestart: () => restart(),
   onExitChallenge: () => exitChallenge(),
@@ -154,14 +168,15 @@ function updateKeyboardCursor() {
 }
 
 function handleCell(cr) {
-  if (river && river.status !== "running") return;
+  if (ui.photoMode || (river && river.status !== "running")) return;
   syncTools();
   if (!cr) { ui.showInspector(null); return; }
   if (bulldoze) {
     const building = engine.occ[cr.r]?.[cr.c];
     if (!building) { engine.toast("There is no building to demolish here."); ui.update(); return; }
-    const refund = Math.round((building.def.cost?.money || 0) * 0.4);
+    const moneyBefore = engine.state.res.money;
     if (engine.removeAt(cr.c, cr.r)) {
+      const refund = Math.round((engine.state.res.money - moneyBefore) * 100) / 100;
       renderer.sync();
       ui.showInspector(null);
       engine.toast(`${building.def.name} demolished · +${refund} €`);
@@ -264,19 +279,28 @@ function wireInputs() {
     if (event.key === "Escape") {
       const modal = document.getElementById("modal");
       if (modal.classList.contains("on")) { document.getElementById("modal-ok")?.click(); return; }
+      if (ui.photoMode) { ui.setPhotoMode(false); return; }
+      if (!document.getElementById("display-panel").hidden) { ui.toggleDisplay(false); return; }
       clearTools();
       ui.showInspector(null);
       updateKeyboardCursor();
       return;
     }
+    if (["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)) return;
+    if ((event.key === "p" || event.key === "P") && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      if (document.querySelector("#modal.on, #end.on, #challenge-end.on, #river-dialog.on")) return;
+      event.preventDefault();
+      ui.setPhotoMode(!ui.photoMode);
+      return;
+    }
     if (event.code === "Space" && !["BUTTON", "INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)) {
       event.preventDefault();
-      if (river && !river.canAdvance) return;
+      if (ui.photoMode || (river && !river.canAdvance)) return;
       engine.state.speed = engine.state.speed === 0 ? 1 : 0;
       ui.buildSpeed();
       return;
     }
-    if ((event.key === "r" || event.key === "R") && selected) {
+    if ((event.key === "r" || event.key === "R") && selected && !ui.photoMode) {
       event.preventDefault();
       selectedRotation = (selectedRotation + Math.PI / 2) % (Math.PI * 2);
       renderer.setGhostRotation(selectedRotation);
@@ -331,6 +355,10 @@ function loop(now) {
 }
 
 function restart() {
+  if (ui?.photoMode) ui.setPhotoMode(false);
+  document.body.classList.remove("photo-mode", "side-open");
+  document.getElementById("display-panel").hidden = true;
+  document.getElementById("display-toggle").setAttribute("aria-expanded", "false");
   for (const [, record] of renderer.meshByBuilding) {
     renderer.scene.remove(record.group);
     renderer.disposeObj(record.group);

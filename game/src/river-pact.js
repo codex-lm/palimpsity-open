@@ -76,6 +76,10 @@ export class RiverCityEngine extends CityEngine {
     this._producingTurn = this.state.tick + 1;
     try { super.tick(); } finally { this._producingTurn = null; }
   }
+  endGame(outcome, reason) {
+    if (outcome === "victory") return;
+    super.endGame(outcome, reason);
+  }
   profileOf(building) {
     const profile = super.profileOf(building);
     const water = profile?.outputs?.water;

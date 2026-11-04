@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "python -m http.server 5173",
-    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs test/river-pact.mjs test/river-pact-controls.mjs",
+    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/living-layers.mjs test/living-layers-static.mjs test/renderer-living-layers.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs test/river-pact.mjs test/river-pact-controls.mjs",
     "test:challenge": "node --test test/challenge.mjs",
     "test:gameplay": "node test/gameplay-regressions.mjs",
     "test:ui": "node test/ui-contracts.mjs",
@@ -15,6 +15,9 @@
     "test:victory": "node test/victory-check.mjs",
     "test:artifact": "node test/artifact-check.mjs",
     "test:browser": "node test/game-browser-check.mjs",
+    "test:first-house-4k": "node test/first-house-4k.mjs",
+    "test:renderer-visual": "node test/renderer-visual-check.mjs",
+    "test:living-layers-browser": "node test/living-layers-browser.mjs",
     "test:diorama": "node test/diorama-state-check.mjs",
     "test:diorama-browser": "node test/diorama-browser-check.mjs",
     "test:complete": "node test/complete-state-check.mjs",

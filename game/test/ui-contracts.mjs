@@ -4,6 +4,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { UI } from '../src/ui.js';
 import { CityEngine } from '../src/engine.js';
@@ -145,4 +146,61 @@ test('la lentille usure tient compte de l’entretien plutôt que du seul âge',
   assert.equal(engine.state.buildings[0].age, 130);
   assert.notEqual(mesh.material.color.getHex(), unattended);
   assert.equal(mesh.material.color.getHex(), context._lensColors.maintenance[0].getHex());
+});
+
+function focusFixture() {
+  const control = visible => ({
+    isConnected: true,
+    closest() { return null; },
+    getClientRects() { return visible ? [{}] : []; },
+    setAttribute() {},
+    focus() { document.activeElement = this; },
+  });
+  const canvas = control(true), toggle = control(true), display = control(true), hidden = control(false);
+  globalThis.document = {
+    activeElement: null,
+    body: { classList: { toggle() {} } },
+    getElementById(id) { return id === 'cv' ? canvas : null; },
+  };
+  return { canvas, toggle, display, hidden };
+}
+
+test('la fermeture du tiroir cible le bouton visible puis le canvas en repli', () => {
+  const { canvas, toggle } = focusFixture();
+  const ui = { sideOpen: true, $: { 'side-toggle': toggle } };
+  UI.prototype.setSideOpen.call(ui, false);
+  assert.equal(document.activeElement, toggle);
+  toggle.getClientRects = () => [];
+  ui.sideOpen = true;
+  UI.prototype.setSideOpen.call(ui, false);
+  assert.equal(document.activeElement, canvas);
+});
+
+test('la sortie photo ignore les retours masqués par CSS et garde un focus visible', () => {
+  const { canvas, toggle, display, hidden } = focusFixture();
+  const ui = {
+    photoMode: true, photoTime: 'day', photoReturnFocus: hidden,
+    renderer: { setPhotoMode() {} }, h: { onPhotoMode() {} },
+    $: { 'photo-controls': toggle, 'display-toggle': display },
+  };
+  UI.prototype.setPhotoMode.call(ui, false);
+  assert.equal(document.activeElement, display);
+  display.getClientRects = () => [];
+  ui.photoMode = true;
+  UI.prototype.setPhotoMode.call(ui, false);
+  assert.equal(document.activeElement, canvas);
+});
+
+test('le refund affiché vient du crédit réel et P reste inerte derrière une modale', () => {
+  const source = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
+  assert.match(source, /const moneyBefore = engine\.state\.res\.money/);
+  assert.match(source, /engine\.state\.res\.money - moneyBefore/);
+  assert.doesNotMatch(source, /building\.def\.cost\?\.money[^\n]*0\.4/);
+  assert.match(source, /document\.querySelector\("#modal\.on, #end\.on, #challenge-end\.on, #river-dialog\.on"\)\) return/);
+});
+
+test('les contrôles mobiles du défi et du statut conservent leurs propres zones', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /#challenge\{position:fixed;top:94px;right:10px/);
+  assert.match(html, /#placement-status\{bottom:145px;max-width:calc\(100vw - 20px\)\}/);
 });
