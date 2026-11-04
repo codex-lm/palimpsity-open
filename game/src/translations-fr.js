@@ -470,7 +470,17 @@ export const EXACT_FR = {
   "Maintenance demand (engine units)": "Demande d’entretien (unités moteur)",
   "Maintenance provided (engine units)": "Entretien fourni (unités moteur)",
   "Upkeep (€ / turn)": "Coût d’entretien (€ / tour)",
-  "This transformation could not be applied.": "Cette transformation n’a pas pu être appliquée."
+  "This transformation could not be applied.": "Cette transformation n’a pas pu être appliquée.",
+  "Levels": "Niveaux",
+  "Use": "Usage",
+  "Roof": "Toit",
+  "Appearance": "Apparence",
+  "Current": "Actuel",
+  "Potential income (€ / turn)": "Revenus potentiels (€ / tour)",
+  "No economic changes.": "Aucun changement économique.",
+  "Current architecture": "Architecture actuelle",
+  "Proposed architecture": "Architecture proposée",
+  "Scroll for more buildings": "Faire défiler pour voir plus de bâtiments"
 };
 
 export const TEMPLATES_FR = [
@@ -826,5 +836,17 @@ export const TEMPLATES_FR = [
   {
     "en": "Changes applied: {0} · Spent {1} € + {2} material",
     "fr": "Modifications appliquées : {0} · Dépense : {1} € + {2} matériau"
+  },
+  {
+    "en": "Unchanged values ({0})",
+    "fr": "Valeurs inchangées ({0})"
+  },
+  {
+    "en": "{0}–{1} of {2} · Scroll for more",
+    "fr": "{0}–{1} sur {2} · Faire défiler"
+  },
+  {
+    "en": "{0} buildings",
+    "fr": "{0} bâtiments"
   }
 ];

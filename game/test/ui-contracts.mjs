@@ -212,6 +212,11 @@ test('A3 sépare charge et apport d’entretien, coût argent et singuliers', ()
   const singular = UI.prototype.renderTransformationPreview.call({}, engine.transformationOptions(house).find(option => option.id === 'variant_1'));
   assert.match(singular, /1 floor/);
   assert.match(singular, /1 material/);
+  assert.match(singular, /data-architecture-comparison/);
+  assert.match(singular, /unchanged-details/);
+  assert.match(singular, /No economic changes\./);
+  const use = UI.prototype.renderTransformationPreview.call({}, engine.transformationOptions(house).find(option => option.id === 'base_shop'));
+  assert.doesNotMatch(use, /data-architecture-comparison/);
   assert.equal(engine.transformBuilding(house, 'add_floor'), true);
   assert.equal(engine.transformBuilding(house, 'add_floor'), true);
   const option = engine.transformationOptions(house).find(item => item.id === 'add_floor');

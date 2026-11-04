@@ -42,8 +42,9 @@ export class RiverPactView {
     if (focus) node.querySelector(`[id="${focus}"]`)?.focus({ preventScroll: true });
   }
 
-  render() {
+  render(compact = false) {
     const p = this.pact;
+    this.panel.classList.toggle("river-compact", compact);
     this.panel.setAttribute("aria-label", say("River Pact", "Le pacte de la rivière"));
     document.body.classList.toggle("river-mode", !!p);
     this.dialog.classList.toggle("on", !!p && (p.awaitingCharter || p.status !== "running"));
@@ -71,11 +72,13 @@ export class RiverPactView {
       <div class="river-weather ${weather.kind}"><b>${forecast}</b><div class="river-timeline" aria-hidden="true"><i style="width:${Math.min(100, s.tick / 240 * 100)}%"></i><span></span></div><small>${say("Water supply falls on turns 120–149. Add wells before it arrives.", "La production d’eau baisse aux tours 120–149. Ajoute des puits avant.")}</small></div>
       <div class="river-budget">${Math.round(s.res.population)} ${say("residents", "habitants")} · ${Math.round(s.res.money)} €${p.charter ? ` · ${charter}` : ""}</div>
       ${button("river-step", say("Advance 5 turns", "Avancer de 5 tours"), !p.canAdvance)}
-      <h2>${text(progress.stageTitle || stages[p.stage])}</h2><p>${description}</p>
+      <details id="river-objectives" ${compact ? "" : "open"}><summary>${say("Full objectives", "Objectifs complets")}</summary><h2>${text(progress.stageTitle || stages[p.stage])}</h2><p>${description}</p>
       ${s.tick === 0 ? `<p>${say("Try 5 houses, 2 wells, a farm and a local market in one quarter of the map. Build while paused, then advance.", "Essaie 5 maisons, 2 puits, une ferme et un marché dans un même quart de la carte. Construis en pause, puis avance.")}</p>` : ""}
       <ul class="river-goals">${progress.rows.map(row => `<li class="${row.met ? "met" : ""}"><span aria-label="${row.met ? say("Met", "Atteint") : say("Pending", "À atteindre")}">${row.met ? "✓" : "○"}</span><div><b>${text(row.label)}</b><small>${text(row.detail)}</small></div></li>`).join("")}</ul>
-      <details id="river-ledger"><summary>${say("District supplies", "Approvisionnement des quartiers")}</summary><small>${say("The map has four quarters. Each inhabited district needs its own services.", "La carte a quatre quarts. Chaque quartier habité a besoin de ses services.")}</small>${s.districts.filter(d => d.pop > 0).map(d => `<p><b>${text(d.name)}</b><br>${say("Housing", "Logements")} ${Math.round(d.pop)} · ${say("food", "nourriture")} ${Math.round(d.foodCoverage * 100)}% · ${say("water", "eau")} ${Math.round(d.waterCoverage * 100)}% · ${say("access", "accès")} ${Math.round(d.access * 100)}%</p>`).join("")}</details>
+      <details id="river-ledger"><summary>${say("District supplies", "Approvisionnement des quartiers")}</summary><small>${say("The map has four quarters. Each inhabited district needs its own services.", "La carte a quatre quarts. Chaque quartier habité a besoin de ses services.")}</small>${s.districts.filter(d => d.pop > 0).map(d => `<p><b>${text(d.name)}</b><br>${say("Housing", "Logements")} ${Math.round(d.pop)} · ${say("food", "nourriture")} ${Math.round(d.foodCoverage * 100)}% · ${say("water", "eau")} ${Math.round(d.waterCoverage * 100)}% · ${say("access", "accès")} ${Math.round(d.access * 100)}%</p>`).join("")}</details></details>
       <small>${say("Pauses are free. Build before advancing. Each batch stops at a decision.", "Les pauses sont libres. Construis avant d’avancer. Chaque choix arrête les tours.")}</small>`);
+    const objectives = this.panel.querySelector("#river-objectives");
+    if (objectives && this.compactState !== compact) { objectives.open = !compact; this.compactState = compact; }
     for (const control of document.querySelectorAll("#speed button")) control.disabled = !p.canAdvance;
     const state = p.awaitingCharter ? "charter" : p.status === "running" ? "" : p.status;
     if (!state) {

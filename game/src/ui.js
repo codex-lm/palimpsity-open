@@ -16,8 +16,16 @@ const ARCHITECTURE_NAMES = {
   roof: { traditional: "Traditional roof", garden: "Garden roof", productive: "Productive roof" },
   family: { banks: "Banks", works: "Works", gardens: "Gardens" },
 };
+const TRANSFORMATION_GROUPS = [
+  { id: "levels", label: "Levels", match: id => id === "add_floor" },
+  { id: "use", label: "Use", match: id => id.startsWith("base_") },
+  { id: "roof", label: "Roof", match: id => id.startsWith("roof_") },
+  { id: "appearance", label: "Appearance", match: id => id.startsWith("family_") || id.startsWith("variant_") },
+];
+const groupOf = id => TRANSFORMATION_GROUPS.find(group => group.match(id)) || TRANSFORMATION_GROUPS[0];
+const transformationIcon = id => id.startsWith("roof_") ? uiIcon("roof") : groupOf(id).id === "appearance" ? uiIcon("display") : buildingIcon(id === "base_shop" ? "market" : id === "base_workshop" ? "workshop" : "house");
 const OUTPUT_LABELS = {
-  population: "Housing capacity", workers: "Worker capacity", money: "Income",
+  population: "Housing capacity", workers: "Worker capacity", money: "Potential income (€ / turn)",
   food: "Food production", water: "Water production", energy: "Energy production",
   materials: "Materials production", trust: "Trust services",
 };
@@ -58,7 +66,8 @@ function comparisonRows(before, after) {
   const rows = [];
   const add = (label, left, right, tone = "neutral") => {
     if (left == null && right == null) return;
-    rows.push({ label, left: metricValue(left ?? 0), right: metricValue(right ?? 0), tone });
+    const beforeValue = left ?? 0, afterValue = right ?? 0;
+    rows.push({ label, left: metricValue(beforeValue), right: metricValue(afterValue), tone, changed: beforeValue !== afterValue });
   };
   add("Floors", before?.architecture?.floors, after?.architecture?.floors);
   for (const key of Object.keys(OUTPUT_LABELS)) add(OUTPUT_LABELS[key], metricAt(before, "outputs", key), metricAt(after, "outputs", key), "benefit");
@@ -71,6 +80,10 @@ function comparisonRows(before, after) {
   return rows;
 }
 
+function comparisonTable(rows) {
+  return `<table class="profile-diff"><thead><tr><th scope="col">Effect</th><th scope="col">Before</th><th scope="col">After</th></tr></thead><tbody>${rows.map(row => `<tr data-tone="${row.tone}"><th scope="row">${row.label}</th><td>${row.left}</td><td>${row.right}</td></tr>`).join("")}</tbody></table>`;
+}
+
 export class UI {
   constructor(engine, renderer, handlers) {
     this.engine = engine;
@@ -81,6 +94,7 @@ export class UI {
     this.lens = "none";
     this.inspectBuilding = null;
     this.transformPreview = null;
+    this.layerGroup = "levels";
     this.photoMode = false;
     this.photoTime = "day";
     this.sideOpen = false;
@@ -95,7 +109,7 @@ export class UI {
     };
     this.photoTime = this.displayPrefs.photoTime;
     this.$ = {};
-    for (const id of ["hud-res", "regimes", "clock", "speed", "palette", "advisors", "diagnostic", "inspector", "side", "side-toggle", "side-close", "lenses", "modal", "toast", "end", "camera-home", "objectives-summary", "objectives-list", "challenge", "challenge-end", "display-toggle", "display-panel", "display-close", "reduced-effects", "roof-visibility", "photo-controls", "photo-exit"]) {
+    for (const id of ["hud-res", "regimes", "clock", "speed", "palette", "palette-hint", "advisors", "diagnostic", "inspector", "side", "side-toggle", "side-close", "lenses", "modal", "toast", "end", "camera-home", "objectives-summary", "objectives-list", "challenge", "challenge-end", "display-toggle", "display-panel", "display-close", "reduced-effects", "roof-visibility", "photo-controls", "photo-exit"]) {
       this.$[id] = document.getElementById(id);
     }
     this.buildSpeed();
@@ -104,6 +118,7 @@ export class UI {
     this.buildDisplayTools();
     this.buildPanelTools();
     this.applyDisplayPreferences();
+    this.$.palette.addEventListener("scroll", () => this.renderPaletteHint(), { passive: true });
     this.renderPalette();
     this.renderRegimes();
   }
@@ -320,6 +335,22 @@ export class UI {
     }
     state.newlyUnlocked = [];
     localizeDOM(this.$.palette);
+    this.renderPaletteHint();
+  }
+
+  renderPaletteHint() {
+    const hint = this.$["palette-hint"];
+    if (!hint) return;
+    const buttons = [...this.$.palette.querySelectorAll("#building-list [data-id]")];
+    const bounds = this.$.palette.getBoundingClientRect();
+    const visible = buttons.filter(button => {
+      const rect = button.getBoundingClientRect();
+      return rect.right > bounds.left + 2 && rect.left < bounds.right - 2;
+    });
+    const first = buttons.indexOf(visible[0]), last = buttons.indexOf(visible.at(-1));
+    const more = this.$.palette.scrollWidth > this.$.palette.clientWidth + 4;
+    hint.textContent = buttons.length && more ? `${first + 1}–${last + 1} of ${buttons.length} · Scroll for more` : `${buttons.length} buildings`;
+    localizeDOM(hint);
   }
 
   refreshPaletteAfford() {
@@ -431,7 +462,9 @@ export class UI {
 
   renderTransformationPreview(option, feedback = null) {
     const rows = comparisonRows(option.before, option.after);
-    const aesthetic = option.id.startsWith("family_") || option.id.startsWith("variant_");
+    const changedRows = rows.filter(row => row.changed), unchangedRows = rows.filter(row => !row.changed);
+    const group = groupOf(option.id);
+    const aesthetic = group.id === "appearance";
     const condition = option.reason || (option.phase ? `Available from phase ${option.phase}.` : "Available now.");
     const architecture = option.after?.architecture;
     const result = architecture ? [
@@ -445,21 +478,70 @@ export class UI {
         <p class="conversion-cost">Cost: ${costText(option.cost)}</p>
         <p class="conversion-condition">${condition}</p>
         ${aesthetic ? '<p class="aesthetic-note">Appearance only · no economic advantage.</p>' : ""}
-        ${rows.length ? `<table class="profile-diff"><thead><tr><th scope="col">Effect</th><th scope="col">Before</th><th scope="col">After</th></tr></thead><tbody>${rows.map(row => `<tr data-tone="${row.tone}"><th scope="row">${row.label}</th><td>${row.left}</td><td>${row.right}</td></tr>`).join("")}</tbody></table>` : '<p class="aesthetic-note">No capacity, needs, production or service changes.</p>'}
+        ${changedRows.length ? comparisonTable(changedRows) : '<p class="aesthetic-note">No economic changes.</p>'}
+        ${group.id !== "use" ? `<div class="architecture-comparison" data-architecture-comparison><figure><figcaption>Before</figcaption><canvas data-architecture-before aria-label="Current architecture"></canvas></figure><figure><figcaption>After</figcaption><canvas data-architecture-after aria-label="Proposed architecture"></canvas></figure></div>` : ""}
+        ${unchangedRows.length ? `<details class="unchanged-details"><summary>Unchanged values (${unchangedRows.length})</summary>${comparisonTable(unchangedRows)}</details>` : ""}
       </div>
       ${feedback?.type === "error" ? `<div class="transform-feedback error" role="alert" tabindex="-1">${feedback.text}</div>` : ""}
       <div class="preview-actions"><button type="button" class="confirm-transform" data-transform-confirm="${option.id}" ${option.reason ? "disabled" : ""}>Apply changes</button><button type="button" class="cancel-transform" data-transform-cancel>Cancel</button></div>
     </section>`;
   }
 
+  syncArchitectureComparison() {
+    const root = this.$.inspector.querySelector("[data-architecture-comparison]");
+    const key = this.transformPreview?.id || "";
+    if (!root || !this.transformPreview) {
+      this.architectureObserver?.disconnect();
+      if (this.architectureFrame) globalThis.cancelAnimationFrame?.(this.architectureFrame);
+      this.architectureFrame = this.architectureRoot = this.architectureDrawnRoot = null;
+      this.architectureKey = "";
+      return;
+    }
+    if (this.architectureRoot === root && this.architectureKey === key) return;
+    this.architectureObserver?.disconnect();
+    if (this.architectureFrame) globalThis.cancelAnimationFrame?.(this.architectureFrame);
+    this.architectureFrame = null;
+    this.architectureRoot = root;
+    this.architectureKey = key;
+    const draw = () => {
+      this.architectureFrame = null;
+      if (!root.isConnected || !this.transformPreview) return;
+      const width = root.clientWidth, height = root.clientHeight, ratio = globalThis.devicePixelRatio || 1;
+      if (this.architectureDrawnRoot === root && this.architectureWidth === width && this.architectureHeight === height && this.architectureRatio === ratio) return;
+      this.architectureDrawnRoot = root;
+      this.architectureWidth = width;
+      this.architectureHeight = height;
+      this.architectureRatio = ratio;
+      const before = root.querySelector("[data-architecture-before]"), after = root.querySelector("[data-architecture-after]");
+      for (const canvas of [before, after]) {
+        const pixelWidth = Math.max(1, Math.round(canvas.clientWidth * ratio)), pixelHeight = Math.max(1, Math.round(canvas.clientHeight * ratio));
+        if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+        if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
+      }
+      const rendered = this.renderer.renderArchitectureComparison?.(this.transformPreview.building, this.transformPreview.id, before, after) || false;
+      root.dataset.rendered = String(rendered);
+    };
+    this.architectureDraw = draw;
+    if (globalThis.ResizeObserver) {
+      this.architectureObserver = new ResizeObserver(() => {
+        if (this.architectureFrame) return;
+        this.architectureFrame = globalThis.requestAnimationFrame(() => this.architectureDraw?.());
+      });
+      this.architectureObserver.observe(root);
+    }
+    draw();
+  }
+
   showInspector(building, { focusPreview = false } = {}) {
     const changed = this.inspectBuilding !== building;
     const active = document.activeElement;
+    const previousInspectorScroll = this.$.inspector.querySelector(".inspector-scroll")?.scrollTop || 0;
     const previousPreviewScroll = this.$.inspector.querySelector(".preview-scroll")?.scrollTop || 0;
     let focusedAction = null;
     if (this.$.inspector.contains(active)) {
       if (active.id === "close-inspector") focusedAction = "#close-inspector";
       else if (active.dataset?.conversion) focusedAction = `[data-conversion="${active.dataset.conversion}"]`;
+      else if (active.dataset?.layerGroupToggle) focusedAction = `[data-layer-group-toggle="${active.dataset.layerGroupToggle}"]`;
       else if (active.dataset?.transformPreview) focusedAction = `[data-transform-preview="${active.dataset.transformPreview}"]`;
       else if (active.dataset?.transformConfirm) focusedAction = `[data-transform-confirm="${active.dataset.transformConfirm}"]`;
       else if (active.hasAttribute?.("data-transform-title")) focusedAction = "[data-transform-title]";
@@ -482,6 +564,7 @@ export class UI {
     if (changed) {
       this.transformPreview = null;
       this.transformFeedback = null;
+      this.layerGroup = "levels";
       this.setSideOpen?.(true);
     }
     this.$.side?.classList.add("has-inspector");
@@ -492,7 +575,7 @@ export class UI {
     const bonusTags = this.engine.tagBonusFor(building);
     const heat = this.engine.localHeatAt(building.c, building.r);
     const canFocus = typeof this.renderer.focusBuilding === "function";
-    let html = `<div class="insp-h"><span>${def.name}${revalued ? ' <span class="reval">⬆ renewed value</span>' : ""}</span><div class="insp-actions"><button type="button" class="icon-button" data-focus-building aria-label="Focus building" title="Focus building" ${canFocus ? "" : "disabled"}>${uiIcon("focus")}</button><button type="button" class="icon-button" id="close-inspector" aria-label="Close inspector">${uiIcon("close")}</button></div></div>`;
+    let html = `<div class="insp-h"><span>${def.name}${revalued ? ' <span class="reval">⬆ renewed value</span>' : ""}</span><div class="insp-actions"><button type="button" class="icon-button" data-focus-building aria-label="Focus building" title="Focus building" ${canFocus ? "" : "disabled"}>${uiIcon("focus")}</button><button type="button" class="icon-button" id="close-inspector" aria-label="Close inspector">${uiIcon("close")}</button></div></div><div class="inspector-scroll"><div class="inspector-collapsed">`;
     if (building.disabled) html += `<div class="insp-disabled">OUT OF SERVICE — this building is temporarily disabled.</div>`;
     html += `<div class="insp-d">${def.desc}</div>`;
     const architecture = building.architecture || def.architecture;
@@ -515,19 +598,30 @@ export class UI {
     html += `<div class="insp-tags">${def.tags.map(tag => `<span class="tag${bonusTags.includes(tag) ? " hot" : ""}">${tagText(tag)}</span>`).join("")}</div>`;
     if (bonusTags.length) html += `<div class="insp-note">The <b>${REGIME_META[this.engine.dominantRegime().key].lbl}</b> regime values: ${bonusTags.map(tagText).join(", ")}.</div>`;
     const districtName = DISTRICT_NAMES[districtOf(building.c, building.r)];
-    html += `<div class="insp-age">Age: ${building.age} turns · ${districtName} · local heat: ${heat.toFixed(1)}</div>`;
+    html += `<div class="insp-age">Age: ${building.age} turns · ${districtName} · local heat: ${heat.toFixed(1)}</div></div>`;
 
     const transformations = this.engine.transformationOptions?.(building) || [];
     if (transformations.length) {
       if (this.transformPreview?.building !== building || !transformations.some(option => option.id === this.transformPreview.id)) this.transformPreview = null;
+      if (this.transformPreview) this.layerGroup = groupOf(this.transformPreview.id).id;
+      if (!TRANSFORMATION_GROUPS.some(group => group.id === this.layerGroup)) this.layerGroup = "levels";
       const feedback = this.transformFeedback?.building === building ? this.transformFeedback : null;
       this.$.side?.classList.toggle("has-transform-preview", !!this.transformPreview);
-      html += `<section class="living-layers"><div class="section-kicker">Living Layers</div><h2>Transform this building</h2><p class="section-help">Review every effect before spending anything.</p>${feedback?.type === "success" ? `<div class="transform-feedback success" role="status" tabindex="-1" data-transform-success>${feedback.text}</div>` : ""}<div class="transformation-list">${transformations.map(option => `<article class="transformation-offer${this.transformPreview?.id === option.id ? " selected" : ""}"><div class="offer-heading"><strong>${option.name}</strong><span>${costText(option.cost)}</span></div><p>${option.desc || ""}</p><button type="button" data-transform-preview="${option.id}" aria-expanded="${this.transformPreview?.id === option.id}">Preview transformation</button>${this.transformPreview?.id === option.id ? this.renderTransformationPreview(option, feedback) : ""}</article>`).join("")}</div></section>`;
+      html += `<section class="living-layers"><div class="section-kicker">Living Layers</div><h2>Transform this building</h2><p class="section-help">Review every effect before spending anything.</p>${feedback?.type === "success" ? `<div class="transform-feedback success" role="status" tabindex="-1" data-transform-success>${feedback.text}</div>` : ""}<div class="transformation-groups">${TRANSFORMATION_GROUPS.map(group => {
+        const offers = transformations.filter(option => group.match(option.id));
+        if (!offers.length) return "";
+        const open = this.layerGroup === group.id;
+        return `<section class="transformation-group${open ? " active" : ""}" data-layer-group="${group.id}"><button type="button" class="layer-group-toggle" data-layer-group-toggle="${group.id}" aria-expanded="${open}" aria-controls="layer-group-${group.id}"><span>${group.label}</span><small>${offers.length}</small></button><div class="transformation-list" id="layer-group-${group.id}" ${open ? "" : "hidden"}>${offers.map(option => {
+          const current = option.reason === "This transformation is already applied.";
+          return `<article class="transformation-offer${this.transformPreview?.id === option.id ? " selected" : ""}"><div class="offer-heading"><span class="offer-icon">${transformationIcon(option.id)}</span><strong>${option.name}</strong><span>${costText(option.cost)}</span></div><p>${option.desc || ""}</p><p class="offer-state${current ? " current" : ""}">${current ? "Current" : option.reason || "Available now."}</p><button type="button" data-transform-preview="${option.id}" aria-expanded="${this.transformPreview?.id === option.id}">Preview transformation</button>${this.transformPreview?.id === option.id ? this.renderTransformationPreview(option, feedback) : ""}</article>`;
+        }).join("")}</div></section>`;
+      }).join("")}</div></section>`;
     } else {
       this.transformPreview = null;
       this.$.side?.classList.remove("has-transform-preview");
     }
 
+    html += `<div class="inspector-collapsed">`;
     const options = this.engine.conversionOptions(building);
     if (building.conversion) {
       html += `<div class="insp-conversion converted" tabindex="-1"><strong>✓ ${def.name}</strong><p>${def.desc}</p></div>`;
@@ -536,7 +630,7 @@ export class UI {
     }
 
     const history = Array.isArray(building.history) ? building.history : [];
-    html += `<details class="insp-history"><summary>Building history</summary>${Number.isFinite(building.createdAt) ? `<p>Built on turn ${building.createdAt}</p>` : ""}${history.length ? `<ol>${history.map(event => `<li><span>Turn ${event.tick}</span><p>${event.label}</p></li>`).join("")}</ol>` : "<p>No transformations recorded yet.</p>"}</details>`;
+    html += `<details class="insp-history"><summary>Building history</summary>${Number.isFinite(building.createdAt) ? `<p>Built on turn ${building.createdAt}</p>` : ""}${history.length ? `<ol>${history.map(event => `<li><span>Turn ${event.tick}</span><p>${event.label}</p></li>`).join("")}</ol>` : "<p>No transformations recorded yet.</p>"}</details></div></div>`;
     setHTML(this.$.inspector, html);
     this.$.inspector.classList.add("on");
     const close = document.getElementById("close-inspector");
@@ -545,9 +639,18 @@ export class UI {
       this.renderer.focusBuilding?.(building);
       this.setSideOpen?.(false);
     });
+    for (const button of this.$.inspector.querySelectorAll("[data-layer-group-toggle]")) {
+      button.onclick = () => {
+        this.layerGroup = button.dataset.layerGroupToggle;
+        this.transformPreview = null;
+        this.transformFeedback = null;
+        this.showInspector(building);
+      };
+    }
     for (const button of this.$.inspector.querySelectorAll("[data-transform-preview]")) {
       button.onclick = () => {
         this.transformFeedback = null;
+        this.layerGroup = groupOf(button.dataset.transformPreview).id;
         this.transformPreview = { building, id: button.dataset.transformPreview };
         this.showInspector(building, { focusPreview: true });
       };
@@ -602,10 +705,15 @@ export class UI {
         }
       };
     }
-    if (!focusPreview && this.transformPreview) {
-      const scroll = this.$.inspector.querySelector(".preview-scroll");
-      if (scroll) scroll.scrollTop = previousPreviewScroll;
+    if (!focusPreview) {
+      const inspectorScroll = this.$.inspector.querySelector(".inspector-scroll");
+      if (inspectorScroll) inspectorScroll.scrollTop = previousInspectorScroll;
+      if (this.transformPreview) {
+        const scroll = this.$.inspector.querySelector(".preview-scroll");
+        if (scroll) scroll.scrollTop = previousPreviewScroll;
+      }
     }
+    this.syncArchitectureComparison?.();
     if (focusPreview) {
       const title = this.$.inspector.querySelector("[data-transform-title]");
       title?.focus({ preventScroll: true });
@@ -673,6 +781,6 @@ export class UI {
     this.drainReports();
     this.drainToasts();
     this.renderEnd();
-    this.riverView?.render();
+    this.riverView?.render(!!this.inspectBuilding);
   }
 }

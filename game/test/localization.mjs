@@ -113,6 +113,15 @@ test('Living Layers shop profiles, tags and controls have complete French copy',
   assert.equal(translate('1 floor', 'fr'), '1 niveau');
   assert.equal(translate('Cost: 8 € + 1 material', 'fr'), 'Coût : 8 € + 1 matériau');
   assert.equal(translate('Changes applied: Original details · Spent 8 € + 1 material', 'fr'), 'Modifications appliquées : Détails d’origine · Dépense : 8 € + 1 matériau');
+  assert.equal(translate('Levels', 'fr'), 'Niveaux');
+  assert.equal(translate('Use', 'fr'), 'Usage');
+  assert.equal(translate('Roof', 'fr'), 'Toit');
+  assert.equal(translate('Appearance', 'fr'), 'Apparence');
+  assert.equal(translate('Current', 'fr'), 'Actuel');
+  assert.equal(translate('Potential income (€ / turn)', 'fr'), 'Revenus potentiels (€ / tour)');
+  assert.equal(translate('No economic changes.', 'fr'), 'Aucun changement économique.');
+  assert.equal(translate('Unchanged values (3)', 'fr'), 'Valeurs inchangées (3)');
+  assert.equal(translate('1–2 of 7 · Scroll for more', 'fr'), '1–2 sur 7 · Faire défiler');
 });
 
 class TextBoundary {

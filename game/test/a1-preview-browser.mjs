@@ -106,7 +106,8 @@ try {
   });
 
   const desktopBefore = await snapshot();
-  await browser.click('[data-transform-preview="base_shop"]');
+  await browser.page(() => { document.querySelector('[data-layer-group-toggle="use"]').click(); });
+  await browser.page(() => { document.querySelector('[data-transform-preview="base_shop"]').click(); });
   assertLayout(await previewLayout(), "1280x720 initial preview");
   const desktopFooter = await browser.evaluate("document.querySelector('.preview-actions').getBoundingClientRect().top");
   await browser.page(() => { document.querySelector(".preview-scroll").scrollTop = document.querySelector(".preview-scroll").scrollHeight; });
@@ -116,8 +117,9 @@ try {
   assert.deepEqual(await snapshot(), desktopBefore, "1280x720: opening and scrolling do not mutate game or camera");
   await cancelAndCheck(desktopBefore, "1280x720");
 
-  await browser.click('[data-transform-preview="base_shop"]');
-  await browser.click('[data-transform-preview="add_floor"]');
+  await browser.page(() => { document.querySelector('[data-layer-group-toggle="use"]').click(); });
+  await browser.page(() => { document.querySelector('[data-transform-preview="base_shop"]').click(); });
+  await browser.page(() => { document.querySelector('[data-transform-preview="add_floor"]').click(); });
   assert.equal(await browser.evaluate("document.querySelectorAll('.transform-preview').length"), 1, "Opening another offer replaces the expanded preview");
   assert.equal(await browser.evaluate("document.activeElement?.dataset?.transformPreview"), undefined, "The new title, not the old offer, owns focus");
   assert.equal(await browser.evaluate("document.activeElement?.hasAttribute('data-transform-title')"), true);
@@ -125,7 +127,8 @@ try {
 
   await browser.viewport({ width: 390, height: 844, dpr: 2 });
   const mobileBefore = await snapshot();
-  await browser.click('[data-transform-preview="base_shop"]');
+  await browser.page(() => { document.querySelector('[data-layer-group-toggle="use"]').click(); });
+  await browser.page(() => { document.querySelector('[data-transform-preview="base_shop"]').click(); });
   assertLayout(await previewLayout(), "390x844 initial preview");
   const mobileFooter = await browser.evaluate("document.querySelector('.preview-actions').getBoundingClientRect().top");
   await browser.page(() => { document.querySelector(".preview-scroll").scrollTop = document.querySelector(".preview-scroll").scrollHeight; });

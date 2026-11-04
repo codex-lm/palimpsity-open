@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { COLS, ROWS, BUILDINGS, ARCHITECTURE_DEFAULTS, districtOf } from "./data.js";
 import { localizeDOM } from "./localization.js";
 import { loadDioramaManifest, loadDioramaGLB, layerPlanForBuilding } from "./diorama-assets.js";
+import { ArchitecturePreview } from "./architecture-preview.js";
 
 const worldX = c => c - (COLS - 1) / 2;
 const worldZ = r => r - (ROWS - 1) / 2;
@@ -47,6 +48,7 @@ export class Renderer3D {
     this.smokePuffs = [];
     this.glbTemplates = new Map(); // legacy building IDs; shared GLB resources
     this.manifest = null;
+    this._architecturePreview = null;
     this.ghost = null;
     this.ghostId = null;
     this.ghostMats = [];
@@ -374,6 +376,15 @@ export class Renderer3D {
     return rec;
   }
 
+  renderArchitectureComparison(building, optionId, beforeCanvas, afterCanvas) {
+    if (this._disposed || !this._loaded) return false;
+    if (!this._architecturePreview) {
+      try { this._architecturePreview = new ArchitecturePreview(this); }
+      catch (error) { this._architecturePreviewError = error; return false; }
+    }
+    return this._architecturePreview.render(building, optionId, beforeCanvas, afterCanvas);
+  }
+
   getTransportChoice(id, c, r) {
     const connected = (nc, nr) => {
       const other = this.engine.occ[nr]?.[nc]?.def.id;
@@ -496,6 +507,8 @@ export class Renderer3D {
       if (restarted || !present.has(rec.b) || this.meshByBuilding.get(rec.b) !== rec || rec.group.parent !== this.scene) this.disposeObj(rec.group);
     }
     if (restarted) {
+      this._architecturePreview?.dispose();
+      this._architecturePreview = null;
       this._buildingRotations = new WeakMap();
       this._syncedEngine = this.engine;
       this.setHover(null);
@@ -865,10 +878,43 @@ export class Renderer3D {
     this.controls.enableDamping = damping;
     this.controls.saveState();
   }
-  _moveCamera(target, viewHeight, scale, immediate = false) {
+  _focusViewMetrics() {
+    const width = this._width || 1, height = this._height || 1;
+    if (width <= 900 || this.photoMode || typeof document === "undefined") return { right: 0, bottom: 0, fit: 1 };
+    let right = 0, bottom = 0;
+    const side = document.getElementById("side")?.getBoundingClientRect();
+    if (side?.width && side.left > width * 0.35 && side.right > 0 && side.top < height * 0.8) {
+      right = Math.min(width * 0.45, Math.max(0, width - side.left + 12));
+    }
+    const palette = document.getElementById("palette")?.getBoundingClientRect();
+    if (palette?.height && palette.top > height * 0.45 && palette.top < height) {
+      bottom = Math.min(height * 0.35, Math.max(0, height - palette.top + 12));
+    }
+    const availableWidth = Math.max(width * 0.5, width - right), availableHeight = Math.max(height * 0.45, height - bottom);
+    return { right, bottom, fit: Math.max(1, width / availableWidth, height / availableHeight) };
+  }
+  _clearFocusViewOffset() {
+    for (const camera of [this.perspectiveCamera, this.orthoCamera]) {
+      if (!camera.view?.enabled) continue;
+      camera.clearViewOffset();
+      camera.updateProjectionMatrix();
+    }
+    this._focusInsets = null;
+  }
+  _updateFocusViewOffset() {
+    this._clearFocusViewOffset();
+    if (this.cameraScale !== "building") return;
+    const { right, bottom } = this._focusViewMetrics();
+    if (!right && !bottom) return;
+    this.camera.setViewOffset(this._width, this._height, right / 2, bottom / 2, this._width, this._height);
+    this.camera.updateProjectionMatrix();
+    this._focusInsets = { right, bottom };
+  }
+  _moveCamera(target, viewHeight, scale, immediate = false, facade = false) {
     this._clearControlDamping();
     this._updateDistanceLimits();
-    this._offset.copy(this.camera.position).sub(this.controls.target);
+    if (facade) this._offset.copy(this.homePosition).sub(this.homeTarget);
+    else this._offset.copy(this.camera.position).sub(this.controls.target);
     if (this._offset.lengthSq() < 0.001) this._offset.copy(this.homePosition).sub(this.homeTarget);
     this._offset.normalize();
     const baseHeight = this._viewHeight();
@@ -878,6 +924,8 @@ export class Renderer3D {
     const position = target.clone().addScaledVector(this._offset, distance);
     position.y = Math.max(0.65, position.y);
     this.cameraScale = scale;
+    if (scale === "building") this._updateFocusViewOffset();
+    else this._clearFocusViewOffset();
     if (immediate || this.reducedEffects) {
       this._cameraTransition = null;
       this.camera.position.copy(position);
@@ -916,7 +964,8 @@ export class Renderer3D {
     const rec = this.meshByBuilding.get(building);
     const height = rec?.height || ((building.architecture?.floors || 1) + 1) * (this.manifest?.layers?.floorHeight || 0.48);
     const target = new THREE.Vector3(worldX(building.c), Math.max(0.35, height * 0.42), worldZ(building.r));
-    this._moveCamera(target, Math.max(5.8, height * 2.8), "building");
+    const viewHeight = Math.max(5.8, height * 2.8) * this._focusViewMetrics().fit;
+    this._moveCamera(target, viewHeight, "building", false, true);
     return true;
   }
   setCameraScale(scale) {
@@ -957,6 +1006,7 @@ export class Renderer3D {
     this.camera.position.copy(this.controls.target).addScaledVector(this._offset, height / zoom / (2 * HALF_TAN));
     this.camera.updateProjectionMatrix();
     this._clearControlDamping();
+    this._updateFocusViewOffset();
     this.camera.updateMatrixWorld();
     this._updateFog();
     return mode;
@@ -992,6 +1042,7 @@ export class Renderer3D {
     const nativeRatio = globalThis.devicePixelRatio || 1;
     this.renderer.setPixelRatio(this.quality === "high" ? nativeRatio : this.quality === "balanced" ? Math.min(nativeRatio, 1.5) : 1);
     this.renderer.setSize(width, height, false);
+    this._updateFocusViewOffset();
     this._updateFog();
     return { width, height, viewHeight };
   }
@@ -1080,6 +1131,7 @@ export class Renderer3D {
       smokeCount: this.smokePuffs.filter(puff => puff.visible).length, projectionMode: this.projectionMode,
       cameraScale: this.cameraScale, quality: this.quality, reducedEffects: this.reducedEffects,
       photoMode: this.photoMode, ambiance: this.ambiance, roofsVisible: this.roofsVisible,
+      previewContextCount: this._architecturePreview && !this._architecturePreview.disposed ? 1 : 0,
       pixelRatio: this.renderer.getPixelRatio(), nativePixelRatio: globalThis.devicePixelRatio || 1,
       drawingSize: { width: drawingSize.x, height: drawingSize.y }, cssSize: { width: this._width, height: this._height },
       fps: Math.round(this._fps * 10) / 10, droughtLevel: this._droughtLevel,
@@ -1093,6 +1145,8 @@ export class Renderer3D {
   dispose() {
     if (this._disposed) return;
     this._disposed = true;
+    this._architecturePreview?.dispose();
+    this._architecturePreview = null;
     this._ro?.disconnect();
     globalThis.removeEventListener("resize", this._onResize);
     this.canvas.removeEventListener("webglcontextlost", this._onContextLost);
