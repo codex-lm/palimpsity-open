@@ -185,7 +185,7 @@ function handleCell(cr) {
     return;
   }
   if (selected) {
-    const building = engine.place(selected, cr.c, cr.r);
+    const building = engine.place(selected, cr.c, cr.r, { family: ui.buildFamily });
     if (building) {
       renderer.setBuildingRotation(building, selectedRotation);
       renderer.sync();

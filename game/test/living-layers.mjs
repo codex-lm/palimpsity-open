@@ -28,7 +28,7 @@ test('architecture is per instance, lazily initialized, and never mutates the ca
   assert.equal(engine.transformBuilding(first, 'add_floor'), true);
   assert.equal(engine.profileOf(first).outputs.population, 12);
   assert.equal(engine.profileOf(neighbour).outputs.population, 6);
-  assert.deepEqual(neighbour.architecture, ARCHITECTURE_DEFAULTS.house);
+  assert.deepEqual(neighbour.architecture, { ...ARCHITECTURE_DEFAULTS.house, variant: 1 });
   assert.equal(JSON.stringify(BUILDINGS), catalogue);
 
   const legacy = { def: BUILDINGS.house, c: 2, r: 0, age: 17, disabled: false };
@@ -36,7 +36,54 @@ test('architecture is per instance, lazily initialized, and never mutates the ca
   engine.occ[0][2] = legacy;
   assert.equal(legacy.architecture, undefined);
   assert.equal(engine.profileOf(legacy).outputs.population, 6);
-  assert.deepEqual(legacy.architecture, ARCHITECTURE_DEFAULTS.house);
+  assert.deepEqual(legacy.architecture, ARCHITECTURE_DEFAULTS.house, 'Legacy instances keep their original appearance');
+});
+
+test('new houses use deterministic tile variants in a 3x3 block and after restart', () => {
+  const buildBlock = () => {
+    const engine = funded(1);
+    const houses = [];
+    for (let r = 6; r < 9; r++) for (let c = 0; c < 3; c++) houses.push(engine.place('house', c, r, { family: 'works' }));
+    return { engine, houses };
+  };
+  const { engine, houses } = buildBlock();
+  assert.equal(houses.length, 9);
+  for (const house of houses) {
+    assert.equal(house.architecture.family, 'works');
+    assert.equal(house.architecture.variant, (house.c + 2 * house.r) % 3);
+  }
+  for (const variant of [0, 1, 2]) assert.equal(houses.filter(house => house.architecture.variant === variant).length, 3);
+  const before = houses.map(house => ({ ...house.architecture }));
+  engine.tick();
+  assert.deepEqual(houses.map(house => ({ ...house.architecture })), before, 'Simulation time does not change appearance');
+  assert.deepEqual(buildBlock().houses.map(house => ({ ...house.architecture })), before, 'Restart repeats the same appearance');
+});
+
+test('house families have identical economics and preserve deterministic details during later work', () => {
+  const profiles = [];
+  for (const family of ['banks', 'works', 'gardens']) {
+    const engine = funded(2);
+    const money = engine.state.res.money, materials = engine.state.res.materials;
+    const house = engine.place('house', 0, 0, { family });
+    assert.equal(engine.state.res.money, money - BUILDINGS.house.cost.money);
+    assert.equal(engine.state.res.materials, materials);
+    assert.equal(engine.transformBuilding(house, 'add_floor'), true);
+    assert.equal(house.architecture.family, family);
+    assert.equal(house.architecture.variant, 0);
+    const { architecture, ...profile } = engine.profileOf(house);
+    profiles.push(profile);
+  }
+  assert.deepEqual(profiles[0], profiles[1]);
+  assert.deepEqual(profiles[1], profiles[2]);
+  const engine = funded(2);
+  const house = engine.place('house', 1, 0, { family: 'invalid' });
+  assert.equal(house.architecture.family, 'banks', 'Invalid aesthetic input falls back to Banks');
+  assert.equal(house.architecture.variant, 1);
+  const money = engine.state.res.money, materials = engine.state.res.materials;
+  assert.equal(engine.transformBuilding(house, 'family_works'), true);
+  assert.equal(engine.state.res.money, money - 12);
+  assert.equal(engine.state.res.materials, materials - 2);
+  assert.equal(house.architecture.variant, 1, 'Aesthetic renovation does not alter the tile variant');
 });
 
 test('offers expose complete cloned profiles and exact progressive house costs', () => {

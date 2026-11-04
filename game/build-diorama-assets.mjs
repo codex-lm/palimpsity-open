@@ -57,7 +57,7 @@ async function validateOutputs() {
   assert(JSON.stringify(gameMap.terrain) === JSON.stringify(genTerrain()), "game-map.json ne correspond pas à genTerrain()");
 
   const manifest = JSON.parse(await readFile(path.join(outputDir, "asset-manifest.json"), "utf8"));
-  assert(Object.keys(manifest).sort().join(",") === "decor,layers,models,terrain,transportVariants", "Manifeste: structure racine invalide");
+  assert(Object.keys(manifest).sort().join(",") === "decor,environment,layers,models,terrain,transportVariants", "Manifeste: structure racine invalide");
   assert(manifest.terrain === "terrain-game.glb", "Manifeste: terrain invalide");
   assert(Object.keys(manifest.models).length === 18 && catalogModelIds.every((id) => id in manifest.models), "Manifeste: les 18 ids sont requis");
   for (const [id, entry] of Object.entries(manifest.models)) {
@@ -91,9 +91,19 @@ async function validateOutputs() {
   assert(Object.keys(manifest.layers.modules ?? {}).sort().join(",") === [...layerKeys].sort().join(","), "Manifeste: les 45 modules layers sont requis");
   for (const key of layerKeys) assert(manifest.layers.modules[key].file === `layers/${key}.glb`, `Manifeste: module ${key} invalide`);
 
+  const environmentKeys = [
+    "bank_straight", "bank_corner_inner", "bank_corner_outer", "quay_straight",
+    "ground_path", "ground_soil", "ground_fertile", "ground_planted",
+    "civic_plaza", "vegetation_reeds", "vegetation_flowers",
+    "furniture_bench", "furniture_lamp", "furniture_planter",
+  ];
+  assert(environmentKeys.length === 14, "Manifeste: contrat environment invalide");
+  assert(Object.keys(manifest.environment?.modules ?? {}).sort().join(",") === [...environmentKeys].sort().join(","), "Manifeste: les 14 modules environment sont requis");
+  for (const key of environmentKeys) assert(manifest.environment.modules[key].file === `environment/${key}.glb`, `Manifeste: module ${key} invalide`);
+
   const glbFiles = collectGlbFiles(manifest);
   glbFiles.add("terrain.glb");
-  assert(glbFiles.size === 85, `85 GLB attendus, ${glbFiles.size} trouvés`);
+  assert(glbFiles.size === 99, `99 GLB attendus, ${glbFiles.size} trouvés`);
   for (const file of [...glbFiles, "palimpsity-diorama.blend", "preview.png", "assets-preview.png", "assets-preview-18.png", "game-terrain-preview.png", "vegetation-preview.png", "rear-preview.png"]) {
     const info = await stat(path.join(outputDir, file));
     assert(info.size >= 1024, `${file} est vide ou incomplet.`);
@@ -102,7 +112,7 @@ async function validateOutputs() {
     const data = await readFile(path.join(outputDir, file));
     assert(data.toString("ascii", 0, 4) === "glTF" && data.readUInt32LE(4) === 2 && data.readUInt32LE(8) === data.length, `${file} n'est pas un GLB 2.0 valide.`);
   }
-  console.log(`Contrôle Node réussi: 18 modèles, 15 variantes, 45 modules layers, ${glbFiles.size} GLB, manifeste, cartes et six rendus.`);
+  console.log(`Contrôle Node réussi: 18 modèles, 15 variantes, 45 modules layers, 14 modules environment, ${glbFiles.size} GLB, manifeste, cartes et six rendus.`);
 }
 
 async function runBlender(scriptPath, extraArgs = []) {
@@ -125,6 +135,7 @@ async function run() {
   console.log(`Blender: ${blender}`);
   await runBlender(script);
   await runBlender(path.join(gameDir, "art", "living-layers", "build_living_layers.py"), ["--", "--skip-render"]);
+  await runBlender(path.join(gameDir, "art", "environment", "build_environment.py"), ["--", "--skip-render"]);
   await validateOutputs();
   console.log(`Assets prêts dans ${outputDir}`);
 }

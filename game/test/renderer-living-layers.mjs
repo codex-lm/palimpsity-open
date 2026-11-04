@@ -60,6 +60,41 @@ test("civic stays standalone in placed meshes and the placement ghost", () => {
   assert.equal(fixture.ghost.children[0].children[0].children.length, 1);
 });
 
+test("house ghost, placed architecture and later floors share family and deterministic tile variant", () => {
+  const fixture = modularFixture();
+  Object.assign(fixture, {
+    _loaded: true, _disposed: false, ghostId: null, ghostFamily: "banks", hover: null,
+    ghost: null, ghostMats: [], ghostRotation: 0, _ghostFile: null,
+    scene: new THREE.Scene(), buildLayerMesh: Renderer3D.prototype.buildLayerMesh,
+    _updateGhost: Renderer3D.prototype._updateGhost,
+    _clearGhost: Renderer3D.prototype._clearGhost,
+    refreshGhostTint() {},
+    disposeObj(object) { object.removeFromParent(); },
+  });
+  Renderer3D.prototype.setGhost.call(fixture, "house", { family: "gardens" });
+  Renderer3D.prototype.setHover.call(fixture, { c: 0, r: 1 });
+  assert.equal(fixture.ghostArchitecture.family, "gardens");
+  assert.equal(fixture.ghostArchitecture.variant, 2);
+  const ghostPlan = layerPlanForBuilding({ def: { id: "house" }, architecture: fixture.ghostArchitecture }, layers);
+  assert.equal(fixture._ghostFile, ghostPlan.signature);
+  const firstGhost = fixture.ghost;
+  Renderer3D.prototype.setHover.call(fixture, { c: 1, r: 1 });
+  assert.notEqual(fixture.ghost, firstGhost, "Changing the tile changes the deterministic facade");
+  assert.equal(fixture.ghostArchitecture.variant, 0);
+  Renderer3D.prototype.setGhost.call(fixture, "house", { family: "works" });
+  assert.equal(fixture.ghostArchitecture.family, "works");
+  assert.equal(fixture.ghostArchitecture.variant, 0);
+  const placed = { def: { id: "house" }, architecture: { ...fixture.ghostArchitecture } };
+  const placedPlan = layerPlanForBuilding(placed, layers);
+  assert.equal(placedPlan.signature, fixture._ghostFile);
+  placed.architecture.floors = 3;
+  const tallerPlan = layerPlanForBuilding(placed, layers);
+  const rec = Renderer3D.prototype.buildLayerMesh.call(fixture, placed, tallerPlan);
+  assert.equal(rec.model.children.length, 4, 'Three floors and one roof use the same family and facade');
+  assert.equal(placed.architecture.family, "works");
+  assert.equal(placed.architecture.variant, 0);
+});
+
 test("a hidden roof is excluded from raycasts and becomes pickable again when shown", () => {
   const fixture = modularFixture();
   const building = { def: { id: "house" }, architecture: architecture("residential") };

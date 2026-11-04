@@ -39,7 +39,9 @@ const floorText = value => `${value} ${value === 1 ? "floor" : "floors"}`;
 const materialText = value => `${value} ${value === 1 ? "material" : "materials"}`;
 const costText = cost => `${cost?.money || 0} € + ${materialText(cost?.materials || 0)}`;
 const flowText = (flows, sign) => Object.entries(flows || {}).filter(([, value]) => value).map(([key, value]) => `${sign}${value} ${key === "materials" && value === 1 ? "material" : FLOW_NAMES[key] || key}`).join("<br>") || "—";
-const resourceColor = key => key === "population" ? "#263c35" : key === "money" ? "#9a7625" : RES_META[key].col;
+export const RESOURCE_COLORS = { population: "#F0EEE9", money: "#E6A461", materials: "#c5a985", heat: "#ff8066", congestion: "#df9275" };
+const resourceColor = key => RESOURCE_COLORS[key] || RES_META[key].col;
+export const regimeColor = key => key === "maintenance_heat" ? "#df9275" : REGIME_META[key].col;
 const metricValue = value => Number.isFinite(value) ? String(Math.round(value * 10) / 10) : "—";
 const metricAt = (profile, group, key) => profile?.[group]?.[key];
 const readDisplayPreferences = () => {
@@ -90,6 +92,7 @@ export class UI {
     this.renderer = renderer;
     this.h = handlers;
     this.selected = null;
+    this.buildFamily = "banks";
     this.bulldoze = false;
     this.lens = "none";
     this.inspectBuilding = null;
@@ -310,7 +313,25 @@ export class UI {
       this.h.onSelect(null);
       this.renderPalette();
     };
-    this.$.palette.append(heading, list, bulldoze);
+    const familyPicker = el("div", "palette-heading house-family");
+    familyPicker.id = "house-family";
+    familyPicker.setAttribute("role", "group");
+    familyPicker.setAttribute("aria-label", "House family");
+    familyPicker.appendChild(el("small", "", "House family"));
+    for (const family of Object.keys(ARCHITECTURE_NAMES.family)) {
+      const button = el("button", "family-choice" + (this.buildFamily === family ? " on" : ""), ARCHITECTURE_NAMES.family[family]);
+      button.dataset.family = family;
+      button.title = "House family";
+      button.setAttribute("aria-label", ARCHITECTURE_NAMES.family[family]);
+      button.setAttribute("aria-pressed", String(this.buildFamily === family));
+      button.onclick = () => {
+        this.buildFamily = family;
+        this.renderer.setGhost(this.selected, { family });
+        this.renderPalette();
+      };
+      familyPicker.appendChild(button);
+    }
+    this.$.palette.append(heading, familyPicker, list, bulldoze);
     for (const id of ORDER) {
       if (!state.unlocked.has(id)) continue;
       const def = BUILDINGS[id];
@@ -327,7 +348,7 @@ export class UI {
       button.onclick = () => {
         this.bulldoze = false;
         this.selected = this.selected === id ? null : id;
-        this.renderer.setGhost(this.selected);
+        this.renderer.setGhost(this.selected, { family: this.buildFamily });
         this.h.onSelect(this.selected);
         this.renderPalette();
       };
@@ -383,7 +404,7 @@ export class UI {
     for (const key of REGIMES) {
       const meta = REGIME_META[key];
       const value = state.regime[key];
-      html += `<div class="regime${key === dominant ? " dom" : ""}" title="${meta.q}"><span class="rgl" style="color:${meta.col}">${meta.lbl}</span><span class="rgbar"><span style="width:${Math.round(clamp(value / 1.6 * 100, 0, 100))}%;background:${meta.col}"></span></span></div>`;
+      html += `<div class="regime${key === dominant ? " dom" : ""}" title="${meta.q}"><span class="rgl" style="color:${regimeColor(key)}">${meta.lbl}</span><span class="rgbar"><span style="width:${Math.round(clamp(value / 1.6 * 100, 0, 100))}%;background:${regimeColor(key)}"></span></span></div>`;
     }
     setHTML(this.$.regimes, html);
   }

@@ -5,7 +5,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { COLS, ROWS, BUILDINGS, ARCHITECTURE_DEFAULTS, districtOf } from "./data.js";
 import { localizeDOM } from "./localization.js";
-import { loadDioramaManifest, loadDioramaGLB, layerPlanForBuilding } from "./diorama-assets.js";
+import { loadDioramaManifest, loadDioramaGLB, layerPlanForBuilding, environmentPlanForCell } from "./diorama-assets.js";
 import { ArchitecturePreview } from "./architecture-preview.js";
 
 const worldX = c => c - (COLS - 1) / 2;
@@ -51,6 +51,8 @@ export class Renderer3D {
     this._architecturePreview = null;
     this.ghost = null;
     this.ghostId = null;
+    this.ghostFamily = "banks";
+    this.ghostArchitecture = null;
     this.ghostMats = [];
     this.ghostRotation = 0;
     this.hover = this.keyboardCell = null;
@@ -64,6 +66,10 @@ export class Renderer3D {
     this.roofsVisible = true;
     this._templatesByFile = new Map();
     this._photoMaterials = new Map();
+    this._environmentBatches = new Map();
+    this._environmentCellParts = new Map();
+    this._environmentSignatures = new Map();
+    this._environmentRebuiltCells = 0;
     this._reactiveMaterials = [];
     this._people = [];
     this._buildingRotations = new WeakMap();
@@ -125,7 +131,7 @@ export class Renderer3D {
     const fill = this.fill = new THREE.DirectionalLight(0xc6e1dd, 0.4);
     fill.position.set(12, 8, -10);
     scene.add(fill);
-    for (const name of ["terrainRoot", "decorRoot", "haloRoot", "overlayRoot", "pickRoot", "peopleRoot"]) {
+    for (const name of ["terrainRoot", "decorRoot", "environmentRoot", "haloRoot", "overlayRoot", "pickRoot", "peopleRoot"]) {
       this[name] = new THREE.Group();
       scene.add(this[name]);
     }
@@ -448,6 +454,104 @@ export class Renderer3D {
   }
   getBuildingRotation(building) { return this._buildingRotations.get(building) || 0; }
 
+  _environmentTemplateParts(key) {
+    this._environmentTemplateCache ||= new Map();
+    if (this._environmentTemplateCache.has(key)) return this._environmentTemplateCache.get(key);
+    const file = fileOf(this.manifest.environment?.modules?.[key]);
+    const template = file ? this._templatesByFile.get(fileKey(file)) : null;
+    const parts = [];
+    template?.updateMatrixWorld(true);
+    template?.traverse(object => {
+      if (!object.isMesh) return;
+      const materials = Array.isArray(object.material) ? object.material : [object.material];
+      const materialKey = materials.map(material => material?.uuid || "none").join(":");
+      parts.push({
+        id: `${object.geometry.uuid}:${materialKey}`, geometry: object.geometry, material: object.material,
+        matrix: object.matrixWorld.clone(), castShadow: object.castShadow, receiveShadow: object.receiveShadow,
+      });
+    });
+    this._environmentTemplateCache.set(key, parts);
+    return parts;
+  }
+
+  _environmentParts(c, r, plan) {
+    const parts = new Map();
+    for (const placement of plan) {
+      const moduleMatrix = new THREE.Matrix4().makeRotationY(placement.rotation || 0);
+      moduleMatrix.setPosition(worldX(c) + (placement.x || 0), placement.y || 0, worldZ(r) + (placement.z || 0));
+      for (const part of this._environmentTemplateParts(placement.key)) {
+        if (!parts.has(part.id)) parts.set(part.id, { ...part, matrices: [] });
+        parts.get(part.id).matrices.push(moduleMatrix.clone().multiply(part.matrix));
+      }
+    }
+    return parts;
+  }
+
+  _rebuildEnvironmentBatch(id, batch) {
+    const count = [...batch.cells.values()].reduce((sum, matrices) => sum + matrices.length, 0);
+    if (!count) {
+      if (batch.mesh) this.disposeObj(batch.mesh);
+      batch.mesh = null;
+      return;
+    }
+    if (!batch.mesh || batch.mesh.instanceMatrix.count < count) {
+      if (batch.mesh) this.disposeObj(batch.mesh);
+      batch.mesh = new THREE.InstancedMesh(batch.geometry, batch.material, Math.max(16, count));
+      batch.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      batch.mesh.castShadow = batch.castShadow;
+      batch.mesh.receiveShadow = batch.receiveShadow;
+      batch.mesh.userData.environment = true;
+      this.environmentRoot.add(batch.mesh);
+      this._makeLandscapeReactive(batch.mesh);
+    }
+    const mesh = batch.mesh;
+    mesh.count = count;
+    let index = 0;
+    for (const matrices of batch.cells.values()) for (const matrix of matrices) mesh.setMatrixAt(index++, matrix);
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.computeBoundingSphere();
+  }
+
+  _rebuildEnvironmentCell(c, r, plan) {
+    const cellKey = r * COLS + c, previous = this._environmentCellParts.get(cellKey) || new Map();
+    const next = this._environmentParts(c, r, plan);
+    for (const id of new Set([...previous.keys(), ...next.keys()])) {
+      const source = next.get(id) || previous.get(id);
+      if (!this._environmentBatches.has(id)) this._environmentBatches.set(id, { ...source, cells: new Map(), mesh: null });
+      const batch = this._environmentBatches.get(id);
+      if (next.has(id)) batch.cells.set(cellKey, next.get(id).matrices);
+      else batch.cells.delete(cellKey);
+      this._rebuildEnvironmentBatch(id, batch);
+    }
+    this._environmentCellParts.set(cellKey, next);
+    this._environmentRebuiltCells++;
+  }
+
+  _clearEnvironment() {
+    for (const batch of this._environmentBatches.values()) if (batch.mesh) this.disposeObj(batch.mesh);
+    this._environmentBatches.clear();
+    this._environmentCellParts.clear();
+    this._environmentSignatures.clear();
+    this._environmentTemplateCache?.clear();
+    this.environmentRoot.clear();
+  }
+
+  _syncEnvironment(restarted = false) {
+    if (!this.manifest.environment?.modules) {
+      if (this._environmentBatches.size) this._clearEnvironment();
+      return;
+    }
+    if (restarted) this._clearEnvironment();
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      const cellKey = r * COLS + c;
+      const plan = environmentPlanForCell(this.engine.terrain, c, r, (x, y) => this.engine.occ[y]?.[x] || null);
+      const signature = JSON.stringify(plan);
+      if (this._environmentSignatures.get(cellKey) === signature) continue;
+      this._environmentSignatures.set(cellKey, signature);
+      this._rebuildEnvironmentCell(c, r, plan);
+    }
+  }
+
   _syncDecor() {
     for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
       const key = r * COLS + c;
@@ -549,6 +653,7 @@ export class Renderer3D {
     for (const puff of this.smokePuffs.slice()) if (!this._records.has(puff.userData.rec)) this.disposeObj(puff);
     this.smokePuffs = this.smokePuffs.filter(puff => this._records.has(puff.userData.rec));
     this._syncDecor();
+    this._syncEnvironment(restarted);
     this._syncPeople();
     this._syncWeather();
     this.applyLens();
@@ -607,6 +712,7 @@ export class Renderer3D {
   }
   disposeObj(obj) {
     if (!obj) return;
+    if (obj.isInstancedMesh) obj.dispose();
     const rec = this._recordsByGroup.get(obj);
     if (rec) {
       this._removeHalo(rec.b);
@@ -690,8 +796,10 @@ export class Renderer3D {
     this.hemisphere.intensity = settings[2];
     this.sun.color.setHex(settings[3]);
     this.sun.intensity = settings[4];
+    const golden = this.ambiance === "golden";
+    this.sun.position.set(golden ? -12 : -10, golden ? 10 : 20, golden ? 16 : 12);
     this.fill.color.setHex(settings[5]);
-    this.fill.intensity = settings[6];
+    this.fill.intensity = golden ? 0.38 : settings[6];
     this.renderer.toneMappingExposure = settings[7];
     for (const rec of this._records) this._applyPhotoToObject(rec.visual);
     return this.ambiance;
@@ -758,12 +866,14 @@ export class Renderer3D {
     this.ghostMats = [];
     this._ghostFile = this._ghostOk = null;
   }
-  setGhost(id) {
+  setGhost(id, options = {}) {
     id = id && BUILDINGS[id] ? id : null;
-    if (id === this.ghostId && (this.ghost || !id)) return;
+    const family = ["banks", "works", "gardens"].includes(options?.family) ? options.family : "banks";
+    if (id === this.ghostId && (id !== "house" || family === this.ghostFamily) && (this.ghost || !id)) return;
     this._clearGhost();
     if (id !== this.ghostId) this.ghostRotation = 0;
     this.ghostId = id;
+    this.ghostFamily = family;
     this._updateGhost();
   }
   setGhostRotation(rotation) {
@@ -780,9 +890,15 @@ export class Renderer3D {
     return this.keyboardCell;
   }
   _updateGhost() {
-    if (!this._loaded || this._disposed || !this.ghostId) return;
+    if (!this._loaded || this._disposed || !this.ghostId) { this.ghostArchitecture = null; return; }
     const cell = this.hover;
-    const def = BUILDINGS[this.ghostId], architecture = ARCHITECTURE_DEFAULTS[this.ghostId];
+    const def = BUILDINGS[this.ghostId], defaults = ARCHITECTURE_DEFAULTS[this.ghostId];
+    const architecture = defaults ? { ...defaults } : null;
+    if (architecture && this.ghostId === "house") {
+      architecture.family = this.ghostFamily;
+      architecture.variant = cell ? (cell.c + 2 * cell.r) % 3 : 0;
+    }
+    this.ghostArchitecture = architecture;
     const sample = architecture ? { def, architecture } : null;
     const plan = layerPlanForBuilding(sample, this.manifest.layers, this.roofsVisible);
     const choice = cell && TRANSPORT.has(this.ghostId) ? this.getTransportChoice(this.ghostId, cell.c, cell.r) : null;
@@ -913,7 +1029,7 @@ export class Renderer3D {
   _moveCamera(target, viewHeight, scale, immediate = false, facade = false) {
     this._clearControlDamping();
     this._updateDistanceLimits();
-    if (facade) this._offset.copy(this.homePosition).sub(this.homeTarget);
+    if (facade) this._offset.set(10, 9, 20);
     else this._offset.copy(this.camera.position).sub(this.controls.target);
     if (this._offset.lengthSq() < 0.001) this._offset.copy(this.homePosition).sub(this.homeTarget);
     this._offset.normalize();
@@ -1080,8 +1196,8 @@ export class Renderer3D {
       const activity = this._activityOf(b);
       this._syncHalo(b, rec);
       this._animateDisabled(rec, time);
-      if (rec.spin) rec.spin.rotation[rec.spinAxis] += dt * 1.25 * activity;
-      if (rec.car) rec.car.position.x = rec.carAnchor[0] + Math.sin(time * 0.45 + b.c * 0.7 + b.r) * 0.13 * activity;
+      if (rec.spin && !this.reducedEffects) rec.spin.rotation[rec.spinAxis] += dt * 1.25 * activity;
+      if (rec.car) rec.car.position.x = rec.carAnchor[0] + (this.reducedEffects ? 0 : Math.sin(time * 0.45 + b.c * 0.7 + b.r) * 0.13 * activity);
     }
     for (const halo of this.haloRoot.children) {
       if (!halo.visible) continue;
@@ -1097,8 +1213,7 @@ export class Renderer3D {
     }
     for (const puff of this.smokePuffs) {
       const rec = puff.userData.rec, activity = this._activityOf(rec.b);
-      puff.visible = this._records.has(rec) && !!rec.group.parent && rec.producesSmoke && activity > 0
-        && (!this.reducedEffects || puff.userData.phase < 0.5);
+      puff.visible = this._records.has(rec) && !!rec.group.parent && rec.producesSmoke && activity > 0 && !this.reducedEffects;
       if (!puff.visible) continue;
       const k = puff.userData.t = (puff.userData.t + dt * (0.04 + activity * 0.09)) % 1, anchor = rec.smokeAt;
       puff.position.set(anchor[0] + k * 0.13, anchor[1] + k * 0.8, anchor[2] + Math.sin(k * 5) * 0.045);
@@ -1127,6 +1242,9 @@ export class Renderer3D {
       haloCount: this.haloRoot.children.reduce((count, halo) => count + Number(halo.visible), 0),
       overlayCount: this.overlays.reduce((count, item) => count + Number(item.mesh.visible), 0),
       decorCount: [...this.decorByCell.values()].filter(decor => decor.visible).length,
+      environmentBatches: [...this._environmentBatches.values()].filter(batch => !!batch.mesh).length,
+      environmentInstances: [...this._environmentBatches.values()].reduce((sum, batch) => sum + (batch.mesh?.count || 0), 0),
+      environmentRebuiltCells: this._environmentRebuiltCells,
       peopleCount: this._people.filter(person => person.visible).length,
       smokeCount: this.smokePuffs.filter(puff => puff.visible).length, projectionMode: this.projectionMode,
       cameraScale: this.cameraScale, quality: this.quality, reducedEffects: this.reducedEffects,
@@ -1153,6 +1271,7 @@ export class Renderer3D {
     this.controls.dispose();
     for (const rec of this._records) this.disposeObj(rec.group);
     this._clearGhost();
+    this._clearEnvironment();
     this.disposeObj(this.scene);
     for (const geometry of this._ownedGeometries) this._disposeGeometry(geometry);
     for (const material of this._ownedMaterials) this._disposeMaterial(material);

@@ -10,7 +10,7 @@ Depuis `game/`, avec Blender 4.5 ou une version compatible :
 BLENDER_EXE=/chemin/absolu/vers/blender npm run assets:diorama
 ```
 
-La commande régénère d’abord le diorama existant, puis Living Layers sans rendu de présentation. Elle contrôle les **84 GLB référencés par le manifeste**, plus `terrain.glb` de présentation, soit **85 GLB contrôlés** au total. Pour ne régénérer que ce kit et obtenir le rendu de contrôle des neuf maisons assemblées :
+La commande régénère successivement le diorama existant, Living Layers et les 14 modules Environment sans leurs rendus de présentation. Elle contrôle les **98 GLB référencés par le manifeste**, plus `terrain.glb` de présentation, soit **99 GLB contrôlés** au total. Pour ne régénérer que ce kit et obtenir le rendu de contrôle des neuf maisons assemblées :
 
 ```sh
 blender --background --factory-startup --python-exit-code 1 \
@@ -69,9 +69,9 @@ Chaque variante possède un étage correspondant et deux choix de toit tradition
 
 ### Familles
 
-- **Banks** : enduit clair, pans de bois, galeries, ardoise, menuiseries et gestion de l’eau couleur rivière.
-- **Works** : brique et mortier, acier encre, rivets, larges châssis, dents de scie et verrières.
-- **Gardens** : brume, bois patiné, terrasses, treillis, plantations et serres.
+- **Banks** : craie `#DFE5E2`, ardoise `#465F78`, eau `#4F9DA6`, pans de bois, galeries, volets et récupération d’eau.
+- **Works** : brique `#A4523E`, graphite `#35394A`, laiton `#D9A047`, acier, grandes baies, dents de scie et verrières.
+- **Gardens** : prune `#806484`, sauge `#82A48B`, lin `#E0D8C6`, terrasses, treillis, jardinières et serres.
 
 ## Dix-huit motifs de décor intégrés
 
@@ -100,13 +100,16 @@ Les matériaux sont créés une fois puis réutilisés dans toutes les collectio
 
 | Teinte | Hexadécimal | Usage principal |
 |---|---|---|
-| Encre | `#263449` | Structure, menuiseries, acier |
-| Brume | `#A7C4D2` | Verre, pierre, enduit Gardens |
-| Argile | `#BF735E` | Brique, tuiles, jardinières |
-| Ocre | `#D7AA48` | Enseignes, détails et équipements |
-| Prune | `#78627D` | Fleurs |
-| Pin | `#476D55` | Végétation et serres |
-| Rivière | `#4F8FA8` | Eau, volets et réseaux |
+| Craie | `#DFE5E2` | Enduits Banks et pierre claire |
+| Ardoise | `#465F78` | Toitures Banks |
+| Eau | `#4F9DA6` | Volets, récupération et plans d’eau |
+| Brique | `#A4523E` | Maçonnerie Works et jardinières |
+| Graphite | `#35394A` | Structure, acier et menuiseries |
+| Laiton | `#D9A047` | Enseignes et détails Works |
+| Prune | `#806484` | Terrasses, toitures et menuiseries Gardens |
+| Sauge | `#82A48B` | Végétation, treillis et serres |
+| Lin | `#E0D8C6` | Enduits Gardens, mortier et pierre |
+| Verre | `#A7C4D2` | Baies et verrières |
 
 Le générateur refuse tout module de plus de 12 000 triangles, 20 meshes ou 512 Kio. Les sorties actuelles sont bien en dessous de ces plafonds. La validation lit réellement chaque GLB, parcourt ses transformations de nœuds et contrôle les limites XYZ, la base `Y=0`, le sommet `Y=0.48` des niveaux et l’absence de ressources externes.
 

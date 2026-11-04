@@ -95,7 +95,7 @@ export class CityEngine {
     return null;
   }
 
-  place(id, c, r) {
+  place(id, c, r, options = {}) {
     if (!this.canPlace(id, c, r)) return null;
     const def = BUILDINGS[id], money = def.cost?.money || 0, materials = def.cost?.materials || 0;
     this.state.res.money -= money;
@@ -105,6 +105,10 @@ export class CityEngine {
       createdAt: this.state.tick, investedMoney: money, history: [],
     };
     if (ARCHITECTURE_DEFAULTS[id]) b.architecture = { ...ARCHITECTURE_DEFAULTS[id] };
+    if (id === "house") {
+      b.architecture.family = ["banks", "works", "gardens"].includes(options?.family) ? options.family : ARCHITECTURE_DEFAULTS.house.family;
+      b.architecture.variant = (c + 2 * r) % 3;
+    }
     this.state.buildings.push(b);
     this.occ[r][c] = b;
     this.recomputeFields();

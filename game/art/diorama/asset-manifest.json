@@ -302,5 +302,51 @@
         "file": "layers/conversion_warehouse_hall.glb"
       }
     }
+  },
+  "environment": {
+    "modules": {
+      "bank_straight": {
+        "file": "environment/bank_straight.glb"
+      },
+      "bank_corner_inner": {
+        "file": "environment/bank_corner_inner.glb"
+      },
+      "bank_corner_outer": {
+        "file": "environment/bank_corner_outer.glb"
+      },
+      "quay_straight": {
+        "file": "environment/quay_straight.glb"
+      },
+      "ground_path": {
+        "file": "environment/ground_path.glb"
+      },
+      "ground_soil": {
+        "file": "environment/ground_soil.glb"
+      },
+      "ground_fertile": {
+        "file": "environment/ground_fertile.glb"
+      },
+      "ground_planted": {
+        "file": "environment/ground_planted.glb"
+      },
+      "civic_plaza": {
+        "file": "environment/civic_plaza.glb"
+      },
+      "vegetation_reeds": {
+        "file": "environment/vegetation_reeds.glb"
+      },
+      "vegetation_flowers": {
+        "file": "environment/vegetation_flowers.glb"
+      },
+      "furniture_bench": {
+        "file": "environment/furniture_bench.glb"
+      },
+      "furniture_lamp": {
+        "file": "environment/furniture_lamp.glb"
+      },
+      "furniture_planter": {
+        "file": "environment/furniture_planter.glb"
+      }
+    }
   }
 }

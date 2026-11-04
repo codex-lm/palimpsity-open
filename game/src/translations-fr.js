@@ -161,6 +161,7 @@ export const EXACT_FR = {
   "Underserved districts and local congestion": "Quartiers mal desservis et congestion locale",
   "Unmet maintenance needs in each district": "Charge d'entretien non couverte dans chaque quartier",
   "Build": "Construire",
+  "House family": "Famille des maisons",
   "Choose a building, then an empty tile": "Choisis un modèle, puis une case libre",
   "Demolish a building and recover 40% of its cost": "Démolir un bâtiment et récupérer 40 % de son coût",
   "Thriving city": "Ville accomplie",

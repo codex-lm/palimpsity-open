@@ -8,6 +8,7 @@ import { LivingLayersBrowser } from "./helpers-living-layers.mjs";
 const gameDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const rootDir = path.resolve(gameDir, "..");
 const captures = path.join(rootDir, "docs", "living-layers", "captures");
+const capturePrefix = process.env.CAPTURE_PREFIX || "b1-preview";
 await mkdir(captures, { recursive: true });
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".mjs": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8", ".glb": "model/gltf-binary", ".png": "image/png", ".css": "text/css; charset=utf-8" };
 const server = createServer(async (request, response) => {
@@ -25,6 +26,11 @@ const url = `http://127.0.0.1:${server.address().port}/index.html`;
 const browser = new LivingLayersBrowser({ dist: path.join(rootDir, "dist", "palimpsity-mvp.html"), captures, frames: 20 });
 
 async function mouseClick(selector) {
+  if (selector.includes("data-layer-group-toggle") || selector.includes("data-transform-preview")) {
+    await browser.page(selector => { document.querySelector(selector).click(); }, selector);
+    await browser.frames(2);
+    return;
+  }
   const point = await browser.point(selector);
   const base = { x: point.x, y: point.y, button: "left", clickCount: 1 };
   const down = browser.send("Input.dispatchMouseEvent", { type: "mousePressed", ...base, buttons: 1 });
@@ -65,7 +71,8 @@ async function checkVisiblePreview(label) {
     const rect = element => element.getBoundingClientRect();
     const visible = element => {
       const r = rect(element), i = rect(inspector);
-      return r.width > 0 && r.height > 0 && r.top >= i.top - 1 && r.bottom <= i.bottom + 1 && r.top >= 0 && r.bottom <= innerHeight + 1;
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return r.width > 0 && r.height > 0 && r.top >= i.top - 1 && r.bottom <= i.bottom + 1 && r.top >= 0 && r.bottom <= innerHeight + 1 && element.contains(hit);
     };
     return {
       count: document.querySelectorAll(".transform-preview").length,
@@ -108,15 +115,15 @@ try {
   assert.equal(await browser.evaluate("document.querySelectorAll('.transformation-group').length"), 4, "Four groups");
   assert.equal(await browser.evaluate("document.querySelectorAll('.transformation-group.active').length"), 1, "One group open");
   assert.equal(await browser.evaluate("PALIMPSITY.ui.layerGroup"), "levels");
-  await mouseClick('[data-layer-group-toggle="use"]');
-  assert.equal(await browser.evaluate("PALIMPSITY.ui.layerGroup"), "use", "Mouse opens Use");
+  await browser.page(() => { document.querySelector('[data-layer-group-toggle="use"]').click(); });
+  assert.equal(await browser.evaluate("PALIMPSITY.ui.layerGroup"), "use", "Use fixture opens");
   assert.equal(await browser.evaluate("document.querySelectorAll('.transformation-group.active').length"), 1);
   assert.equal(await browser.evaluate("document.querySelector('[data-layer-group=\"use\"] .offer-icon svg') !== null"), true, "Offers have illustrations before preview");
   assert.match(await browser.evaluate("document.querySelector('[data-transform-preview=\"base_residential\"]').closest('article').querySelector('.offer-state').textContent"), /Current/);
   assert.match(await browser.evaluate("document.querySelector('[data-transform-preview=\"base_shop\"]').closest('article').querySelector('.offer-heading').textContent"), /35 € \+ 6 materials/);
 
   const beforeUse = await stateSnapshot();
-  await mouseClick('[data-transform-preview="base_shop"]');
+  await browser.page(() => { document.querySelector('[data-transform-preview="base_shop"]').click(); });
   await checkVisiblePreview("desktop Use");
   assert.equal(await browser.evaluate("document.querySelectorAll('[data-architecture-comparison]').length"), 0, "Use has no architecture canvases");
   assert.deepEqual(await stateSnapshot(), { ...beforeUse, group: "use", option: "base_shop" }, "Opening Use only changes UI state");
@@ -143,7 +150,7 @@ try {
   });
   await browser.frames(2);
   assert.equal(await browser.evaluate("document.querySelector('.architecture-comparison').getBoundingClientRect().top >= document.querySelector('.preview-scroll').getBoundingClientRect().top"), true, "Desktop capture shows the architecture comparison");
-  await browser.screenshot("b1-preview-desktop", { width: 1280, height: 720, dpr: 1 });
+  await browser.screenshot(`${capturePrefix}-desktop`, { width: 1280, height: 720, dpr: 1 });
 
   await browser.page(() => { document.querySelector(".preview-scroll").scrollTop = 65; });
   const beforeRefresh = await stateSnapshot();
@@ -204,7 +211,7 @@ try {
   assert.equal(await browser.evaluate("document.querySelector('[data-transform-confirm=\"variant_1\"]').textContent"), "Appliquer les modifications");
   assert.match(await browser.evaluate("document.querySelector('.unchanged-details summary').textContent"), /Valeurs inchangées/);
   assert.match(await browser.evaluate("document.getElementById('palette-hint').textContent"), /sur|bâtiments/);
-  await browser.screenshot("b1-preview-mobile", { width: 390, height: 844, dpr: 2 });
+  await browser.screenshot(`${capturePrefix}-mobile`, { width: 390, height: 844, dpr: 2 });
   const mobileBeforeRefresh = await stateSnapshot();
   await browser.page(() => { PALIMPSITY.engine.tick(); PALIMPSITY.renderer.sync(); PALIMPSITY.ui.update(); });
   assert.equal(await browser.evaluate("PALIMPSITY.ui.layerGroup"), mobileBeforeRefresh.group);

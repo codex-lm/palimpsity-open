@@ -54,6 +54,20 @@ test("new buildings own a valid architecture and offers expose cloned bilingual 
   }
 });
 
+test("construction palette keeps a localized family choice and passes it to placement", () => {
+  const ui = readFileSync(path.join(gameDir, "src", "ui.js"), "utf8");
+  const main = readFileSync(path.join(gameDir, "src", "main.js"), "utf8");
+  assert.match(ui, /this\.buildFamily = "banks"/);
+  assert.match(ui, /button\.dataset\.family = family/);
+  assert.match(ui, /this\.renderer\.setGhost\(this\.selected, \{ family: this\.buildFamily \}\)/);
+  assert.match(main, /engine\.place\(selected, cr\.c, cr\.r, \{ family: ui\.buildFamily \}\)/);
+  assert.equal(translate("House family", "en"), "House family");
+  assert.equal(translate("House family", "fr"), "Famille des maisons");
+  for (const [family, french] of [["Banks", "Rives"], ["Works", "Fabriques"], ["Gardens", "Jardins"]]) {
+    assert.equal(translate(family, "fr"), french);
+  }
+});
+
 test("native-high rendering keeps antialiasing, the native DPR and an unscaled canvas backing store", () => {
   const source = readFileSync(path.join(gameDir, "src", "render3d.js"), "utf8");
   assert.match(source, /antialias\s*:\s*true/);

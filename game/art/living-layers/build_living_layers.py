@@ -49,25 +49,25 @@ def make_material(name, value, roughness=0.8, metallic=0.0, alpha=1.0):
 
 def make_palette():
     values = {
-        "ink": ("263449", 0.72, 0.12),
-        "mist": ("A7C4D2", 0.86, 0.0),
-        "clay": ("BF735E", 0.9, 0.0),
-        "ochre": ("D7AA48", 0.78, 0.0),
-        "plum": ("78627D", 0.86, 0.0),
-        "pine": ("476D55", 0.94, 0.0),
-        "river": ("4F8FA8", 0.34, 0.08),
-        "plaster": ("D9D3BE", 0.94, 0.0),
-        "brick": ("9D594B", 0.94, 0.0),
-        "mortar": ("C6BDA9", 0.96, 0.0),
+        "ink": ("35394A", 0.72, 0.12),
+        "mist": ("E0D8C6", 0.86, 0.0),
+        "clay": ("A4523E", 0.9, 0.0),
+        "ochre": ("D9A047", 0.78, 0.0),
+        "plum": ("806484", 0.86, 0.0),
+        "pine": ("82A48B", 0.94, 0.0),
+        "river": ("4F9DA6", 0.34, 0.08),
+        "plaster": ("DFE5E2", 0.94, 0.0),
+        "brick": ("A4523E", 0.94, 0.0),
+        "mortar": ("E0D8C6", 0.96, 0.0),
         "wood": ("675143", 0.9, 0.0),
-        "patina": ("8A8067", 0.9, 0.0),
-        "slate": ("405168", 0.78, 0.05),
-        "steel": ("596875", 0.55, 0.48),
+        "patina": ("806484", 0.9, 0.0),
+        "slate": ("465F78", 0.78, 0.05),
+        "steel": ("35394A", 0.55, 0.48),
         "soil": ("5C4C3E", 1.0, 0.0),
-        "leaf": ("5D8157", 0.96, 0.0),
+        "leaf": ("82A48B", 0.96, 0.0),
         "glass": ("A7C4D2", 0.24, 0.08),
-        "water": ("4F8FA8", 0.28, 0.06),
-        "solar": ("304D63", 0.3, 0.34),
+        "water": ("4F9DA6", 0.28, 0.06),
+        "solar": ("35394A", 0.3, 0.34),
     }
     for name, (value, roughness, metallic) in values.items():
         make_material(name, value, roughness, metallic)
@@ -298,7 +298,7 @@ def house_details(family, variant, width, front, ground):
         timber_frame("Banks timber", width, front, bottom)
     if variant == 0:
         front_door("Gallery entry", -0.19, front, bottom, mat=trim)
-        front_window("Gallery window", 0.17, front, bottom + 0.215, 0.22, 0.23, trim, family == "banks")
+        front_window("Gallery window", 0.17, front, bottom + 0.215, 0.28 if family == "works" else 0.22, 0.25 if family == "works" else 0.23, trim, family == "banks", 2 if family == "works" else 3)
         if family == "banks":
             for x in (-0.34, 0.34):
                 box("Gallery post", (x, front - 0.09, bottom + 0.19), (0.03, 0.03, 0.38), "wood")
@@ -307,6 +307,7 @@ def house_details(family, variant, width, front, ground):
                 box("Gallery baluster", (x, front - 0.1, bottom + 0.065), (0.015, 0.018, 0.09), "wood")
             rainwater("Banks rain chain", 0.365, front - 0.02, bottom)
         elif family == "gardens":
+            box("Gardens terrace", (0, front - 0.06, bottom + 0.012), (0.70, 0.12, 0.024), "patina")
             trellis("Gallery espalier", 0.31, front - 0.035, bottom, 0.33, 0.15)
             planter("Gallery herbs", -0.02, front - 0.09, bottom, 0.25, True)
         else:
@@ -318,7 +319,7 @@ def house_details(family, variant, width, front, ground):
         front_door("Bay entry", -0.22, front, bottom, 0.15, 0.31, trim)
         bay_x = 0.13
         box("Projecting bay", (bay_x, front - 0.025, bottom + 0.19), (0.32, 0.05, 0.3), wall, 0.004)
-        front_window("Bay front", bay_x, front - 0.052, bottom + 0.21, 0.24, 0.22, trim, False, 3)
+        front_window("Bay front", bay_x, front - 0.052, bottom + 0.21, 0.28 if family == "works" else 0.24, 0.24 if family == "works" else 0.22, trim, False, 2 if family == "works" else 3)
         box("Bay cap", (bay_x, front - 0.03, bottom + 0.365), (0.36, 0.10, 0.025), accent)
         if family == "banks":
             box("Bay balcony", (bay_x, front - 0.075, bottom + 0.075), (0.39, 0.12, 0.025), "wood")
@@ -331,15 +332,16 @@ def house_details(family, variant, width, front, ground):
             box("Bay canopy", (bay_x, front - 0.055, bottom + 0.385), (0.38, 0.10, 0.025), "steel")
     else:
         front_door("Townhouse entry", -0.27, front, bottom, 0.16, 0.35, trim)
-        front_window("Townhouse pair", 0.02, front, bottom + 0.22, 0.21, 0.26, trim, family == "banks", 3)
-        front_window("Townhouse narrow", 0.28, front, bottom + 0.22, 0.11, 0.26, trim, False, 1)
+        front_window("Townhouse pair", 0.02, front, bottom + 0.22, 0.26 if family == "works" else 0.21, 0.26, trim, family == "banks", 2 if family == "works" else 3)
+        front_window("Townhouse narrow", 0.28, front, bottom + 0.22, 0.14 if family == "works" else 0.11, 0.26, trim, False, 1)
         box("Townhouse string course", (0, front - 0.022, bottom + 0.365), (width, 0.035, 0.025), accent)
         if family == "gardens":
+            box("Townhouse terrace", (0.06, front - 0.04, bottom + 0.012), (0.42, 0.08, 0.024), "patina")
             trellis("Townhouse trellis", 0.37, front - 0.035, bottom, 0.36, 0.12)
         elif family == "banks":
             for x in (-0.37, 0.37):
                 box("Townhouse pilaster", (x, front - 0.025, bottom + 0.19), (0.055, 0.045, 0.38), "plaster")
-    side_window("Side light", 1, width / 2, 0.08, bottom + 0.22, 0.16, 0.2, trim)
+    side_window("Side light", 1, width / 2, 0.08, bottom + 0.22, 0.22 if family == "works" else 0.16, 0.23 if family == "works" else 0.2, trim)
 
 
 def build_house(family, variant, ground=True):
@@ -479,10 +481,10 @@ def hip_roof(name, cx, cy, width, depth, base, rise, mat):
         tube(f"{name} hip seam", (cx + x, cy - d, base + 0.008), (cx, cy - ridge, z + rise * 0.15), 0.005, mat, 8)
 
 
-def dormer(name, x, front, base, mat="plaster"):
+def dormer(name, x, front, base, mat="plaster", roof_mat="slate"):
     box(f"{name} face", (x, front, base + 0.07), (0.18, 0.14, 0.14), mat)
     front_window(f"{name} light", x, front - 0.075, base + 0.075, 0.11, 0.09, "wood", False, 1)
-    gable_roof(f"{name} cap", x, front - 0.005, 0.22, 0.18, base + 0.14, 0.08, "slate", False)
+    gable_roof(f"{name} cap", x, front - 0.005, 0.22, 0.18, base + 0.14, 0.08, roof_mat, False)
 
 
 def build_traditional_roof(family, variant):
@@ -516,12 +518,12 @@ def build_traditional_roof(family, variant):
             gable_roof("Monitor cap", 0, 0.04, 0.44, 0.46, 0.30, 0.10, "steel")
     else:
         if variant == 0:
-            gable_roof("Gardens clay gable", 0, 0, 0.90, 0.76, 0, 0.24, "clay")
+            gable_roof("Gardens plum gable", 0, 0, 0.90, 0.76, 0, 0.24, "plum")
             for x in (-0.30, -0.15, 0, 0.15, 0.30):
-                tube("Gardens tile roll", (x, -0.38, 0.24 * (1 - abs(x) / 0.45) + 0.008), (x, 0.38, 0.24 * (1 - abs(x) / 0.45) + 0.008), 0.012, "clay", 10)
+                tube("Gardens tile roll", (x, -0.38, 0.24 * (1 - abs(x) / 0.45) + 0.008), (x, 0.38, 0.24 * (1 - abs(x) / 0.45) + 0.008), 0.012, "plum", 10)
         else:
             hip_roof("Gardens pavilion hip", 0, 0, 0.90, 0.78, 0, 0.21, "patina")
-            dormer("Gardens skylight dormer", -0.12, -0.28, 0.06, "mist")
+            dormer("Gardens skylight dormer", -0.12, -0.28, 0.06, "mist", "plum")
             planter("Gardens roof planter", 0.27, 0.03, 0.04, 0.18, True)
 
 
