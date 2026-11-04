@@ -204,3 +204,27 @@ test('les contrôles mobiles du défi et du statut conservent leurs propres zone
   assert.match(html, /#challenge\{position:fixed;top:94px;right:10px/);
   assert.match(html, /#placement-status\{bottom:145px;max-width:calc\(100vw - 20px\)\}/);
 });
+
+test('A3 sépare charge et apport d’entretien, coût argent et singuliers', () => {
+  const engine = new CityEngine();
+  engine.state.phase = 4; engine.state.res.money = 1000; engine.state.res.materials = 100;
+  const house = engine.place('house', 0, 0);
+  const singular = UI.prototype.renderTransformationPreview.call({}, engine.transformationOptions(house).find(option => option.id === 'variant_1'));
+  assert.match(singular, /1 floor/);
+  assert.match(singular, /1 material/);
+  assert.equal(engine.transformBuilding(house, 'add_floor'), true);
+  assert.equal(engine.transformBuilding(house, 'add_floor'), true);
+  const option = engine.transformationOptions(house).find(item => item.id === 'add_floor');
+  const demand = UI.prototype.renderTransformationPreview.call({}, option);
+  assert.match(demand, /Maintenance demand \(engine units\)/);
+  assert.match(demand, /Upkeep \(€ \/ turn\)/);
+  assert.match(demand, /data-tone="cost"/);
+  const provided = UI.prototype.renderTransformationPreview.call({}, {
+    ...option,
+    before: { ...option.before, ext: { maintenance: -3 } },
+    after: { ...option.after, ext: { maintenance: -6 } },
+  });
+  assert.match(provided, /Maintenance provided \(engine units\)/);
+  assert.match(provided, /<td>6<\/td>/);
+  assert.doesNotMatch(provided, /<td>-6<\/td>/);
+});

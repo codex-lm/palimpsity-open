@@ -76,6 +76,11 @@
   }
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 </style>
+<style>
+  #side.has-transform-preview #objectives,#side.has-transform-preview #advisors,#side.has-transform-preview #diagnostic,#side.has-transform-preview #river-panel{display:none}#side.has-transform-preview #inspector{max-height:100%}
+  .transformation-offer .transform-preview{display:flex;flex-direction:column;height:280px;overflow:hidden}.preview-heading{flex:0 0 auto}.preview-heading h3{border-radius:5px}.preview-heading h3:focus{outline:2px solid rgba(47,125,97,.38);outline-offset:3px}.preview-scroll{flex:1;min-height:0;padding-right:4px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.preview-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:0 0 auto;padding-top:8px;background:#edf2e7}.preview-actions button{min-height:38px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:11px;font-weight:750}.cancel-transform{border:1px solid rgba(47,125,97,.3);background:transparent;color:var(--green)}.cancel-transform:hover{background:rgba(47,125,97,.08)}.transform-feedback{padding:8px 9px;border-radius:8px;font-size:10px;line-height:1.45}.transform-feedback.error{flex:0 0 auto;margin-top:7px;background:#f0d8ce;color:#8c4938}.transform-feedback.success{margin:8px 0;background:#dcecdf;color:#27654e}.profile-diff tr[data-tone="cost"] td:last-child{color:#a45c42}.profile-diff tr[data-tone="benefit"] td:last-child{color:var(--green)}
+  @media(max-width:650px){.transformation-offer .transform-preview{height:390px;max-height:52dvh}.preview-actions button{min-height:40px}.preview-actions{font-size:11px}}
+</style>
 </head>
 <body>
 <div id="language-control"><select id="language-select" aria-label="Language"><option value="en" data-no-translate>English</option><option value="fr" data-no-translate>Français</option></select></div>

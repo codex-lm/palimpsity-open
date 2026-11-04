@@ -22,12 +22,15 @@ const OUTPUT_LABELS = {
   materials: "Materials production", trust: "Trust services",
 };
 const INPUT_LABELS = { food: "Food need", water: "Water need", energy: "Energy need", materials: "Materials need", workers: "Worker need", money: "Money need", heat: "Heat need" };
-const EXTERNAL_LABELS = { heat: "Heat output", cooling: "Cooling", maintenance: "Maintenance service", distribution: "Distribution service", capacity: "Distribution capacity", congestion: "Congestion" };
+const EXTERNAL_LABELS = { heat: "Heat output", cooling: "Cooling", distribution: "Distribution service", capacity: "Distribution capacity", congestion: "Congestion" };
 const tagText = tag => tag.replace(/_/g, " ");
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const setHTML = (node, html) => { if (node.__h !== html) { node.__h = html; node.innerHTML = html; } localizeDOM(node); };
-const flowText = (flows, sign) => Object.entries(flows || {}).filter(([, value]) => value).map(([key, value]) => `${sign}${value} ${FLOW_NAMES[key] || key}`).join("<br>") || "—";
+const floorText = value => `${value} ${value === 1 ? "floor" : "floors"}`;
+const materialText = value => `${value} ${value === 1 ? "material" : "materials"}`;
+const costText = cost => `${cost?.money || 0} € + ${materialText(cost?.materials || 0)}`;
+const flowText = (flows, sign) => Object.entries(flows || {}).filter(([, value]) => value).map(([key, value]) => `${sign}${value} ${key === "materials" && value === 1 ? "material" : FLOW_NAMES[key] || key}`).join("<br>") || "—";
 const resourceColor = key => key === "population" ? "#263c35" : key === "money" ? "#9a7625" : RES_META[key].col;
 const metricValue = value => Number.isFinite(value) ? String(Math.round(value * 10) / 10) : "—";
 const metricAt = (profile, group, key) => profile?.[group]?.[key];
@@ -53,15 +56,18 @@ function focusVisible(...candidates) {
 
 function comparisonRows(before, after) {
   const rows = [];
-  const add = (label, left, right) => {
+  const add = (label, left, right, tone = "neutral") => {
     if (left == null && right == null) return;
-    rows.push({ label, left: metricValue(left ?? 0), right: metricValue(right ?? 0) });
+    rows.push({ label, left: metricValue(left ?? 0), right: metricValue(right ?? 0), tone });
   };
   add("Floors", before?.architecture?.floors, after?.architecture?.floors);
-  for (const key of Object.keys(OUTPUT_LABELS)) add(OUTPUT_LABELS[key], metricAt(before, "outputs", key), metricAt(after, "outputs", key));
-  for (const key of Object.keys(INPUT_LABELS)) add(INPUT_LABELS[key], metricAt(before, "inputs", key), metricAt(after, "inputs", key));
-  for (const key of Object.keys(EXTERNAL_LABELS)) add(EXTERNAL_LABELS[key], metricAt(before, "ext", key), metricAt(after, "ext", key));
-  add("Upkeep", before?.upkeep ?? metricAt(before, "ext", "upkeep"), after?.upkeep ?? metricAt(after, "ext", "upkeep"));
+  for (const key of Object.keys(OUTPUT_LABELS)) add(OUTPUT_LABELS[key], metricAt(before, "outputs", key), metricAt(after, "outputs", key), "benefit");
+  for (const key of Object.keys(INPUT_LABELS)) add(INPUT_LABELS[key], metricAt(before, "inputs", key), metricAt(after, "inputs", key), "cost");
+  for (const key of Object.keys(EXTERNAL_LABELS)) add(EXTERNAL_LABELS[key], metricAt(before, "ext", key), metricAt(after, "ext", key), ["heat", "congestion"].includes(key) ? "cost" : "benefit");
+  const beforeMaintenance = metricAt(before, "ext", "maintenance"), afterMaintenance = metricAt(after, "ext", "maintenance");
+  if (beforeMaintenance > 0 || afterMaintenance > 0) add("Maintenance demand (engine units)", Math.max(0, beforeMaintenance || 0), Math.max(0, afterMaintenance || 0), "cost");
+  if (beforeMaintenance < 0 || afterMaintenance < 0) add("Maintenance provided (engine units)", beforeMaintenance < 0 ? -beforeMaintenance : 0, afterMaintenance < 0 ? -afterMaintenance : 0, "benefit");
+  add("Upkeep (€ / turn)", before?.upkeep ?? metricAt(before, "ext", "upkeep"), after?.upkeep ?? metricAt(after, "ext", "upkeep"), "cost");
   return rows;
 }
 
@@ -423,36 +429,42 @@ export class UI {
     localizeDOM(box);
   }
 
-  renderTransformationPreview(option) {
+  renderTransformationPreview(option, feedback = null) {
     const rows = comparisonRows(option.before, option.after);
     const aesthetic = option.id.startsWith("family_") || option.id.startsWith("variant_");
     const condition = option.reason || (option.phase ? `Available from phase ${option.phase}.` : "Available now.");
     const architecture = option.after?.architecture;
     const result = architecture ? [
-      `${architecture.floors} floors`, ARCHITECTURE_NAMES.base[architecture.base], ARCHITECTURE_NAMES.roof[architecture.roof],
+      floorText(architecture.floors), ARCHITECTURE_NAMES.base[architecture.base], ARCHITECTURE_NAMES.roof[architecture.roof],
       ARCHITECTURE_NAMES.family[architecture.family], `Variant ${architecture.variant + 1}`,
     ].join(" · ") : "";
     return `<section class="transform-preview" aria-label="Transformation preview">
-      <div class="preview-heading"><div><span class="section-kicker">Before confirmation</span><h3>${option.name}</h3></div><button type="button" class="icon-button" data-transform-cancel aria-label="Close preview">${uiIcon("close")}</button></div>
-      <p>${option.desc || ""}</p>
-      ${result ? `<p class="preview-architecture"><b>After</b> · ${result}</p>` : ""}
-      <p class="conversion-cost">Cost: ${option.cost?.money || 0} € + ${option.cost?.materials || 0} materials</p>
-      ${aesthetic ? '<p class="aesthetic-note">Appearance only · no economic advantage.</p>' : ""}
-      ${rows.length ? `<table class="profile-diff"><thead><tr><th scope="col">Effect</th><th scope="col">Before</th><th scope="col">After</th></tr></thead><tbody>${rows.map(row => `<tr><th scope="row">${row.label}</th><td>${row.left}</td><td>${row.right}</td></tr>`).join("")}</tbody></table>` : '<p class="aesthetic-note">No capacity, needs, production or service changes.</p>'}
-      <p class="conversion-condition">${condition}</p>
-      <button type="button" class="confirm-transform" data-transform-confirm="${option.id}" ${option.reason ? "disabled" : ""}>Confirm transformation</button>
+      <div class="preview-heading"><span class="section-kicker">Before confirmation</span><h3 tabindex="-1" data-transform-title>${option.name}</h3></div>
+      <div class="preview-scroll">
+        ${result ? `<p class="preview-architecture"><b>After</b> · ${result}</p>` : ""}
+        <p class="conversion-cost">Cost: ${costText(option.cost)}</p>
+        <p class="conversion-condition">${condition}</p>
+        ${aesthetic ? '<p class="aesthetic-note">Appearance only · no economic advantage.</p>' : ""}
+        ${rows.length ? `<table class="profile-diff"><thead><tr><th scope="col">Effect</th><th scope="col">Before</th><th scope="col">After</th></tr></thead><tbody>${rows.map(row => `<tr data-tone="${row.tone}"><th scope="row">${row.label}</th><td>${row.left}</td><td>${row.right}</td></tr>`).join("")}</tbody></table>` : '<p class="aesthetic-note">No capacity, needs, production or service changes.</p>'}
+      </div>
+      ${feedback?.type === "error" ? `<div class="transform-feedback error" role="alert" tabindex="-1">${feedback.text}</div>` : ""}
+      <div class="preview-actions"><button type="button" class="confirm-transform" data-transform-confirm="${option.id}" ${option.reason ? "disabled" : ""}>Apply changes</button><button type="button" class="cancel-transform" data-transform-cancel>Cancel</button></div>
     </section>`;
   }
 
-  showInspector(building) {
+  showInspector(building, { focusPreview = false } = {}) {
     const changed = this.inspectBuilding !== building;
     const active = document.activeElement;
+    const previousPreviewScroll = this.$.inspector.querySelector(".preview-scroll")?.scrollTop || 0;
     let focusedAction = null;
     if (this.$.inspector.contains(active)) {
       if (active.id === "close-inspector") focusedAction = "#close-inspector";
       else if (active.dataset?.conversion) focusedAction = `[data-conversion="${active.dataset.conversion}"]`;
       else if (active.dataset?.transformPreview) focusedAction = `[data-transform-preview="${active.dataset.transformPreview}"]`;
       else if (active.dataset?.transformConfirm) focusedAction = `[data-transform-confirm="${active.dataset.transformConfirm}"]`;
+      else if (active.hasAttribute?.("data-transform-title")) focusedAction = "[data-transform-title]";
+      else if (active.hasAttribute?.("data-transform-success")) focusedAction = "[data-transform-success]";
+      else if (active.classList?.contains("transform-feedback") && active.classList.contains("error")) focusedAction = ".transform-feedback.error";
       else if (active.hasAttribute?.("data-transform-cancel")) focusedAction = "[data-transform-cancel]";
       else if (active.hasAttribute?.("data-focus-building")) focusedAction = "[data-focus-building]";
     }
@@ -460,14 +472,16 @@ export class UI {
     if (!building || !this.engine.state.buildings.includes(building)) {
       this.inspectBuilding = null;
       this.transformPreview = null;
+      this.transformFeedback = null;
       setHTML(this.$.inspector, "");
       this.$.inspector.classList.remove("on");
-      this.$.side?.classList.remove("has-inspector");
+      this.$.side?.classList.remove("has-inspector", "has-transform-preview");
       this.setSideOpen?.(false);
       return;
     }
     if (changed) {
       this.transformPreview = null;
+      this.transformFeedback = null;
       this.setSideOpen?.(true);
     }
     this.$.side?.classList.add("has-inspector");
@@ -484,7 +498,7 @@ export class UI {
     const architecture = building.architecture || def.architecture;
     if (architecture) {
       const summary = [
-        architecture.floors ? `${architecture.floors} floors` : null,
+        architecture.floors ? floorText(architecture.floors) : null,
         ARCHITECTURE_NAMES.base[architecture.base], ARCHITECTURE_NAMES.roof[architecture.roof],
         ARCHITECTURE_NAMES.family[architecture.family], Number.isInteger(architecture.variant) ? `Variant ${architecture.variant + 1}` : null,
       ].filter(Boolean).join(" · ");
@@ -506,17 +520,19 @@ export class UI {
     const transformations = this.engine.transformationOptions?.(building) || [];
     if (transformations.length) {
       if (this.transformPreview?.building !== building || !transformations.some(option => option.id === this.transformPreview.id)) this.transformPreview = null;
-      html += `<section class="living-layers"><div class="section-kicker">Living Layers</div><h2>Transform this building</h2><p class="section-help">Review every effect before spending anything.</p><div class="transformation-list">${transformations.map(option => `<article class="transformation-offer${this.transformPreview?.id === option.id ? " selected" : ""}"><div class="offer-heading"><strong>${option.name}</strong><span>${option.cost?.money || 0} € · ${option.cost?.materials || 0} materials</span></div><p>${option.desc || ""}</p><button type="button" data-transform-preview="${option.id}" aria-expanded="${this.transformPreview?.id === option.id}">Preview transformation</button></article>`).join("")}</div>`;
-      const preview = transformations.find(option => option.id === this.transformPreview?.id);
-      if (preview) html += this.renderTransformationPreview(preview);
-      html += "</section>";
-    } else this.transformPreview = null;
+      const feedback = this.transformFeedback?.building === building ? this.transformFeedback : null;
+      this.$.side?.classList.toggle("has-transform-preview", !!this.transformPreview);
+      html += `<section class="living-layers"><div class="section-kicker">Living Layers</div><h2>Transform this building</h2><p class="section-help">Review every effect before spending anything.</p>${feedback?.type === "success" ? `<div class="transform-feedback success" role="status" tabindex="-1" data-transform-success>${feedback.text}</div>` : ""}<div class="transformation-list">${transformations.map(option => `<article class="transformation-offer${this.transformPreview?.id === option.id ? " selected" : ""}"><div class="offer-heading"><strong>${option.name}</strong><span>${costText(option.cost)}</span></div><p>${option.desc || ""}</p><button type="button" data-transform-preview="${option.id}" aria-expanded="${this.transformPreview?.id === option.id}">Preview transformation</button>${this.transformPreview?.id === option.id ? this.renderTransformationPreview(option, feedback) : ""}</article>`).join("")}</div></section>`;
+    } else {
+      this.transformPreview = null;
+      this.$.side?.classList.remove("has-transform-preview");
+    }
 
     const options = this.engine.conversionOptions(building);
     if (building.conversion) {
       html += `<div class="insp-conversion converted" tabindex="-1"><strong>✓ ${def.name}</strong><p>${def.desc}</p></div>`;
     } else if (options.length) {
-      html += `<div class="insp-conversion"><div class="conversion-kicker">Give this building a new role</div>${options.map(option => `<div class="conversion-offer"><strong>${option.name}</strong><p>${option.desc}</p><p class="conversion-cost">${option.cost.money} € + ${option.cost.materials} materials</p><button type="button" data-conversion="${option.id}" ${option.reason ? "disabled" : ""}>Confirm repurposing</button><p class="conversion-condition">${option.reason || `Available from phase ${option.phase}, after ${option.minAge} turns.`}</p></div>`).join("")}</div>`;
+      html += `<div class="insp-conversion"><div class="conversion-kicker">Give this building a new role</div>${options.map(option => `<div class="conversion-offer"><strong>${option.name}</strong><p>${option.desc}</p><p class="conversion-cost">${costText(option.cost)}</p><button type="button" data-conversion="${option.id}" ${option.reason ? "disabled" : ""}>Confirm repurposing</button><p class="conversion-condition">${option.reason || `Available from phase ${option.phase}, after ${option.minAge} turns.`}</p></div>`).join("")}</div>`;
     }
 
     const history = Array.isArray(building.history) ? building.history : [];
@@ -531,27 +547,47 @@ export class UI {
     });
     for (const button of this.$.inspector.querySelectorAll("[data-transform-preview]")) {
       button.onclick = () => {
+        this.transformFeedback = null;
         this.transformPreview = { building, id: button.dataset.transformPreview };
-        this.showInspector(building);
+        this.showInspector(building, { focusPreview: true });
       };
     }
     this.$.inspector.querySelector("[data-transform-cancel]")?.addEventListener?.("click", () => {
       const id = this.transformPreview?.id;
       this.transformPreview = null;
+      this.transformFeedback = null;
       this.showInspector(building);
       if (id) this.$.inspector.querySelector(`[data-transform-preview="${id}"]`)?.focus({ preventScroll: true });
     });
     for (const button of this.$.inspector.querySelectorAll("[data-transform-confirm]")) {
       button.onclick = () => {
         const id = button.dataset.transformConfirm;
-        const reason = this.engine.transformationBlockReason(building, id);
-        if (reason) { this.engine.toast(reason); this.update(); return; }
-        if (this.engine.transformBuilding(building, id)) {
-          this.transformPreview = null;
-          this.renderer.sync();
-          this.update();
-          this.$.inspector.querySelector("#close-inspector")?.focus({ preventScroll: true });
-        }
+        if (this.transformBusy || this.transformPreview?.building !== building || this.transformPreview.id !== id) return;
+        this.transformBusy = true;
+        try {
+          const reason = this.engine.transformationBlockReason(building, id);
+          if (reason) {
+            this.transformFeedback = { building, id, type: "error", text: reason };
+            this.update();
+            this.$.inspector.querySelector(".transform-feedback.error")?.focus({ preventScroll: true });
+            return;
+          }
+          const option = this.engine.transformationOptions(building).find(item => item.id === id);
+          if (this.engine.transformBuilding(building, id)) {
+            this.transformPreview = null;
+            this.transformFeedback = { building, id, type: "success", text: `Changes applied: ${option.name} · Spent ${costText(option.cost)}` };
+            this.renderer.sync();
+            this.update();
+            const success = this.$.inspector.querySelector("[data-transform-success]");
+            success?.focus({ preventScroll: true });
+            success?.scrollIntoView({ block: "nearest", inline: "nearest" });
+          } else {
+            const text = this.engine.transformationBlockReason(building, id) || "This transformation could not be applied.";
+            this.transformFeedback = { building, id, type: "error", text };
+            this.update();
+            this.$.inspector.querySelector(".transform-feedback.error")?.focus({ preventScroll: true });
+          }
+        } finally { this.transformBusy = false; }
       };
     }
     for (const button of this.$.inspector.querySelectorAll("[data-conversion]")) {
@@ -566,7 +602,16 @@ export class UI {
         }
       };
     }
-    if (focusedAction) this.$.inspector.querySelector(focusedAction)?.focus({ preventScroll: true });
+    if (!focusPreview && this.transformPreview) {
+      const scroll = this.$.inspector.querySelector(".preview-scroll");
+      if (scroll) scroll.scrollTop = previousPreviewScroll;
+    }
+    if (focusPreview) {
+      const title = this.$.inspector.querySelector("[data-transform-title]");
+      title?.focus({ preventScroll: true });
+      const preview = title?.closest(".transform-preview");
+      (preview || title)?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    } else if (focusedAction) this.$.inspector.querySelector(focusedAction)?.focus({ preventScroll: true });
     if (changed) this.$.inspector.scrollIntoView({ block: "nearest" });
   }
 

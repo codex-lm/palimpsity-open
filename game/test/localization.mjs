@@ -106,6 +106,13 @@ test('Living Layers shop profiles, tags and controls have complete French copy',
   assert.equal(translate('dense', 'fr'), 'densifié');
   assert.equal(translate('Living Layers', 'fr'), 'Couches vivantes');
   assert.equal(translate('Pause', 'fr'), 'Pause');
+  assert.equal(translate('Apply changes', 'fr'), 'Appliquer les modifications');
+  assert.equal(translate('Maintenance demand (engine units)', 'fr'), 'Demande d’entretien (unités moteur)');
+  assert.equal(translate('Maintenance provided (engine units)', 'fr'), 'Entretien fourni (unités moteur)');
+  assert.equal(translate('Upkeep (€ / turn)', 'fr'), 'Coût d’entretien (€ / tour)');
+  assert.equal(translate('1 floor', 'fr'), '1 niveau');
+  assert.equal(translate('Cost: 8 € + 1 material', 'fr'), 'Coût : 8 € + 1 matériau');
+  assert.equal(translate('Changes applied: Original details · Spent 8 € + 1 material', 'fr'), 'Modifications appliquées : Détails d’origine · Dépense : 8 € + 1 matériau');
 });
 
 class TextBoundary {

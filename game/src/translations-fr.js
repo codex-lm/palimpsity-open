@@ -464,7 +464,13 @@ export const EXACT_FR = {
   "commercial": "marchand",
   "dense": "densifié",
   "distribution": "distribution",
-  "local": "local"
+  "local": "local",
+  "Apply changes": "Appliquer les modifications",
+  "Cancel": "Annuler",
+  "Maintenance demand (engine units)": "Demande d’entretien (unités moteur)",
+  "Maintenance provided (engine units)": "Entretien fourni (unités moteur)",
+  "Upkeep (€ / turn)": "Coût d’entretien (€ / tour)",
+  "This transformation could not be applied.": "Cette transformation n’a pas pu être appliquée."
 };
 
 export const TEMPLATES_FR = [
@@ -796,5 +802,29 @@ export const TEMPLATES_FR = [
   {
     "en": "{0}: conversion complete.",
     "fr": "{0} : reconversion terminée."
+  },
+  {
+    "en": "{0} floor",
+    "fr": "{0} niveau"
+  },
+  {
+    "en": "{0} material",
+    "fr": "{0} matériau"
+  },
+  {
+    "en": "{0} € + {1} material",
+    "fr": "{0} € + {1} matériau"
+  },
+  {
+    "en": "Cost: {0} € + {1} material",
+    "fr": "Coût : {0} € + {1} matériau"
+  },
+  {
+    "en": "Changes applied: {0} · Spent {1} € + {2} materials",
+    "fr": "Modifications appliquées : {0} · Dépense : {1} € + {2} matériaux"
+  },
+  {
+    "en": "Changes applied: {0} · Spent {1} € + {2} material",
+    "fr": "Modifications appliquées : {0} · Dépense : {1} € + {2} matériau"
   }
 ];

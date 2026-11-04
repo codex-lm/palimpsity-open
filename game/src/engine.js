@@ -218,7 +218,7 @@ export class CityEngine {
 
   transformationSpec(b, id, architecture = this.architectureOf(b)) {
     const definition = BUILDING_TRANSFORMATIONS[id];
-    if (!definition || !architecture) return null;
+    if (b?.def?.id === "commons" || !definition || !architecture) return null;
     let after = { ...architecture }, phase = definition.phase, cost = definition.cost;
     if (id === "add_floor") {
       const target = architecture.floors + 1;
@@ -236,6 +236,7 @@ export class CityEngine {
   }
   transformationBlockReason(b, id) {
     if (!b || !this.state.buildings.includes(b)) return "This building no longer exists.";
+    if (b.def?.id === "commons" && Object.hasOwn(BUILDING_TRANSFORMATIONS, id)) return "This civic building cannot be expanded.";
     if (!ARCHITECTURE_DEFAULTS[b.def?.id]) return "This building cannot be transformed.";
     if (this.state.outcome) return "The game has ended.";
     if (b.conversion) return "A reconverted building cannot be transformed.";
@@ -250,7 +251,7 @@ export class CityEngine {
     return null;
   }
   transformationOptions(b) {
-    if (!ARCHITECTURE_DEFAULTS[b?.def?.id] || b.conversion) return [];
+    if (b?.def?.id === "commons" || !ARCHITECTURE_DEFAULTS[b?.def?.id] || b.conversion) return [];
     const architecture = this.architectureOf(b), before = cloneProfile(this.profileOf(b));
     return Object.keys(BUILDING_TRANSFORMATIONS).map(id => {
       const spec = this.transformationSpec(b, id, architecture);

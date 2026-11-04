@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CityEngine } from '../src/engine.js';
 import { RiverCityEngine } from '../src/river-pact.js';
-import { ARCHITECTURE_DEFAULTS, BUILDINGS } from '../src/data.js';
+import { layerPlanForBuilding } from '../src/diorama-assets.js';
+import { ARCHITECTURE_DEFAULTS, BUILDINGS, BUILDING_TRANSFORMATIONS } from '../src/data.js';
 
 function funded(phase = 4) {
   const engine = new CityEngine();
@@ -263,6 +264,47 @@ test('commons unlock in phase 3, charge their full cost and provide real service
   assert.ok(commons.flowInput.water > 0);
   assert.ok(engine.state.districts[0].maintenanceCapacity > 0);
   assert.ok(engine.state.districts[0].distribution > 0);
+});
+
+test('standalone Commons rejects every transformation family atomically and keeps its civic layer plan', () => {
+  const engine = funded(4);
+  engine.state.unlocked.add('commons');
+  const commons = engine.place('commons', 0, 0);
+  const layers = { floorHeight: 0.48, modules: { base_civic: { file: 'layers/base_civic.glb' } } };
+  const planBefore = layerPlanForBuilding(commons, layers);
+  assert.equal(planBefore.signature, 'base_civic|standalone');
+  assert.equal(planBefore.floors, 1);
+  assert.equal(planBefore.roofKey, null);
+  assert.deepEqual(engine.transformationOptions(commons), []);
+  for (const id of Object.keys(BUILDING_TRANSFORMATIONS)) {
+    const before = snapshot(engine, commons);
+    const profileBefore = JSON.stringify(engine.profileOf(commons));
+    assert.equal(engine.transformationBlockReason(commons, id), 'This civic building cannot be expanded.', id);
+    assert.equal(engine.transformBuilding(commons, id), false, id);
+    assert.equal(snapshot(engine, commons), before, `${id}: money, materials, architecture, investment and history stay unchanged`);
+    assert.equal(JSON.stringify(engine.profileOf(commons)), profileBefore, `${id}: economic profile stays unchanged`);
+  }
+  assert.deepEqual(commons.architecture, ARCHITECTURE_DEFAULTS.commons);
+  assert.equal(commons.investedMoney, BUILDINGS.commons.cost.money);
+  assert.deepEqual(commons.history, []);
+  assert.equal(layerPlanForBuilding(commons, layers).signature, planBefore.signature);
+});
+
+test('houses, workshops, warehouses and their conversions retain transformation rights', () => {
+  const engine = funded(4);
+  engine.state.unlocked.add('warehouse');
+  const house = engine.place('house', 0, 0);
+  const workshop = engine.place('workshop', 1, 0);
+  const warehouse = engine.place('warehouse', 2, 0);
+  assert.equal(engine.transformBuilding(house, 'add_floor'), true);
+  assert.equal(engine.transformBuilding(workshop, 'family_gardens'), true);
+  assert.equal(engine.transformBuilding(warehouse, 'roof_garden'), true);
+  workshop.age = 24;
+  warehouse.age = 18;
+  assert.equal(engine.convertBuilding(workshop, 'workshop_repair'), true);
+  assert.equal(engine.convertBuilding(warehouse, 'warehouse_hall'), true);
+  assert.equal(workshop.conversion, 'workshop_repair');
+  assert.equal(warehouse.conversion, 'warehouse_hall');
 });
 
 test('history preserves age and demolition refunds forty percent of all invested money', () => {
