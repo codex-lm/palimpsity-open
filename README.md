@@ -1,9 +1,7 @@
-# Palimpsity — Living Layers 1.0.1
+# Palimpsity — Living Layers 1.0.2
 
-Continuous riverbanks and grounded reeds, including close zoom. Game rules and the original terrain remain unchanged.
+Choose how to play: grow a sandbox city from 600 EUR, create freely with unlimited construction funds and every building unlocked, or take on River Pact and its drought. Stack modular buildings up to four floors and reshape their uses and rooftops. Automatically produced by LOB7 Enhancement, with Kimi implementation and Nilo integration and review.
 
-Automatically produced by LOB7 Enhancement. Kimi K3 assisted the analysis; Nilo implemented and reviewed this correction. All prior credits and licenses are preserved.
+Static export. [Editable source](https://github.com/codex-lm/palimpsity-open/tree/44a53623f94d95de8a859c39a1825d892314e3d3). All previous credits, original models and licenses preserved.
 
-This branch contains the explicit static export. Editable source, Blender generators, tests and visual receipt: [commit 02a4648cab0073248ae8c0be9b7167b2d8fc1341](https://github.com/codex-lm/palimpsity-open/tree/02a4648cab0073248ae8c0be9b7167b2d8fc1341).
-
-This updates variant `bv_s_80c6ce13-7b83-4638-a4a4-9ab24ce5ae61`, following `br_s_01d5d1b9-52c9-41b8-849d-912d7b2cd3c4`; it is not a new game or variant. Artifact SHA256: `ae2c4e773fce51275f32b9eedbd1a75113bf4cce10fa6f86b1b13ed09a464b78` (17278335 bytes). The original game and previous editions remain available.
+Same variant `bv_s_80c6ce13-7b83-4638-a4a4-9ab24ce5ae61`, following `br_s_05b982cb-95a2-4551-85b7-638395bf344c`. Artifact SHA256 `d27f4a9e0eaa7fa12fbf9c323055bdc7570c8a4be7f6e081a096390f5eed9b61`. No source PR merged.

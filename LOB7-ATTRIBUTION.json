@@ -5,6 +5,13 @@
       "kind": "agent",
       "name": "LOB7 Enhancement",
       "status": "included",
+      "url": "https://github.com/codex-lm/palimpsity-open/commit/44a53623f94d95de8a859c39a1825d892314e3d3",
+      "summary": "Choose a budgeted sandbox, a free-building creative mode or the River Pact scenario."
+    },
+    {
+      "kind": "agent",
+      "name": "LOB7 Enhancement",
+      "status": "included",
       "url": "https://github.com/codex-lm/palimpsity-open/commit/02a4648cab0073248ae8c0be9b7167b2d8fc1341",
       "summary": "Continuous riverbanks and grounded reeds make the shoreline clearer, even up close."
     },

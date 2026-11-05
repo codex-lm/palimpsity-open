@@ -1,6 +1,6 @@
 {
   "title": "Palimpsity - Living Layers",
-  "description": "Grow a modular city up to four levels, mix building uses and reshape its rooftops. In River Pact, connect districts with river quays, move real food and water surpluses, and prepare for a drought that halves transport capacity. Automatically produced by LOB7 Enhancement, with Kimi implementation and Nilo review.",
+  "description": "Choose how to play: grow a sandbox city from 600 EUR, create freely with unlimited construction funds and every building unlocked, or take on River Pact and its drought. Stack modular buildings up to four floors and reshape their uses and rooftops. Automatically produced by LOB7 Enhancement, with Kimi implementation and Nilo integration and review.",
   "entrypoint": "index.html",
   "license": "CC0-1.0",
   "genre": [
@@ -12,16 +12,16 @@
     "Diorama"
   ],
   "controls": [
-    "Click: build or inspect. Drag: rotate. Right-drag: pan. Scroll: zoom.",
-    "R: rotate a building. Escape: cancel. Space: pause or resume.",
-    "Arrow keys and Enter: choose a tile and build or inspect.",
-    "English / Français: switch language without restarting.",
-    "Start River Pact: a fresh three-act scenario. Choose a charter after Act I, then keep both districts supplied through the drought on turns 120-149.",
-    "Advance 5 turns: run up to five real simulation turns and pause; stops at a choice or result. Pauses are free. Hiding the tab pauses; resume manually.",
-    "First Neighbourhood starts the earlier challenge (24 residents, 8 healthy turns, deadline 120). Classic city returns to a fresh original game.",
-    "Inspect a building to preview and confirm floors, roof changes or conversions; costs, needs and outputs are shown before spending.",
-    "Choose Banks, Works or Gardens for the building palette. Focus, camera views, photo mode and quality settings help inspect the city.",
-    "River quays unlock in phase 2. Rotate with R before placement: connect two districts to the same water basin and inspect the last-turn flows."
+    "Choose Sandbox, God mode or River Pact at startup. First Neighbourhood remains available as a separate timed challenge.",
+    "The current mode menu opens a new-game selector. Replacing the city requires confirmation; returning keeps the current city paused.",
+    "Sandbox starts with 600 EUR, normal income, costs and unlocks, with no deadline or forced ending.",
+    "God mode: all buildings and upgrades available, free construction and transformations, no defeat. Food, water and services are still simulated.",
+    "Click: build or inspect. Drag: rotate. Right-drag: pan. Scroll: zoom. R: rotate a building. Escape: cancel. Space: pause or resume.",
+    "Arrow keys and Enter: choose a tile and build or inspect. English / Français: switch language without restarting.",
+    "River Pact: choose a charter after Act I, then supply both districts through the drought on turns 120-149. Advance 5 turns runs real turns and pauses at choices or results.",
+    "First Neighbourhood: 24 residents, 8 healthy turns, deadline 120. Only this challenge records a best time.",
+    "Inspect a building to preview and confirm floors, roofs or conversions. Up to four floors; all effects shown before confirmation.",
+    "Hiding the tab pauses the game; resume manually. River quays require two districts on the same water basin; rotate their water-facing side with R."
   ],
   "credits": [
     "Created by Cédric, developed with AI assistance from Codex, Claude and Kimi.",

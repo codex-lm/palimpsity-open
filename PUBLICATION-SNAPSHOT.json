@@ -1,23 +1,29 @@
 {
   "game": "Palimpsity",
-  "version": "living-layers-1.0.1",
+  "version": "living-layers-1.0.2",
   "entrypoint": "index.html",
-  "artifactSha256": "ae2c4e773fce51275f32b9eedbd1a75113bf4cce10fa6f86b1b13ed09a464b78",
-  "artifactBytes": 17278335,
+  "artifactSha256": "d27f4a9e0eaa7fa12fbf9c323055bdc7570c8a4be7f6e081a096390f5eed9b61",
+  "artifactBytes": 17289825,
   "referencedGlbs": 102,
   "publicationFilesAreExplicitExport": true,
   "editableSourceRepository": "https://github.com/codex-lm/palimpsity-open",
-  "editableSourceRef": "02a4648cab0073248ae8c0be9b7167b2d8fc1341",
-  "gameplayCommit": "0a5ac8569175ec018a41b0cf531d73aae859e239",
-  "parentReleaseId": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
+  "editableSourceRef": "44a53623f94d95de8a859c39a1825d892314e3d3",
+  "gameplayCommit": "44a53623f94d95de8a859c39a1825d892314e3d3",
+  "parentReleaseId": "br_s_05b982cb-95a2-4551-85b7-638395bf344c",
   "sourceChecks": {
-    "nodeTestsPassed": 166,
+    "passed": true,
+    "nodeTests": 185,
     "sourceArtifactMatch": true,
-    "realGlbTestsPassed": 8
+    "embeddedGlbs": 102
   },
   "browserValidation": {
-    "scope": "Local Edge close zoom/rotations and IAB 4K render. Hosted validation recorded after preparation/publication."
+    "passed": true,
+    "actions": "EN/FR startup selection; creative house+floor free; cancel preserves city; sandbox house costs40 from600; River Pact advances5 turns; earlier challenge starts0/120; mobile390px no overflow, Escape and pause, clean warn/error logs.",
+    "evidence": [
+      "modes-local-390-20261105.jpg",
+      "modes-local-desktop-fr-20261105.jpg"
+    ]
   },
-  "previousReleaseId": "br_s_01d5d1b9-52c9-41b8-849d-912d7b2cd3c4",
+  "previousReleaseId": "br_s_05b982cb-95a2-4551-85b7-638395bf344c",
   "variantId": "bv_s_80c6ce13-7b83-4638-a4a4-9ab24ce5ae61"
 }
