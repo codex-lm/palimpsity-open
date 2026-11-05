@@ -510,8 +510,7 @@ export class UI {
         : `<li>Import: ${amount} ${resource} ← ${DISTRICT_NAMES[flow.sourceDistrict]}</li>`;
     }).join("") : `<li>No completed-turn flow</li>`;
     const quays = info.network?.quays || [];
-    const selectedInNetwork = quays.some(quay => quay.c === building.c && quay.r === building.r && quay.district === homeDistrict);
-    const hasPartnerTarget = selectedInNetwork && quays.some(quay => quay.district !== homeDistrict);
+    const hasPartnerTarget = quays.some(quay => quay.district !== homeDistrict);
     const canFocus = hasPartnerTarget && typeof this.renderer.focusQuayPartner === "function";
     return `<section class="quay-info"><div class="section-kicker">River network</div><div class="quay-status" data-status="${info.status}">${status}</div>
       <dl class="quay-facts"><div><dt>Water basin</dt><dd>${info.basin ?? "No water basin"}</dd></div><div><dt>Home district</dt><dd>${districtName}</dd></div><div><dt>Other districts</dt><dd>${others}</dd></div>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "python -m http.server 5173",
-    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/living-layers.mjs test/living-layers-static.mjs test/renderer-living-layers.mjs test/architecture-preview.mjs test/renderer-environment.mjs test/ui-palette.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs test/river-pact.mjs test/river-quays.mjs test/river-pact-controls.mjs",
+    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/living-layers.mjs test/living-layers-static.mjs test/renderer-living-layers.mjs test/architecture-preview.mjs test/renderer-environment.mjs test/ui-palette.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs test/river-pact.mjs test/river-quays.mjs test/river-pact-controls.mjs test/renderer-river.mjs test/river-visual-regressions.mjs",
     "test:challenge": "node --test test/challenge.mjs",
     "test:gameplay": "node test/gameplay-regressions.mjs",
     "test:ui": "node test/ui-contracts.mjs",
@@ -22,6 +22,7 @@
     "test:d2": "node test/d2-performance-comparison.mjs",
     "test:d2-calculation": "node --test test/d2-performance-calculation.mjs",
     "test:d3": "node test/d3-natural-playthrough.mjs",
+    "test:015": "node test/015-natural-quays.mjs",
     "test:diorama": "node test/diorama-state-check.mjs",
     "test:diorama-browser": "node test/diorama-browser-check.mjs",
     "test:complete": "node test/complete-state-check.mjs",

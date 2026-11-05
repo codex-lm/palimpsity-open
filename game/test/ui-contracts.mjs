@@ -109,7 +109,7 @@ test('LOT015 quay affiche bassin, équipage, capacité et flux datés sans activ
   engine.computeDistricts(2);
   ui.showInspector(duplicate);
   assert.ok(engine.quayInfo(duplicate).otherDistricts.length > 0);
-  assert.ok(inspector.innerHTML.includes('data-quay-partner disabled'), 'An unselected duplicate has no renderer partner target');
+  assert.ok(!inspector.innerHTML.includes('data-quay-partner disabled'), 'A secondary quay can focus a partner in another district');
 });
 
 test('la commande de rénovation paie le moteur, actualise le profil et conserve le modèle', () => {

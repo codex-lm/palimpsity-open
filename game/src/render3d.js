@@ -615,8 +615,10 @@ export class Renderer3D {
 
   _positionBarge(rec, phase) {
     if (rec.points.length === 1) {
-      const point = rec.points[0], side = rec.flow.resource === "food" ? -1 : 1;
-      rec.group.position.set(point.x + side * 0.18, point.y, point.z + (rec.stationaryIndex % 3 - 1) * 0.08);
+      const point = rec.points[0], count = rec.stationaryCount, index = rec.stationaryIndex;
+      const x = count === 1 ? 0 : (index % 2 ? 0.23 : -0.23);
+      const z = (Math.floor(index / 2) - (Math.ceil(count / 2) - 1) / 2) * 0.30;
+      rec.group.position.set(point.x + x, point.y, point.z + z);
       rec.group.rotation.y = 0;
       return;
     }
@@ -638,6 +640,14 @@ export class Renderer3D {
     const assets = this.manifest.riverAssets;
     if (!assets?.barge) return;
     const plans = riverVisualFlows(this.engine.state, this.engine.terrain);
+    const stationaryCells = new Map();
+    for (const { flow } of plans) {
+      if (flow.path.length !== 1) continue;
+      const key = `${flow.path[0].c},${flow.path[0].r}`;
+      const cell = stationaryCells.get(key) || { count: 0, next: 0 };
+      cell.count++;
+      stationaryCells.set(key, cell);
+    }
     for (const [index, { flow }] of plans.entries()) {
       const group = new THREE.Group(), boat = this._clone(fileOf(assets.barge));
       const cargoKey = flow.resource === "food" ? "cargoFood" : "cargoWater";
@@ -648,7 +658,9 @@ export class Renderer3D {
       const points = flow.path.map(cell => new THREE.Vector3(worldX(cell.c), -0.06, worldZ(cell.r)));
       const cumulative = [0];
       for (let i = 1; i < points.length; i++) cumulative.push(cumulative[i - 1] + points[i].distanceTo(points[i - 1]));
-      const rec = { group, flow, points, cumulative, totalLength: cumulative.at(-1), direction: new THREE.Vector3(), phase: index / Math.max(1, plans.length), stationaryIndex: index };
+      const stationary = points.length === 1 ? stationaryCells.get(`${flow.path[0].c},${flow.path[0].r}`) : null;
+      if (stationary) group.scale.setScalar(0.5);
+      const rec = { group, flow, points, cumulative, totalLength: cumulative.at(-1), direction: new THREE.Vector3(), phase: index / Math.max(1, plans.length), stationaryIndex: stationary ? stationary.next++ : 0, stationaryCount: stationary?.count || 0 };
       this.bargeRoot.add(group);
       this._barges.push(rec);
       this._positionBarge(rec, rec.phase);

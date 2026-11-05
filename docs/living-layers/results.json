@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-04T23:00:00.688Z",
-  "revision": "50e382488be8d394b00fa3c80b9c3ad7324ec1a2",
+  "generatedAt": "2026-11-05T06:33:24.701Z",
+  "revision": "0b4d2782f6303902f1eaa833e7151cedf9c47c6d",
   "machine": {
     "platform": "win32",
     "architecture": "x64",
@@ -44,14 +44,14 @@
   },
   "export": {
     "file": "C:\\dev\\lob7-publication-flow\\.work\\kimi-palimpsity-living-layers\\dist\\palimpsity-mvp.html",
-    "bytes": 17071612,
-    "gzipBytes": 2772401
+    "bytes": 17378392,
+    "gzipBytes": 2824751
   },
   "scenarios": [
     {
       "name": "elevated city",
       "status": "passed",
-      "durationMs": 37531,
+      "durationMs": 9346,
       "details": {
         "placed": {
           "houses": [
@@ -910,7 +910,7 @@
     {
       "name": "mixed city, two conversions, camera and native viewports",
       "status": "passed",
-      "durationMs": 373764,
+      "durationMs": 21368,
       "details": {
         "placed": {
           "houses": [
@@ -1161,21 +1161,21 @@
               "dpr": 1
             },
             "frames": 30,
-            "meanFrameMs": 304.43666666666684,
-            "fps": 3.284755449956749,
-            "p50FrameMs": 300,
-            "p95FrameMs": 316.70000000001164,
-            "maxFrameMs": 350.09999999999127,
-            "drawCalls": 956,
-            "triangles": 266512,
+            "meanFrameMs": 16.666666666666668,
+            "fps": 59.99999999999999,
+            "p50FrameMs": 16.69999999999891,
+            "p95FrameMs": 17.099999999998545,
+            "maxFrameMs": 17.200000000000728,
+            "drawCalls": 931,
+            "triangles": 199984,
             "rendererMemory": {
               "geometries": 199,
               "textures": 1,
               "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 64000000,
-              "totalBytes": 72200000,
+              "usedBytes": 91700000,
+              "totalBytes": 139000000,
               "limitBytes": 3760000000
             },
             "css": {
@@ -1195,9 +1195,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 1869,
-              "JSHeapUsedSize": 35031004,
-              "JSHeapTotalSize": 41984000
+              "Nodes": 3374,
+              "JSHeapUsedSize": 33555696,
+              "JSHeapTotalSize": 106889216
             }
           },
           {
@@ -1209,21 +1209,21 @@
               "dpr": 2
             },
             "frames": 30,
-            "meanFrameMs": 1090.5233333333338,
-            "fps": 0.91699092484648,
-            "p50FrameMs": 1083.2999999999884,
-            "p95FrameMs": 1150,
-            "maxFrameMs": 1200,
-            "drawCalls": 956,
-            "triangles": 266512,
+            "meanFrameMs": 16.666666666666668,
+            "fps": 59.99999999999999,
+            "p50FrameMs": 16.69999999999891,
+            "p95FrameMs": 16.899999999999636,
+            "maxFrameMs": 17,
+            "drawCalls": 931,
+            "triangles": 199984,
             "rendererMemory": {
               "geometries": 199,
               "textures": 1,
               "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 64000000,
-              "totalBytes": 72200000,
+              "usedBytes": 91700000,
+              "totalBytes": 139000000,
               "limitBytes": 3760000000
             },
             "css": {
@@ -1243,9 +1243,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 744,
-              "JSHeapUsedSize": 32813656,
-              "JSHeapTotalSize": 43294720
+              "Nodes": 753,
+              "JSHeapUsedSize": 55634484,
+              "JSHeapTotalSize": 101122048
             }
           },
           {
@@ -1257,21 +1257,21 @@
               "dpr": 2
             },
             "frames": 30,
-            "meanFrameMs": 265.5466666666674,
-            "fps": 3.765816429001797,
-            "p50FrameMs": 266.6000000000058,
-            "p95FrameMs": 283.3999999999942,
-            "maxFrameMs": 300.1000000000058,
-            "drawCalls": 956,
-            "triangles": 266512,
+            "meanFrameMs": 16.666666666666668,
+            "fps": 59.99999999999999,
+            "p50FrameMs": 16.600000000002183,
+            "p95FrameMs": 16.799999999999272,
+            "maxFrameMs": 17,
+            "drawCalls": 931,
+            "triangles": 199984,
             "rendererMemory": {
               "geometries": 199,
               "textures": 1,
               "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 64000000,
-              "totalBytes": 72200000,
+              "usedBytes": 91700000,
+              "totalBytes": 139000000,
               "limitBytes": 3760000000
             },
             "css": {
@@ -1291,9 +1291,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 739,
-              "JSHeapUsedSize": 31770412,
-              "JSHeapTotalSize": 36478976
+              "Nodes": 748,
+              "JSHeapUsedSize": 40223468,
+              "JSHeapTotalSize": 99287040
             }
           },
           {
@@ -1305,21 +1305,21 @@
               "dpr": 1
             },
             "frames": 30,
-            "meanFrameMs": 1104.9666666666667,
-            "fps": 0.9050046758574919,
-            "p50FrameMs": 1100,
-            "p95FrameMs": 1150.100000000035,
-            "maxFrameMs": 1199.9000000000233,
-            "drawCalls": 956,
-            "triangles": 266512,
+            "meanFrameMs": 16.666666666666668,
+            "fps": 59.99999999999999,
+            "p50FrameMs": 16.700000000000728,
+            "p95FrameMs": 16.80000000000291,
+            "maxFrameMs": 19.799999999999272,
+            "drawCalls": 931,
+            "triangles": 199984,
             "rendererMemory": {
               "geometries": 199,
               "textures": 1,
               "programs": 12
             },
             "jsHeap": {
-              "usedBytes": 64000000,
-              "totalBytes": 72200000,
+              "usedBytes": 91700000,
+              "totalBytes": 139000000,
               "limitBytes": 3760000000
             },
             "css": {
@@ -1339,9 +1339,9 @@
             },
             "cdpMetrics": {
               "Documents": 1,
-              "Nodes": 660,
-              "JSHeapUsedSize": 33902636,
-              "JSHeapTotalSize": 40411136
+              "Nodes": 1006,
+              "JSHeapUsedSize": 38657192,
+              "JSHeapTotalSize": 99811328
             }
           }
         ],
@@ -1359,7 +1359,7 @@
     {
       "name": "dense city — high and low quality",
       "status": "passed",
-      "durationMs": 129089,
+      "durationMs": 11013,
       "details": {
         "placed": {
           "houses": [
@@ -4712,21 +4712,21 @@
             "dpr": 2
           },
           "frames": 30,
-          "meanFrameMs": 1402.1800000000003,
-          "fps": 0.7131751986192927,
-          "p50FrameMs": 1400,
-          "p95FrameMs": 1449.8999999999942,
-          "maxFrameMs": 1483.300000000003,
-          "drawCalls": 1353,
-          "triangles": 307743,
+          "meanFrameMs": 16.666666666666668,
+          "fps": 59.99999999999999,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.799999999999272,
+          "maxFrameMs": 16.899999999999636,
+          "drawCalls": 1328,
+          "triangles": 244219,
           "rendererMemory": {
-            "geometries": 197,
+            "geometries": 172,
             "textures": 1,
             "programs": 13
           },
           "jsHeap": {
-            "usedBytes": 64000000,
-            "totalBytes": 72200000,
+            "usedBytes": 91700000,
+            "totalBytes": 139000000,
             "limitBytes": 3760000000
           },
           "css": {
@@ -4746,9 +4746,9 @@
           },
           "cdpMetrics": {
             "Documents": 1,
-            "Nodes": 735,
-            "JSHeapUsedSize": 32136320,
-            "JSHeapTotalSize": 37265408
+            "Nodes": 744,
+            "JSHeapUsedSize": 34302068,
+            "JSHeapTotalSize": 113704960
           }
         },
         "low": {
@@ -4760,21 +4760,21 @@
             "dpr": 2
           },
           "frames": 30,
-          "meanFrameMs": 304.43333333333334,
-          "fps": 3.2847914157451004,
-          "p50FrameMs": 300,
-          "p95FrameMs": 316.70000000001164,
-          "maxFrameMs": 333.5,
-          "drawCalls": 1343,
-          "triangles": 307503,
+          "meanFrameMs": 16.666666666666668,
+          "fps": 59.99999999999999,
+          "p50FrameMs": 16.69999999999891,
+          "p95FrameMs": 16.80000000000109,
+          "maxFrameMs": 16.899999999999636,
+          "drawCalls": 1318,
+          "triangles": 243979,
           "rendererMemory": {
-            "geometries": 197,
+            "geometries": 172,
             "textures": 0,
             "programs": 21
           },
           "jsHeap": {
-            "usedBytes": 64000000,
-            "totalBytes": 72200000,
+            "usedBytes": 91700000,
+            "totalBytes": 139000000,
             "limitBytes": 3760000000
           },
           "css": {
@@ -4794,9 +4794,9 @@
           },
           "cdpMetrics": {
             "Documents": 1,
-            "Nodes": 735,
-            "JSHeapUsedSize": 38455400,
-            "JSHeapTotalSize": 53518336
+            "Nodes": 744,
+            "JSHeapUsedSize": 61602544,
+            "JSHeapTotalSize": 106102784
           }
         },
         "final": {
@@ -4813,7 +4813,7 @@
     {
       "name": "River Pact — Garden commons",
       "status": "passed",
-      "durationMs": 67118,
+      "durationMs": 5798,
       "details": {
         "charter": "gardens",
         "actions": [
@@ -5032,7 +5032,7 @@
     {
       "name": "River Pact — Makers quarter",
       "status": "passed",
-      "durationMs": 67131,
+      "durationMs": 5583,
       "details": {
         "charter": "workshops",
         "actions": [
@@ -5259,21 +5259,21 @@
         "dpr": 1
       },
       "frames": 30,
-      "meanFrameMs": 304.43666666666684,
-      "fps": 3.284755449956749,
-      "p50FrameMs": 300,
-      "p95FrameMs": 316.70000000001164,
-      "maxFrameMs": 350.09999999999127,
-      "drawCalls": 956,
-      "triangles": 266512,
+      "meanFrameMs": 16.666666666666668,
+      "fps": 59.99999999999999,
+      "p50FrameMs": 16.69999999999891,
+      "p95FrameMs": 17.099999999998545,
+      "maxFrameMs": 17.200000000000728,
+      "drawCalls": 931,
+      "triangles": 199984,
       "rendererMemory": {
         "geometries": 199,
         "textures": 1,
         "programs": 12
       },
       "jsHeap": {
-        "usedBytes": 64000000,
-        "totalBytes": 72200000,
+        "usedBytes": 91700000,
+        "totalBytes": 139000000,
         "limitBytes": 3760000000
       },
       "css": {
@@ -5293,9 +5293,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 1869,
-        "JSHeapUsedSize": 35031004,
-        "JSHeapTotalSize": 41984000
+        "Nodes": 3374,
+        "JSHeapUsedSize": 33555696,
+        "JSHeapTotalSize": 106889216
       }
     },
     {
@@ -5307,21 +5307,165 @@
         "dpr": 2
       },
       "frames": 30,
-      "meanFrameMs": 1090.5233333333338,
-      "fps": 0.91699092484648,
-      "p50FrameMs": 1083.2999999999884,
-      "p95FrameMs": 1150,
-      "maxFrameMs": 1200,
-      "drawCalls": 956,
-      "triangles": 266512,
+      "meanFrameMs": 16.666666666666668,
+      "fps": 59.99999999999999,
+      "p50FrameMs": 16.69999999999891,
+      "p95FrameMs": 16.899999999999636,
+      "maxFrameMs": 17,
+      "drawCalls": 931,
+      "triangles": 199984,
       "rendererMemory": {
         "geometries": 199,
         "textures": 1,
         "programs": 12
       },
       "jsHeap": {
-        "usedBytes": 64000000,
-        "totalBytes": 72200000,
+        "usedBytes": 91700000,
+        "totalBytes": 139000000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "quality": "high",
+      "rendererPixelRatio": 2,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 753,
+        "JSHeapUsedSize": 55634484,
+        "JSHeapTotalSize": 101122048
+      }
+    },
+    {
+      "label": "mixed-390x844-high-general",
+      "viewport": {
+        "id": "390x844-high",
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "frames": 30,
+      "meanFrameMs": 16.666666666666668,
+      "fps": 59.99999999999999,
+      "p50FrameMs": 16.600000000002183,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 17,
+      "drawCalls": 931,
+      "triangles": 199984,
+      "rendererMemory": {
+        "geometries": 199,
+        "textures": 1,
+        "programs": 12
+      },
+      "jsHeap": {
+        "usedBytes": 91700000,
+        "totalBytes": 139000000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 390,
+        "height": 844
+      },
+      "canvasCss": {
+        "width": 390,
+        "height": 844
+      },
+      "devicePixelRatio": 2,
+      "quality": "high",
+      "rendererPixelRatio": 2,
+      "drawingBuffer": {
+        "width": 780,
+        "height": 1688
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 748,
+        "JSHeapUsedSize": 40223468,
+        "JSHeapTotalSize": 99287040
+      }
+    },
+    {
+      "label": "mixed-3840x2160-general",
+      "viewport": {
+        "id": "3840x2160",
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1
+      },
+      "frames": 30,
+      "meanFrameMs": 16.666666666666668,
+      "fps": 59.99999999999999,
+      "p50FrameMs": 16.700000000000728,
+      "p95FrameMs": 16.80000000000291,
+      "maxFrameMs": 19.799999999999272,
+      "drawCalls": 931,
+      "triangles": 199984,
+      "rendererMemory": {
+        "geometries": 199,
+        "textures": 1,
+        "programs": 12
+      },
+      "jsHeap": {
+        "usedBytes": 91700000,
+        "totalBytes": 139000000,
+        "limitBytes": 3760000000
+      },
+      "css": {
+        "width": 3840,
+        "height": 2160
+      },
+      "canvasCss": {
+        "width": 3840,
+        "height": 2160
+      },
+      "devicePixelRatio": 1,
+      "quality": "high",
+      "rendererPixelRatio": 1,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "cdpMetrics": {
+        "Documents": 1,
+        "Nodes": 1006,
+        "JSHeapUsedSize": 38657192,
+        "JSHeapTotalSize": 99811328
+      }
+    },
+    {
+      "label": "dense-1920x1080-high",
+      "viewport": {
+        "id": "1920x1080-high",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "frames": 30,
+      "meanFrameMs": 16.666666666666668,
+      "fps": 59.99999999999999,
+      "p50FrameMs": 16.69999999999891,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.899999999999636,
+      "drawCalls": 1328,
+      "triangles": 244219,
+      "rendererMemory": {
+        "geometries": 172,
+        "textures": 1,
+        "programs": 13
+      },
+      "jsHeap": {
+        "usedBytes": 91700000,
+        "totalBytes": 139000000,
         "limitBytes": 3760000000
       },
       "css": {
@@ -5342,152 +5486,8 @@
       "cdpMetrics": {
         "Documents": 1,
         "Nodes": 744,
-        "JSHeapUsedSize": 32813656,
-        "JSHeapTotalSize": 43294720
-      }
-    },
-    {
-      "label": "mixed-390x844-high-general",
-      "viewport": {
-        "id": "390x844-high",
-        "width": 390,
-        "height": 844,
-        "dpr": 2
-      },
-      "frames": 30,
-      "meanFrameMs": 265.5466666666674,
-      "fps": 3.765816429001797,
-      "p50FrameMs": 266.6000000000058,
-      "p95FrameMs": 283.3999999999942,
-      "maxFrameMs": 300.1000000000058,
-      "drawCalls": 956,
-      "triangles": 266512,
-      "rendererMemory": {
-        "geometries": 199,
-        "textures": 1,
-        "programs": 12
-      },
-      "jsHeap": {
-        "usedBytes": 64000000,
-        "totalBytes": 72200000,
-        "limitBytes": 3760000000
-      },
-      "css": {
-        "width": 390,
-        "height": 844
-      },
-      "canvasCss": {
-        "width": 390,
-        "height": 844
-      },
-      "devicePixelRatio": 2,
-      "quality": "high",
-      "rendererPixelRatio": 2,
-      "drawingBuffer": {
-        "width": 780,
-        "height": 1688
-      },
-      "cdpMetrics": {
-        "Documents": 1,
-        "Nodes": 739,
-        "JSHeapUsedSize": 31770412,
-        "JSHeapTotalSize": 36478976
-      }
-    },
-    {
-      "label": "mixed-3840x2160-general",
-      "viewport": {
-        "id": "3840x2160",
-        "width": 3840,
-        "height": 2160,
-        "dpr": 1
-      },
-      "frames": 30,
-      "meanFrameMs": 1104.9666666666667,
-      "fps": 0.9050046758574919,
-      "p50FrameMs": 1100,
-      "p95FrameMs": 1150.100000000035,
-      "maxFrameMs": 1199.9000000000233,
-      "drawCalls": 956,
-      "triangles": 266512,
-      "rendererMemory": {
-        "geometries": 199,
-        "textures": 1,
-        "programs": 12
-      },
-      "jsHeap": {
-        "usedBytes": 64000000,
-        "totalBytes": 72200000,
-        "limitBytes": 3760000000
-      },
-      "css": {
-        "width": 3840,
-        "height": 2160
-      },
-      "canvasCss": {
-        "width": 3840,
-        "height": 2160
-      },
-      "devicePixelRatio": 1,
-      "quality": "high",
-      "rendererPixelRatio": 1,
-      "drawingBuffer": {
-        "width": 3840,
-        "height": 2160
-      },
-      "cdpMetrics": {
-        "Documents": 1,
-        "Nodes": 660,
-        "JSHeapUsedSize": 33902636,
-        "JSHeapTotalSize": 40411136
-      }
-    },
-    {
-      "label": "dense-1920x1080-high",
-      "viewport": {
-        "id": "1920x1080-high",
-        "width": 1920,
-        "height": 1080,
-        "dpr": 2
-      },
-      "frames": 30,
-      "meanFrameMs": 1402.1800000000003,
-      "fps": 0.7131751986192927,
-      "p50FrameMs": 1400,
-      "p95FrameMs": 1449.8999999999942,
-      "maxFrameMs": 1483.300000000003,
-      "drawCalls": 1353,
-      "triangles": 307743,
-      "rendererMemory": {
-        "geometries": 197,
-        "textures": 1,
-        "programs": 13
-      },
-      "jsHeap": {
-        "usedBytes": 64000000,
-        "totalBytes": 72200000,
-        "limitBytes": 3760000000
-      },
-      "css": {
-        "width": 1920,
-        "height": 1080
-      },
-      "canvasCss": {
-        "width": 1920,
-        "height": 1080
-      },
-      "devicePixelRatio": 2,
-      "quality": "high",
-      "rendererPixelRatio": 2,
-      "drawingBuffer": {
-        "width": 3840,
-        "height": 2160
-      },
-      "cdpMetrics": {
-        "Documents": 1,
-        "Nodes": 735,
-        "JSHeapUsedSize": 32136320,
-        "JSHeapTotalSize": 37265408
+        "JSHeapUsedSize": 34302068,
+        "JSHeapTotalSize": 113704960
       }
     },
     {
@@ -5499,21 +5499,21 @@
         "dpr": 2
       },
       "frames": 30,
-      "meanFrameMs": 304.43333333333334,
-      "fps": 3.2847914157451004,
-      "p50FrameMs": 300,
-      "p95FrameMs": 316.70000000001164,
-      "maxFrameMs": 333.5,
-      "drawCalls": 1343,
-      "triangles": 307503,
+      "meanFrameMs": 16.666666666666668,
+      "fps": 59.99999999999999,
+      "p50FrameMs": 16.69999999999891,
+      "p95FrameMs": 16.80000000000109,
+      "maxFrameMs": 16.899999999999636,
+      "drawCalls": 1318,
+      "triangles": 243979,
       "rendererMemory": {
-        "geometries": 197,
+        "geometries": 172,
         "textures": 0,
         "programs": 21
       },
       "jsHeap": {
-        "usedBytes": 64000000,
-        "totalBytes": 72200000,
+        "usedBytes": 91700000,
+        "totalBytes": 139000000,
         "limitBytes": 3760000000
       },
       "css": {
@@ -5533,9 +5533,9 @@
       },
       "cdpMetrics": {
         "Documents": 1,
-        "Nodes": 735,
-        "JSHeapUsedSize": 38455400,
-        "JSHeapTotalSize": 53518336
+        "Nodes": 744,
+        "JSHeapUsedSize": 61602544,
+        "JSHeapTotalSize": 106102784
       }
     }
   ],
@@ -5543,168 +5543,168 @@
     {
       "name": "elevated-before-general",
       "file": "captures/elevated-before-general.png",
-      "bytes": 377624,
+      "bytes": 313415,
       "width": 1280,
       "height": 720
     },
     {
       "name": "elevated-after-general",
       "file": "captures/elevated-after-general.png",
-      "bytes": 383953,
+      "bytes": 318253,
       "width": 1280,
       "height": 720
     },
     {
       "name": "elevated-after-close-inspector",
       "file": "captures/elevated-after-close-inspector.png",
-      "bytes": 450328,
+      "bytes": 328402,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-before-general",
       "file": "captures/mixed-before-general.png",
-      "bytes": 377906,
+      "bytes": 315884,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-after-general",
       "file": "captures/mixed-after-general.png",
-      "bytes": 384198,
+      "bytes": 319865,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-workshop-repair-close-inspector",
       "file": "captures/mixed-workshop-repair-close-inspector.png",
-      "bytes": 547205,
+      "bytes": 512438,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-warehouse-hall-close-inspector",
       "file": "captures/mixed-warehouse-hall-close-inspector.png",
-      "bytes": 583862,
+      "bytes": 576148,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-after-close-inspector",
       "file": "captures/mixed-after-close-inspector.png",
-      "bytes": 481738,
+      "bytes": 368930,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-1280x720-general",
       "file": "captures/mixed-1280x720-general.png",
-      "bytes": 413780,
+      "bytes": 365091,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-1280x720-close-inspector",
       "file": "captures/mixed-1280x720-close-inspector.png",
-      "bytes": 481738,
+      "bytes": 421026,
       "width": 1280,
       "height": 720
     },
     {
       "name": "mixed-1920x1080-high-general",
       "file": "captures/mixed-1920x1080-high-general.png",
-      "bytes": 2016591,
+      "bytes": 2028648,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "mixed-1920x1080-high-close-inspector",
       "file": "captures/mixed-1920x1080-high-close-inspector.png",
-      "bytes": 2145795,
+      "bytes": 1882658,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "mixed-390x844-high-general",
       "file": "captures/mixed-390x844-high-general.png",
-      "bytes": 363373,
+      "bytes": 329801,
       "width": 780,
       "height": 1688
     },
     {
       "name": "mixed-390x844-high-close-inspector",
       "file": "captures/mixed-390x844-high-close-inspector.png",
-      "bytes": 317656,
+      "bytes": 352449,
       "width": 780,
       "height": 1688
     },
     {
       "name": "mixed-3840x2160-general",
       "file": "captures/mixed-3840x2160-general.png",
-      "bytes": 1801232,
+      "bytes": 1584192,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "mixed-3840x2160-close-inspector",
       "file": "captures/mixed-3840x2160-close-inspector.png",
-      "bytes": 2480428,
+      "bytes": 2089121,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "dense-1920x1080-high-general",
       "file": "captures/dense-1920x1080-high-general.png",
-      "bytes": 2297421,
+      "bytes": 1901020,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "dense-1920x1080-low-general",
       "file": "captures/dense-1920x1080-low-general.png",
-      "bytes": 2178471,
+      "bytes": 1672711,
       "width": 3840,
       "height": 2160
     },
     {
       "name": "river-gardens-before-charter",
       "file": "captures/river-gardens-before-charter.png",
-      "bytes": 174935,
+      "bytes": 177247,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-gardens-after-charter",
       "file": "captures/river-gardens-after-charter.png",
-      "bytes": 343187,
+      "bytes": 285977,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-gardens-success-dialog",
       "file": "captures/river-gardens-success-dialog.png",
-      "bytes": 206369,
+      "bytes": 202847,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-workshops-before-charter",
       "file": "captures/river-workshops-before-charter.png",
-      "bytes": 173201,
+      "bytes": 177247,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-workshops-after-charter",
       "file": "captures/river-workshops-after-charter.png",
-      "bytes": 343912,
+      "bytes": 286716,
       "width": 1280,
       "height": 720
     },
     {
       "name": "river-workshops-success-dialog",
       "file": "captures/river-workshops-success-dialog.png",
-      "bytes": 204591,
+      "bytes": 202292,
       "width": 1280,
       "height": 720
     }
@@ -5715,7 +5715,7 @@
     "cdpInterceptionErrors": [],
     "blockedRequests": [],
     "unexpectedRequests": [],
-    "chromeStderrTail": "[88648:35148:1105/000048.460:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000049.180:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000049.474:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.038:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.190:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.253:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000050.662:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000051.192:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000051.270:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000052.085:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000052.197:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000053.092:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000053.201:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000054.106:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000054.215:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000055.121:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000055.216:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000056.125:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000056.219:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000057.136:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000057.230:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000058.142:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000058.236:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000059.156:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000059.249:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000100.168:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000100.262:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000101.180:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000101.273:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000102.192:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000102.285:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000103.199:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000103.293:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000104.202:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000104.297:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000105.211:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000106.216:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000107.217:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000108.231:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000109.247:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000110.250:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000111.264:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000112.278:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000113.285:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000114.293:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000115.299:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000116.309:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000117.312:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000118.317:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n[88648:35148:1105/000119.322:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 32456: Access is denied. (0x5)\r\n"
+    "chromeStderrTail": "\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073354.199:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073355.200:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073356.216:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073357.221:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073358.225:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073359.088:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073359.240:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073359.302:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073359.711:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073400.244:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073400.323:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073401.137:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073401.247:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073402.151:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073402.259:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073403.151:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073403.262:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073404.154:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073404.264:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073405.169:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073405.279:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073406.172:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073406.283:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073407.186:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073407.295:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073408.198:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073408.307:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073409.209:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073409.319:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073410.223:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073410.334:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073411.237:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073411.347:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073412.240:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073412.349:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073413.255:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073413.363:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073414.095:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073414.268:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073414.300:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073414.704:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073415.280:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073415.311:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073416.121:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073416.293:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073417.137:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073417.307:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073418.151:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n[104908:76796:1105/073418.322:ERROR:chrome\\updater\\ipc\\update_service_dialer_win.cc:77] Failed to open named pipe server process 22928: Access is denied. (0x5)\r\n"
   },
   "browser": {
     "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",

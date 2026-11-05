@@ -2,24 +2,25 @@
   "game": "Palimpsity",
   "version": "living-layers",
   "parent": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
-  "source": "a7998e2",
+  "source": "0b4d278",
   "artifact": "dist/palimpsity-mvp.html",
-  "artifactSha256": "873ac161ec63c549067ad11d4c67379ab2df7ca140fda3b06ba86d3ac9b500fd",
-  "artifactBytes": 17073157,
-  "legacyModels": 18,
+  "artifactSha256": "e64d86ca4db435f693f26fbc90380b720032ba9700bc21a902e0ad5341979fb8",
+  "artifactBytes": 17378796,
+  "legacyModels": 19,
   "livingLayersModules": 45,
   "environmentModules": 14,
-  "referencedGlbs": 98,
+  "quayBargeAssets": 4,
+  "referencedGlbs": 102,
   "attributionIncluded": true,
   "publicationFilesAreExplicitExport": false,
   "sourceChecks": {
-    "nodeTestsPassed": 127,
+    "nodeTestsPassed": 157,
     "rafCalculationTestsPassed": 5,
-    "embeddedGlbsParsedWithoutFetch": 98,
+    "embeddedGlbsParsedWithoutFetch": 102,
     "sourceArtifactMatch": true
   },
   "browserValidation": {
-    "scope": "standalone offline recipe in isolated Chrome; renderer recorded in the observed report",
+    "scope": "standalone offline recipe in isolated Chrome with LIVING_LAYERS_RENDERER=default",
     "report": "docs/living-layers/observed-results.md",
     "status": "passed",
     "scenariosPassed": 5,
@@ -65,7 +66,7 @@
       -0.5917159762799011,
       0.595238095186021
     ],
-    "scope": "These scenes on one RTX 3080 via D3D11 only; synchronized near 60 FPS is not GPU headroom or a general guarantee.",
+    "scope": "Historical D2 build and scenes on one RTX 3080 via D3D11 only; synchronized near 60 FPS is not GPU headroom or a general guarantee.",
     "initialSwiftShaderReportsSeparated": true,
     "browserClosed": true
   },
@@ -75,7 +76,64 @@
     "naturalBudgetEur": 600,
     "charter": "gardens",
     "completedAtTick": 161,
-    "manualNiloPlaythrough": "Separate human playthrough; not counted as an automated assertion or an additional measurement in this consolidation."
+    "manualNiloPlaythrough": "Separate agent-operated browser playthrough, not a human test or an automated assertion."
+  },
+  "lot015Validation": {
+    "report": "docs/living-layers/015-natural-summary.md",
+    "rawResults": "docs/living-layers/015-natural-results.json",
+    "status": "passed",
+    "naturalBudgetEur": 600,
+    "resourcePhasePopulationInjection": false,
+    "charter": "workshops",
+    "quaysAtTick27": [
+      "NW(2,5)",
+      "SW(4,6)"
+    ],
+    "flowTick28": {
+      "food": 4,
+      "water": 1.7496597908508473,
+      "barges": 2
+    },
+    "secondaryQuayAddsCapacity": false,
+    "partnerFocus": true,
+    "frenchMobile": true,
+    "tick120": {
+      "effectiveCapacity": 6,
+      "food": 3.896157598306317,
+      "water": 2.103842401693683,
+      "totalFlow": 6,
+      "southwestBackupWells": 3
+    },
+    "completedAtTick": 161,
+    "graphicComparison": {
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 (0x00002216) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sameSceneCameraQuality": true,
+      "rawRafIntervalsPerView": 601,
+      "present": {
+        "durationMs": 10016.300000000001,
+        "fps": 60.00219641983566,
+        "medianFrameMs": 16.69999999999891,
+        "p95FrameMs": 16.899999999997817,
+        "drawCalls": 1295,
+        "triangles": 319908,
+        "drawingBuffer": "3840x2160"
+      },
+      "absent": {
+        "durationMs": 10016.400000000001,
+        "fps": 60.0015973802963,
+        "medianFrameMs": 16.69999999999709,
+        "p95FrameMs": 16.899999999997817,
+        "drawCalls": 1256,
+        "triangles": 310526,
+        "drawingBuffer": "3840x2160"
+      },
+      "additionalP95Ms": 0,
+      "additionalP95Percent": 0,
+      "additionalDrawCalls": 39,
+      "additionalTriangles": 9382,
+      "scope": "Two views synchronized at 60 FPS; zero p95 delta does not prove zero GPU cost or available headroom."
+    },
+    "browserClosed": true
   },
   "buildFormat": "readable whitespace; compact identifiers and expressions"
 }

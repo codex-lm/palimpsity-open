@@ -7,12 +7,13 @@ Le point d’entrée consolidé est [`DELIVERY.md`](DELIVERY.md) : fonctionnalit
 Depuis `game/`, après reconstruction de `../dist/palimpsity-mvp.html` par le chantier d’intégration :
 
 ```bash
-npm test                         # 127 tests
+npm test                         # 157 tests
 npm run test:d2-calculation      # 5 tests RAF distincts
 npm run test:living-layers-browser
 npm run test:d1
 npm run test:d2
 npm run test:d3
+npm run test:015
 ```
 
 `CHROME_EXE` peut sélectionner Chrome, Chromium ou Edge. `LIVING_LAYERS_RENDERER=default` laisse Chrome choisir son renderer ; `swiftshader` est une option explicite. `LIVING_LAYERS_FRAMES` concerne l’ancienne recette générale, tandis que D2 exige au moins 10 secondes et 20 intervalles RAF bruts par vue. Aucune recette ne reconstruit le livrable à la place de l’intégrateur.
@@ -25,13 +26,15 @@ npm run test:d3
 - viewports 1280×720, 1920×1080 DPR 2, 390×844 DPR 2 et 3840×2160 ;
 - D1 : 12 combinaisons niveaux/toits ;
 - D2 : baseline/courant avec renderer effectif commun et intervalles RAF bruts ;
-- D3 : route naturelle automatisée, distincte de la partie manuelle de Nilo.
+- D3 : route naturelle automatisée, distincte de la partie jouée par Nilo via les commandes du navigateur ;
+- 015 : quais payés t27, flux t28, réseau saturé t120, trois puits de secours SW et victoire t161, sans injection de ressources, phase ou population.
 
 Les scènes visuelles préparent explicitement phase et ressources ; elles ne prouvent pas une progression naturelle. D3 et les playthroughs Node apportent cette preuve séparément. Les anciennes mesures SwiftShader sont conservées à part et ne sont pas mélangées au résultat RTX 3080.
 
 ## Rapports
 
-- [`DELIVERY.md`](DELIVERY.md) : synthèse complète A–D et limites ;
+- [`DELIVERY.md`](DELIVERY.md) : synthèse complète A–D et lot 015, avec limites ;
+- [`015-natural-summary.md`](015-natural-summary.md) et [`015-natural-results.json`](015-natural-results.json) : route naturelle quais/barges, actions et intervalles RAF bruts ;
 - [`observed-results.md`](observed-results.md) et [`results.json`](results.json) : recette navigateur 5/5 ;
 - [`d1-roof-matrix-4k.md`](d1-roof-matrix-4k.md) : 12 combinaisons D1 ;
 - [`d2-performance-comparison.md`](d2-performance-comparison.md) et [`d2-performance-results.json`](d2-performance-results.json) : finale RTX 3080 D3D11, 601 intervalles/vue ;

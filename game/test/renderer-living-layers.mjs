@@ -186,7 +186,6 @@ test("decorative residents follow residential occupancy rather than production a
 test("dispose during asset loading releases late GLBs without re-registering resources", async () => {
   const gameDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const manifest = JSON.parse(readFileSync(path.join(gameDir, "art", "diorama", "asset-manifest.json"), "utf8"));
-  if (!manifest.models.river_quay) manifest.models.river_quay = { file: "house.glb", footprint: 0.95, height: 1.128, smoke: null };
   const previousWindow = globalThis.window;
   const originalLoadAsync = GLTFLoader.prototype.loadAsync;
   const pending = [];
