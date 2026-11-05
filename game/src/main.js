@@ -2,7 +2,8 @@ import { CityEngine } from "./engine.js";
 import { Renderer3D } from "./render3d.js";
 import { UI } from "./ui.js";
 import { BUILDINGS, COLS, ROWS, DISTRICT_NAMES, districtOf } from "./data.js";
-import { getLocale, setLocale, onLocaleChange, localizeDOM } from "./localization.js";
+import { getLocale, setLocale, onLocaleChange, localizeDOM, translate } from "./localization.js";
+import { ModePicker } from "./mode-picker.js";
 import { FirstNeighbourhood, applyHiddenPause, shouldAdvance } from "./challenge.js";
 import { RiverCityEngine, RiverPact } from "./river-pact.js";
 import { RiverPactView } from "./river-pact-ui.js";
@@ -21,10 +22,25 @@ applyLocale();
 const canvas = document.getElementById("cv");
 const loading = document.getElementById("loading");
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-let engine = new CityEngine();
+let engine = new CityEngine({ mode: "sandbox" });
 let renderer, ui;
-onLocaleChange(() => { ui?.riverView?.render(); ui?.update(); });
-let mode = "classic";              // classic | challenge | river
+onLocaleChange(() => { ui?.riverView?.render(); ui?.update(); syncModeButton(); });
+let mode = "sandbox";              // sandbox | creative | challenge | river
+let hasStarted = false;
+const modePicker = new ModePicker({
+  onOpen: () => {
+    if (ui?.photoMode) ui.setPhotoMode(false);
+    engine.state.speed = 0;
+    clock.acc = 0;
+    ui?.buildSpeed();
+  },
+  onChoose: nextMode => {
+    mode = nextMode;
+    hasStarted = true;
+    restart();
+    canvas.focus({ preventScroll: true });
+  },
+});
 let challenge = null;
 let river = null;
 let speedBeforePhoto = null;
@@ -77,8 +93,8 @@ const handlers = {
     ui.buildSpeed();
   },
   onRestart: () => restart(),
-  onExitChallenge: () => exitChallenge(),
-  onRiver: () => { mode = "river"; restart(); },
+  onExitChallenge: () => chooseMode(),
+  onRiver: () => chooseMode("river"),
   onCharter: id => { river?.chooseCharter(id); ui.buildSpeed(); ui.update(); },
   onStep: () => {
     if (document.hidden || document.getElementById("modal").classList.contains("on")) return;
@@ -93,21 +109,15 @@ const handlers = {
 
 function syncModeButton() {
   const button = document.getElementById("mode-toggle");
-  const challengeMode = mode !== "classic";
-  button.textContent = challengeMode ? "Classic city" : "First Neighbourhood";
-  button.title = challengeMode ? "Return to the classic city" : "Start the First Neighbourhood challenge";
-  button.setAttribute("aria-pressed", String(challengeMode));
-  localizeDOM(button);
+  const label = { sandbox: "Sandbox", creative: "God mode", river: "River Pact", challenge: "First Neighbourhood" }[mode];
+  button.textContent = `${translate(label)} ▾`;
+  button.title = translate("New game");
+  button.setAttribute("aria-label", `${translate(label)} · ${translate("New game")}`);
+  button.setAttribute("aria-haspopup", "dialog");
 }
 
-function startChallenge() {
-  mode = "challenge";
-  restart();
-}
-
-function exitChallenge() {
-  mode = "classic";
-  restart();
+function chooseMode(currentMode = mode) {
+  modePicker.open({ currentMode, hasCity: hasStarted });
 }
 
 function syncTools() {
@@ -157,12 +167,12 @@ function cellStatus(cr) {
   if (!cr) { setStatus("Outside the valley.", true); return; }
   if (bulldoze) {
     const building = engine.occ[cr.r]?.[cr.c];
-    setStatus(building ? `Demolish ${building.def.name.toLowerCase()} · 40% refund` : "Choose a building to demolish.", !building);
+    setStatus(building ? `Demolish ${building.def.name.toLowerCase()} · ${engine.creative ? "No cost or refund" : "40% refund"}` : "Choose a building to demolish.", !building);
     return;
   }
   if (selected) {
     const def = BUILDINGS[selected], materials = def.cost?.materials || 0;
-    const cost = `${def.cost?.money || 0} €${materials ? ` + ${materials} ${materials === 1 ? "material" : "materials"}` : ""}`;
+    const cost = engine.creative ? "Free" : `${def.cost?.money || 0} €${materials ? ` + ${materials} ${materials === 1 ? "material" : "materials"}` : ""}`;
     const reason = engine.placeBlockReason(selected, cr.c, cr.r, placementOptions(cr));
     setStatus((river ? `${DISTRICT_NAMES[districtOf(cr.c, cr.r)]} · ` : "") + (reason || `Place ${def.name.toLowerCase()} · ${cost} · Enter to confirm`), !!reason);
     return;
@@ -277,16 +287,14 @@ function wireInputs() {
       clock.last = performance.now();
     }
   });
-  document.getElementById("mode-toggle").onclick = () => {
-    if (mode !== "classic") exitChallenge();
-    else startChallenge();
-  };
+  document.getElementById("mode-toggle").onclick = () => chooseMode();
   canvas.addEventListener("focus", updateKeyboardCursor);
   canvas.addEventListener("blur", () => {
     renderer.setKeyboardCursor(null);
     setStatus(selected ? `Choose a tile for ${BUILDINGS[selected].name.toLowerCase()} · R to rotate` : bulldoze ? "Choose a building to demolish." : "");
   });
   addEventListener("keydown", event => {
+    if (modePicker.isOpen) return;
     if (event.target === languageSelect) return;
     if (event.key === "Escape") {
       const modal = document.getElementById("modal");
@@ -342,7 +350,7 @@ let uiIdle = 0;
 function loop(now) {
   const dt = now - clock.last;
   clock.last = now;
-  if (shouldAdvance(engine, document.hidden, challenge) && (!river || river.canAdvance)) {
+  if (!modePicker.isOpen && shouldAdvance(engine, document.hidden, challenge) && (!river || river.canAdvance)) {
     clock.acc = Math.min(clock.acc + dt * engine.state.speed, TICK_MS * 4);
     let steps = 0;
     while (clock.acc >= TICK_MS && steps < 4) {
@@ -360,7 +368,7 @@ function loop(now) {
     if (steps) { renderer.sync(); ui.update(); }
   } else {
     uiIdle += dt;
-    if (uiIdle >= 250) { uiIdle = 0; ui.update(); }
+    if (uiIdle >= 250) { uiIdle = 0; if (!modePicker.isOpen) ui.update(); }
   }
   renderer.frame();
   requestAnimationFrame(loop);
@@ -381,9 +389,9 @@ function restart() {
     renderer.disposeObj(puff);
   }
   renderer.smokePuffs = [];
-  engine = mode === "river" ? new RiverCityEngine() : new CityEngine();
-  // Chaque entrée/sortie de mode repart d'un moteur frais : 600 € et les
-  // déblocages naturels, que ce soit pour le défi ou pour la ville classique.
+  engine = mode === "river" ? new RiverCityEngine() : new CityEngine({ mode });
+  // A confirmed choice starts a fresh city; creative permissions cannot leak
+  // into a budgeted city or either challenge.
   challenge = mode === "challenge" ? new FirstNeighbourhood(engine, { storage: challengeStorage }) : null;
   river = mode === "river" ? new RiverPact(engine) : null;
   renderer.engine = engine;
@@ -423,6 +431,7 @@ async function start() {
   wireInputs();
   syncModeButton();
   ui.update();
+  chooseMode();
   clock.last = performance.now();
   requestAnimationFrame(loop);
   loading.classList.add("done");

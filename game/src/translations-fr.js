@@ -3,6 +3,22 @@
 import { RIVER_EXACT_FR, RIVER_TEMPLATES_FR } from './river-translations-fr.js';
 export const EXACT_FR = {
   ...RIVER_EXACT_FR,
+  "Place two quays in different districts on the same water basin.": "Place deux quais dans des quartiers différents du même bassin.",
+  "Sandbox": "Bac à sable",
+  "God mode": "Mode créatif",
+  "New game": "Nouvelle partie",
+  "Free": "Gratuit",
+  "No cost or refund": "Sans coût ni remboursement",
+  "Unlimited construction budget": "Budget de construction illimité",
+  "God mode · build freely": "Mode créatif · construis librement",
+  "Sandbox · grow at your own pace": "Bac à sable · à ton rythme",
+  "Construction and transformations are free. All buildings are available. Food, water and services still shape your city.": "Les constructions et les transformations sont gratuites. Tous les bâtiments sont disponibles. La nourriture, l’eau et les services font toujours vivre ta ville.",
+  "No deadline or game over. Choose a new game from the mode menu.": "Aucune limite de temps ni fin imposée. Choisis une nouvelle partie dans le menu des modes.",
+  "Start with 600 €. Balance income and services to grow and unlock new buildings.": "Commence avec 600 €. Équilibre revenus et services pour grandir et débloquer de nouveaux bâtiments.",
+  "Choose a game mode": "Choisir un mode de jeu",
+  "This record belongs only to the First Neighbourhood challenge.": "Ce record concerne uniquement le défi Premier quartier.",
+  "Demolish a building · no cost or refund": "Démolir un bâtiment · sans coût ni remboursement",
+
   "northwest district": "quartier nord-ouest",
   "northeast district": "quartier nord-est",
   "southwest district": "quartier sud-ouest",
@@ -515,6 +531,9 @@ export const EXACT_FR = {
 
 export const TEMPLATES_FR = [
   ...RIVER_TEMPLATES_FR,
+  { en: "Cost: {0}", fr: "Coût : {0}" },
+  { en: "Changes applied: {0} · No charge", fr: "Modifications appliquées : {0} · Gratuit" },
+  { en: "Demolish {0} · No cost or refund", fr: "Démolir {0} · Sans coût ni remboursement" },
   {
     "en": "Missing embedded model: {0}. Rebuild the standalone game.",
     "fr": "Modèle embarqué absent : {0}. Reconstruis le jeu autonome."

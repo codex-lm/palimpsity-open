@@ -56,6 +56,28 @@ function fixture() {
   return { engine, workshop, inspector, ui, syncs: () => syncs };
 }
 
+test('creative HUD distinguishes unlimited construction funds from real food and water', () => {
+  const engine = new CityEngine({ mode: 'creative' });
+  engine.state.res.food = 12;
+  engine.state.res.water = 7;
+  const hud = {}, clock = {};
+  UI.prototype.renderHUD.call({ engine, $: { 'hud-res': hud, clock } });
+  assert.equal((hud.innerHTML.match(/∞/g) || []).length, 2);
+  assert.match(hud.innerHTML, /Unlimited construction budget/);
+  assert.match(hud.innerHTML, /rval">12</);
+  assert.match(hud.innerHTML, /rval">7</);
+  assert.doesNotMatch(hud.innerHTML, /NaN|Infinity/);
+});
+
+test('sandbox objectives explain the budget without claiming a scenario victory', () => {
+  const summary = {}, list = {};
+  UI.prototype.renderObjectives.call({ engine: new CityEngine({ mode: 'sandbox' }), $: { 'objectives-summary': summary, 'objectives-list': list } });
+  assert.match(summary.innerHTML, /Sandbox/);
+  assert.match(list.innerHTML, /600 €/);
+  assert.match(list.innerHTML, /No deadline or game over/);
+  assert.doesNotMatch(list.innerHTML, /Thriving city|River Pact/);
+});
+
 test('l’inspecteur explique la condition bloquante et désactive la rénovation', () => {
   const { engine, workshop, inspector, ui } = fixture();
   ui.showInspector(workshop);
