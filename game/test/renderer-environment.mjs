@@ -96,7 +96,7 @@ test("civic plaza is limited to the Commons cell", () => {
   assert.ok(!keys(environmentPlanForCell(terrain, 0, 1, occupied)).includes("civic_plaza"));
 });
 
-test("bank cells never compose full ground, flowers or furniture over module water", () => {
+test("bank cells never compose competing full ground, flowers or furniture", () => {
   const terrain = genTerrain();
   for (const [c, r] of [[3, 6], [4, 6]]) {
     const plan = environmentPlanForCell(terrain, c, r);
@@ -105,6 +105,15 @@ test("bank cells never compose full ground, flowers or furniture over module wat
     assert.ok(!plan.some(module => module.key.startsWith("ground_")), `${c},${r} must not compose a competing full ground`);
     assert.ok(!keys(plan).includes("vegetation_flowers"));
     assert.ok(!plan.some(module => module.key.startsWith("furniture_")));
+  }
+});
+
+test("functional river quays retain their own platform without a competing shore decoration", () => {
+  for (const mask of [1, 3, 4, 12]) {
+    const terrain = terrainForMask(mask);
+    const quay = { def: { id: "river_quay" } };
+    assert.deepEqual(environmentPlanForCell(terrain, 2, 2,
+      (c, r) => c === 2 && r === 2 ? quay : null), []);
   }
 });
 

@@ -52,6 +52,8 @@ export function environmentPlanForCell(terrain, c, r, occupied = () => null) {
   const at = (dc, dr) => terrain[r + dr]?.[c + dc];
   const buildingAt = (dc, dr) => dc === 0 && dr === 0 ? occupied(c, r) : occupied(c + dc, r + dr);
   const current = buildingAt(0, 0);
+  // The functional quay already supplies its own platform and bank details.
+  if (current?.def?.id === "river_quay") return [];
   if (current?.def?.id === "commons" || current?.architecture?.base === "civic") {
     return [{ key: "civic_plaza", x: 0, y: 0.01, z: 0, rotation: 0 }];
   }
@@ -75,13 +77,13 @@ export function environmentPlanForCell(terrain, c, r, occupied = () => null) {
   else if (mask === 6) banks.push({ key: "bank_corner_inner", rotation: Math.PI / 2 });
   else if (mask === 12) banks.push({ key: "bank_corner_inner", rotation: 0 });
   else if (mask === 9) banks.push({ key: "bank_corner_inner", rotation: -Math.PI / 2 });
-  // Full-footprint banks cannot represent opposite, three- or four-sided water without coplanar overlap.
+  // Preserve the original terrain for narrow islands and multi-sided water.
   if (mask && !banks.length) return [];
   const modules = groundKey && !banks.length ? [{ key: groundKey, x: 0, y: 0.01, z: 0, rotation: 0 }] : [];
   for (const bank of banks) modules.push({ key: bank.key, x: 0, y: 0, z: 0, rotation: bank.rotation });
   if (!current && banks.length === 1 && banks[0].key === "bank_straight") {
     const bank = banks[0];
-    modules.push({ key: "vegetation_reeds", x: bank.dc * 0.3, y: 0, z: bank.dr * 0.3, rotation: bank.rotation });
+    modules.push({ key: "vegetation_reeds", x: bank.dc * 0.42, y: 0, z: bank.dr * 0.42, rotation: bank.rotation });
   }
   if (!current && !banks.length && (groundKey === "ground_fertile" || groundKey === "ground_planted") && terrain[r][c] !== 4) {
     modules.push({ key: "vegetation_flowers", x: 0.22, y: 0, z: -0.18, rotation: (c + r) * Math.PI / 2 });

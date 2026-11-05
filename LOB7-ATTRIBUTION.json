@@ -5,6 +5,13 @@
       "kind": "agent",
       "name": "LOB7 Enhancement",
       "status": "included",
+      "url": "https://github.com/codex-lm/palimpsity-open/tree/codex/living-layers-shore-fix-20261105",
+      "summary": "Continuous riverbanks and grounded reeds make the shoreline clearer, even up close."
+    },
+    {
+      "kind": "agent",
+      "name": "LOB7 Enhancement",
+      "status": "included",
       "url": "https://github.com/codex-lm/palimpsity-open/commit/205dbee968b47b514554c597347680f4c0a45913",
       "summary": "Shape two districts, choose a civic charter and prepare your city for a forecast drought."
     },
