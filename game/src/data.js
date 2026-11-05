@@ -79,7 +79,7 @@ export const RES_META = {
 };
 
 /* ---------------------------------------------------------------------
-   CATALOGUE DE BÂTIMENTS (19) — data-driven
+   CATALOGUE DE BÂTIMENTS (20) — data-driven
    Champs : id, name, color, cost, tags, inputs, outputs, ext (externalités),
    mods (regime_modifiers), desc (player_description), phase, flags.
    Les 14 premiers reprennent les valeurs CALIBRÉES du POC validé ; les 4
@@ -188,6 +188,14 @@ export const BUILDINGS = {
     mods: { survival: 1.0, production: 1.1, logistics: 0.7, maintenance_heat: 0.7 },
     phase: 2,
   },
+  river_quay: {
+    id: "river_quay", name: "River quay", color: "#4f8f9d", cost: { money: 60, materials: 4 },
+    tags: ["local", "decentralized", "distribution", "maintenance", "river"],
+    inputs: { workers: 2 }, outputs: {}, ext: { maintenance: +0.4 },
+    desc: "Two quays in different districts on the same water basin share food and water surpluses. River transport is halved during the drought.",
+    mods: { survival: 1.0, production: 0.7, logistics: 1.6, maintenance_heat: 1.1 },
+    phase: 2,
+  },
   tower: {
     id: "tower", name: "Apartment building", color: "#a98c6b", cost: { money: 110 },
     tags: ["dense", "centralized", "maintenance", "high_capacity", "residential"],
@@ -258,7 +266,7 @@ export const BUILDINGS = {
 // Ordre d'affichage dans la palette.
 export const ORDER = [
   "house", "well", "farm", "workshop", "market", "path", "park",
-  "road", "generator", "factory", "warehouse", "water_plant", "tower",
+  "road", "generator", "factory", "warehouse", "water_plant", "river_quay", "tower",
   "depot", "tram", "commons", "maint_center", "greenhouse", "recycler",
 ];
 
@@ -270,7 +278,7 @@ export const INITIAL_UNLOCKED = ["house", "well", "farm", "workshop", "market", 
 export const UPKEEP = {
   house: 0.25, well: 0.15, farm: 0.3, workshop: 0.4, market: 0.4,
   path: 0.015, park: 0.15, road: 0.035, generator: 2.5, factory: 2.3,
-  warehouse: 1.2, water_plant: 1.4, tower: 1.5, depot: 0.6, tram: 1,
+  warehouse: 1.2, water_plant: 1.4, river_quay: 0.5, tower: 1.5, depot: 0.6, tram: 1,
   commons: 0.9, maint_center: 0, greenhouse: 0.5, recycler: 0.6,
 };
 

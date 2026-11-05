@@ -14,6 +14,8 @@ import { translate } from '../src/localization.js';
 
 const assetRoot = new URL('../art/diorama/', import.meta.url);
 const manifest = JSON.parse(readFileSync(new URL('asset-manifest.json', assetRoot), 'utf8'));
+// Engine-only quay tests reuse an existing GLB until the dedicated asset lot lands.
+if (!manifest.models.river_quay) manifest.models.river_quay = { file: 'house.glb', footprint: 0.95, height: 1.128, smoke: null };
 const files = new Set();
 function collect(value) {
   if (typeof value === 'string' && /\.glb$/i.test(value)) files.add(value);

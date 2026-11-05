@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "python -m http.server 5173",
-    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/living-layers.mjs test/living-layers-static.mjs test/renderer-living-layers.mjs test/architecture-preview.mjs test/renderer-environment.mjs test/ui-palette.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs test/river-pact.mjs test/river-pact-controls.mjs",
+    "test": "node --test test/sim-harness.mjs test/gameplay-regressions.mjs test/living-layers.mjs test/living-layers-static.mjs test/renderer-living-layers.mjs test/architecture-preview.mjs test/renderer-environment.mjs test/ui-palette.mjs test/ui-contracts.mjs test/english-language.mjs test/localization.mjs test/embedded-assets.mjs test/challenge.mjs test/river-pact.mjs test/river-quays.mjs test/river-pact-controls.mjs",
     "test:challenge": "node --test test/challenge.mjs",
     "test:gameplay": "node test/gameplay-regressions.mjs",
     "test:ui": "node test/ui-contracts.mjs",

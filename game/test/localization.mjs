@@ -79,7 +79,7 @@ test('locale subscribers can update the current screen and unsubscribe', () => {
 });
 
 test('the whole building catalog and dynamic messages have French equivalents', () => {
-  const expected = ['Maison', 'Puits', 'Ferme', 'Atelier', 'Marché local', 'Chemin', 'Parc', 'Route', 'Centrale thermique', 'Usine', 'Entrepôt central', "Station d'eau", 'Immeuble dense', 'Dépôt local', 'Tram', 'Communs', 'Centre de maintenance', 'Serre chauffée', 'Centre de recyclage'];
+  const expected = ['Maison', 'Puits', 'Ferme', 'Atelier', 'Marché local', 'Chemin', 'Parc', 'Route', 'Centrale thermique', 'Usine', 'Entrepôt central', "Station d'eau", 'Quai fluvial', 'Immeuble dense', 'Dépôt local', 'Tram', 'Communs', 'Centre de maintenance', 'Serre chauffée', 'Centre de recyclage'];
   assert.deepEqual(Object.values(BUILDINGS).map(building => translate(building.name, 'fr')), expected);
   for (const building of Object.values(BUILDINGS)) assert.notEqual(translate(building.desc, 'fr'), building.desc, `${building.id} description needs French copy`);
   assert.equal(translate('Choose a tile for house · R to rotate', 'fr'), 'Choisis une case pour maison · R pour pivoter');

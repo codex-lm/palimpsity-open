@@ -84,6 +84,7 @@ export class CityEngine {
       reportsShown: new Set(),
       events: { logisticsFired: false, heatFired: false, maintFired: false },
       districts: [],                       // bilans par quartier (UI / explication)
+      riverNetworks: [], riverFlows: [],
       outcome: null,                       // "victory" | "defeat" | null
       outcomeInfo: null,
     };
@@ -93,9 +94,18 @@ export class CityEngine {
   defAt(c, r) { const b = this.occ?.[r]?.[c]; return b ? b.def : null; }
   inBounds(c, r) { return c >= 0 && c < COLS && r >= 0 && r < ROWS; }
 
-  canPlace(id, c, r) { return this.placeBlockReason(id, c, r) === null; }
+  canPlace(id, c, r, options = {}) { return this.placeBlockReason(id, c, r, options) === null; }
+  waterSides(c, r) {
+    return [[0, -1], [1, 0], [0, 1], [-1, 0]]
+      .map(([dc, dr]) => ({ c: c + dc, r: r + dr }))
+      .filter(cell => this.inBounds(cell.c, cell.r) && this.terrain[cell.r][cell.c] === 1);
+  }
+  quayTarget(c, r, options = {}) {
+    const sides = this.waterSides(c, r), explicit = options?.quaySide || options?.target;
+    return explicit ? { c: explicit.c, r: explicit.r } : sides[0] || null;
+  }
   // pourquoi ce placement est refusé (null = autorisé) — pour le feedback UI
-  placeBlockReason(id, c, r) {
+  placeBlockReason(id, c, r, options = {}) {
     if (!this.inBounds(c, r)) return "Outside the map.";
     if (!this.state.unlocked.has(id)) return "Not unlocked yet.";
     if (this.occ[r][c]) return "This tile is already occupied.";
@@ -103,11 +113,17 @@ export class CityEngine {
     const def = BUILDINGS[id];
     if (this.state.res.money < (def.cost?.money || 0)) return "Not enough money.";
     if (this.state.res.materials < (def.cost?.materials || 0)) return "Not enough materials.";
+    if (id === "river_quay") {
+      const sides = this.waterSides(c, r);
+      if (!sides.length) return "A river quay needs an adjacent water tile.";
+      const target = this.quayTarget(c, r, options);
+      if (!sides.some(cell => cell.c === target?.c && cell.r === target?.r)) return "Choose one adjacent water tile for the quay.";
+    }
     return null;
   }
 
   place(id, c, r, options = {}) {
-    if (!this.canPlace(id, c, r)) return null;
+    if (!this.canPlace(id, c, r, options)) return null;
     const def = BUILDINGS[id], money = def.cost?.money || 0, materials = def.cost?.materials || 0;
     this.state.res.money -= money;
     this.state.res.materials -= materials;
@@ -120,9 +136,11 @@ export class CityEngine {
       b.architecture.family = ["banks", "works", "gardens"].includes(options?.family) ? options.family : ARCHITECTURE_DEFAULTS.house.family;
       b.architecture.variant = (c + 2 * r) % 3;
     }
+    if (id === "river_quay") b.quaySide = this.quayTarget(c, r, options);
     this.state.buildings.push(b);
     this.occ[r][c] = b;
     this.recomputeFields();
+    if (id === "river_quay") this.computeDistricts();
     return b;
   }
 
@@ -134,6 +152,7 @@ export class CityEngine {
     const invested = Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0);
     this.state.res.money += invested * 0.4;
     this.recomputeFields();
+    if (b.def.id === "river_quay") this.computeDistricts();
     return true;
   }
 
@@ -409,6 +428,7 @@ export class CityEngine {
       b.heatFuelLh = lh;
       heatField[b.r][b.c] = Math.max(0, lh - need);
     }
+    if (this.state.buildings.some(b => b.def.id === "river_quay" && b.disabled)) this.computeDistricts();
   }
   localHeatAt(c, r) { return this.heatField[r][c] || 0; }
   localCongAt(c, r) { return this.congField[r][c] || 0; }
@@ -576,6 +596,7 @@ export class CityEngine {
 
     const goodsFlow = this.countTag("high_output") + this.countTag("storage") * 0.5;
     let capacity = (s.transportNetworks || []).reduce((sum, network) => sum + network.capacity, 0);
+    capacity += (s.riverNetworks || []).reduce((sum, network) => sum + network.effectiveCapacity, 0);
     for (const b of s.buildings) {
       const p = this.profileOf(b);
       if (!b.disabled && !p.road && b.def.id !== "tram") capacity += (p.ext?.capacity || 0) * b.activity;
@@ -649,9 +670,125 @@ export class CityEngine {
     return networks;
   }
 
+  riverNetworkMultiplier() { return 1; }
+  waterBasins() {
+    const seen = new Set(), basins = [];
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      const key = `${c},${r}`;
+      if (this.terrain[r][c] !== 1 || seen.has(key)) continue;
+      const basin = { id: basins.length, cells: [], keys: new Set() }, queue = [{ c, r }];
+      seen.add(key);
+      for (let i = 0; i < queue.length; i++) {
+        const cell = queue[i]; basin.cells.push(cell); basin.keys.add(`${cell.c},${cell.r}`);
+        for (const [dc, dr] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+          const cc = cell.c + dc, rr = cell.r + dr, next = `${cc},${rr}`;
+          if (cc >= 0 && cc < COLS && rr >= 0 && rr < ROWS && this.terrain[rr][cc] === 1 && !seen.has(next)) {
+            seen.add(next); queue.push({ c: cc, r: rr });
+          }
+        }
+      }
+      basins.push(basin);
+    }
+    return basins;
+  }
+  quayBasin(b, basins = this.waterBasins()) {
+    if (b?.def?.id !== "river_quay") return null;
+    const side = b.quaySide || this.waterSides(b.c, b.r)[0];
+    return basins.find(basin => basin.keys.has(`${side?.c},${side?.r}`)) || null;
+  }
+  waterPath(start, end, basin) {
+    const first = `${start.c},${start.r}`, last = `${end.c},${end.r}`;
+    if (!basin.keys.has(first) || !basin.keys.has(last)) return [];
+    const queue = [{ c: start.c, r: start.r }], parent = new Map([[first, null]]);
+    for (let i = 0; i < queue.length && !parent.has(last); i++) {
+      const cell = queue[i];
+      for (const [dc, dr] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+        const c = cell.c + dc, r = cell.r + dr, key = `${c},${r}`;
+        if (!basin.keys.has(key) || parent.has(key)) continue;
+        parent.set(key, cell); queue.push({ c, r });
+      }
+    }
+    if (!parent.has(last)) return [];
+    const path = [];
+    for (let cell = { c: end.c, r: end.r }; cell; cell = parent.get(`${cell.c},${cell.r}`)) path.push(cell);
+    return path.reverse();
+  }
+  computeRiverNetworks(districts) {
+    const s = this.state, basins = this.waterBasins(), weather = this.riverNetworkMultiplier();
+    s.riverNetworks = []; s.riverFlows = [];
+    for (const basin of basins) {
+      const best = new Map();
+      for (const b of s.buildings) {
+        if (b.def.id !== "river_quay" || b.disabled || this.quayBasin(b, basins)?.id !== basin.id) continue;
+        const district = districtOf(b.c, b.r), activity = clamp(b.activity ?? 0, 0, 1);
+        if (activity <= 0) continue;
+        const current = best.get(district), order = (a, z) => a.c - z.c || a.r - z.r || a.quaySide.c - z.quaySide.c || a.quaySide.r - z.quaySide.r;
+        if (!current || activity > current.activity || (activity === current.activity && order(b, current.building) < 0)) {
+          best.set(district, { building: b, activity, district });
+        }
+      }
+      if (best.size < 2) continue;
+      const selected = [...best.values()].sort((a, z) => a.district - z.district);
+      const crew = Math.min(...selected.map(entry => entry.activity));
+      const effectiveCapacity = 12 * crew * weather;
+      const reduction = [crew < 1 ? "crew" : null, weather < 1 ? "drought" : null].filter(Boolean).join("+") || null;
+      const network = {
+        basin: basin.id, districts: selected.map(entry => entry.district),
+        quays: selected.map(({ building: b, activity, district }) => ({ district, c: b.c, r: b.r, activity, quaySide: { ...b.quaySide } })),
+        nominalCapacity: 12, effectiveCapacity, weatherMultiplier: weather, reductionReason: reduction,
+      };
+      s.riverNetworks.push(network);
+      for (const id of network.districts) districts[id].networkCapacity += effectiveCapacity;
+      const quayFor = id => selected.find(entry => entry.district === id).building;
+      let remaining = effectiveCapacity;
+      for (const resource of ["food", "water"]) {
+        const available = d => d[resource + "Out"] + d[resource + "Imports"] - d[resource + "Exports"];
+        const destinations = network.districts.map(id => districts[id]).sort((a, z) =>
+          available(a) / Math.max(1, a[resource + "Need"]) - available(z) / Math.max(1, z[resource + "Need"]) || network.districts.indexOf(a.id) - network.districts.indexOf(z.id));
+        for (const destination of destinations) for (const id of network.districts) {
+          const source = districts[id];
+          if (source === destination || remaining <= 1e-9) continue;
+          const surplus = Math.max(0, available(source) - source[resource + "Need"]);
+          const deficit = Math.max(0, destination[resource + "Need"] - available(destination));
+          const sent = Math.min(surplus, deficit, remaining);
+          if (sent <= 1e-9) continue;
+          const sourceQuay = quayFor(id), destinationQuay = quayFor(destination.id);
+          source[resource + "Exports"] += sent; destination[resource + "Imports"] += sent; remaining -= sent;
+          s.riverFlows.push({
+            basin: basin.id, resource, amount: sent, sourceDistrict: id, destinationDistrict: destination.id,
+            sourceQuay: { c: sourceQuay.c, r: sourceQuay.r, quaySide: { ...sourceQuay.quaySide } },
+            destinationQuay: { c: destinationQuay.c, r: destinationQuay.r, quaySide: { ...destinationQuay.quaySide } },
+            path: this.waterPath(sourceQuay.quaySide, destinationQuay.quaySide, basin),
+            nominalCapacity: 12, effectiveCapacity, reductionReason: reduction,
+          });
+        }
+      }
+    }
+  }
+  quayInfo(b) {
+    if (!b || b.def?.id !== "river_quay" || !this.state.buildings.includes(b)) return null;
+    const basin = this.quayBasin(b), activity = clamp(b.activity ?? 0, 0, 1);
+    const network = this.state.riverNetworks.find(item => item.basin === basin?.id);
+    const flows = this.state.riverFlows.filter(flow =>
+      (flow.sourceQuay.c === b.c && flow.sourceQuay.r === b.r) || (flow.destinationQuay.c === b.c && flow.destinationQuay.r === b.r));
+    const weather = network?.weatherMultiplier ?? this.riverNetworkMultiplier();
+    let status = "active";
+    if (b.disabled) status = "suspended";
+    else if (activity <= 0) status = "crew";
+    else if (!network) status = "waiting";
+    else if (weather < 1) status = "drought";
+    else if (activity < 1) status = "crew";
+    else if (!flows.length) status = "no_surplus";
+    return {
+      basin: basin?.id ?? null, otherDistricts: network ? network.districts.filter(id => id !== districtOf(b.c, b.r)) : [],
+      activity, nominalCapacity: 12, effectiveCapacity: network?.effectiveCapacity ?? 0,
+      flows, status, reductionReason: network?.reductionReason ?? null,
+    };
+  }
+
   computeDistricts() {
     const districts = Array.from({ length: 4 }, (_, id) => ({
-      name: DISTRICT_NAMES[id], pop: 0, foodOut: 0, waterOut: 0, distribution: 0, demand: 0, count: 0,
+      id, name: DISTRICT_NAMES[id], pop: 0, foodOut: 0, waterOut: 0, distribution: 0, demand: 0, count: 0,
       foodNeed: 0, waterNeed: 0, foodUse: 0, waterUse: 0,
       foodImports: 0, waterImports: 0, foodExports: 0, waterExports: 0,
       hasLocalFood: false, hasMarket: false, heat: 0, networkCapacity: 0,
@@ -698,6 +835,7 @@ export class CityEngine {
         }
       }
     }
+    this.computeRiverNetworks(districts);
     for (const [id, d] of districts.entries()) {
       d.distributionCapacity = 36 + d.distribution * 8 + d.networkCapacity * 8;
       d.distributionEfficiency = clamp(d.distributionCapacity / Math.max(36, d.demand), 0.2, 1);
@@ -788,7 +926,7 @@ export class CityEngine {
     const s = this.state;
     s.phase = p;
     if (p === 2) {
-      this.unlock(["road", "generator", "factory", "warehouse", "water_plant", "tower"]);
+      this.unlock(["road", "generator", "factory", "warehouse", "water_plant", "river_quay", "tower"]);
       this.advisor("City planner", "Your city is viable. You can now build power plants, factories, warehouses and apartment buildings. Producing more will bring new kinds of problems.", "");
       this.report("p2", "Year " + s.year + " — Foundations established",
         "Your village has its foundations: water, food, energy and homes. You are entering the industrial era. Remember: every solution you build will change the problems you face next.");
