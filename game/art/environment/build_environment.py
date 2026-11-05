@@ -35,13 +35,6 @@ def new_asset(key):
     kit.new_asset(key)
 
 
-def low_stones(points, z=0.12):
-    for index, (x, y) in enumerate(points):
-        scale = 1.0 + (index % 3) * 0.12
-        obj = kit.ico("Bank limestone", (x, y, z), (0.065 * scale, 0.045, 0.035), "mist")
-        obj.rotation_euler.z = index * 0.73
-
-
 def reed_clump(x, y, bottom, scale=1.0):
     offsets = ((-0.035, -0.02), (0.025, -0.025), (-0.01, 0.025), (0.045, 0.035), (-0.05, 0.04))
     for index, (dx, dy) in enumerate(offsets):
@@ -50,60 +43,49 @@ def reed_clump(x, y, bottom, scale=1.0):
         kit.ico("Reed leaf", (x + dx * 0.85, y + dy, bottom + height * 0.55), (0.016, 0.026, height * 0.42), "leaf")
 
 
+def shore_stones(points):
+    # Small stones embedded in the original land, not a second terrain tile.
+    for index, (x, y) in enumerate(points):
+        obj = kit.ico("Bank limestone", (x, y, 0.018), (0.041, 0.025, 0.028), "mist")
+        obj.rotation_euler.z = (index % 3 - 1) * 0.22
+
+
 def build_bank_straight():
     new_asset("bank_straight")
-    kit.box("Bank earth", (0, 0, 0.025), (0.95, 0.95, 0.05), "soil")
-    kit.box("Bank shallow water", (0, -0.36, 0.055), (0.95, 0.23, 0.02), "water")
-    verts = [
-        (-0.475, -0.245, 0.04), (0.475, -0.245, 0.04), (0.475, 0.05, 0.04), (-0.475, 0.05, 0.04),
-        (-0.475, -0.245, 0.065), (0.475, -0.245, 0.065), (0.475, 0.05, 0.16), (-0.475, 0.05, 0.16),
-    ]
-    kit.mesh_object("Bank sloped earth", verts, [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)], "soil")
-    kit.box("Bank upper ground", (0, 0.26, 0.10), (0.95, 0.43, 0.12), "pine")
-    low_stones([(x, -0.205 + 0.012 * (index % 2)) for index, x in enumerate((-0.38, -0.23, -0.07, 0.10, 0.26, 0.39))], 0.105)
-    reed_clump(-0.36, -0.10, 0.13, 0.75)
-    reed_clump(0.35, -0.08, 0.135, 0.70)
+    # Original terrain: one-unit cells, land Z=0, water Z=-0.0925.
+    # Tangent ends meet exactly; the outer face hides the land cliff without
+    # adding water or raising the buildable part of the cell.
+    kit.box("Bank edge", (0, -0.461, -0.046), (1.0, 0.082, 0.108), "soil")
+    shore_stones([(x, -0.455 + 0.008 * (index % 2)) for index, x in enumerate((-0.43, -0.27, -0.10, 0.08, 0.25, 0.42))])
 
 
 def build_bank_corner_inner():
     new_asset("bank_corner_inner")
-    kit.box("Inner bend earth", (0, 0, 0.025), (0.95, 0.95, 0.05), "soil")
-    kit.box("Inner bend water south", (0, -0.36, 0.055), (0.95, 0.23, 0.02), "water")
-    kit.box("Inner bend water west", (-0.36, 0, 0.055), (0.23, 0.95, 0.02), "water")
-    kit.box("Inner bend high ground", (0.13, 0.13, 0.10), (0.69, 0.69, 0.12), "pine")
-    kit.box("Inner bend bank south", (0.13, -0.245, 0.085), (0.69, 0.07, 0.09), "soil")
-    kit.box("Inner bend bank west", (-0.245, 0.13, 0.085), (0.07, 0.69, 0.09), "soil")
-    low_stones([(x, -0.245) for x in (-0.12, 0.05, 0.22, 0.38)] + [(-0.245, y) for y in (-0.10, 0.07, 0.24, 0.39)], 0.13)
-    reed_clump(0.35, 0.32, 0.16, 0.65)
+    # Union of two identical narrow edge strips: no coplanar overlap at bend.
+    outline = [(-0.502, -0.502), (0.5, -0.502), (0.5, -0.42),
+               (-0.42, -0.42), (-0.42, 0.5), (-0.502, 0.5)]
+    verts = [(x, y, z) for z in (-0.10, 0.008) for x, y in outline]
+    faces = [tuple(reversed(range(6))), tuple(range(6, 12))]
+    faces += [(i, (i + 1) % 6, (i + 1) % 6 + 6, i + 6) for i in range(6)]
+    kit.mesh_object("Inner bank edge", verts, faces, "soil")
+    shore_stones([(x, -0.455) for x in (-0.42, -0.22, 0.0, 0.22, 0.42)]
+                 + [(-0.455, y) for y in (-0.22, 0.0, 0.22, 0.42)])
+    reed_clump(-0.37, -0.37, 0, 0.70)
 
 
 def build_bank_corner_outer():
     new_asset("bank_corner_outer")
-    kit.box("Outer bend earth", (0, 0, 0.025), (0.95, 0.95, 0.05), "soil")
-    kit.box("Outer bend water", (0, 0, 0.055), (0.95, 0.95, 0.02), "water")
-    verts = [
-        (-0.475, -0.475, 0.04), (0.30, -0.475, 0.04), (-0.475, 0.30, 0.04),
-        (-0.475, -0.475, 0.16), (0.30, -0.475, 0.16), (-0.475, 0.30, 0.16),
-    ]
-    kit.mesh_object("Outer bend pointed bank", verts, [(0, 2, 1), (3, 4, 5), (0, 1, 4, 3), (1, 2, 5, 4), (2, 0, 3, 5)], "pine")
-    low_stones([(0.20 - index * 0.135, -0.43 + index * 0.135) for index in range(5)], 0.14)
-    reed_clump(-0.27, -0.25, 0.16, 0.70)
+    # Only diagonal water: land remains square. Canonical corner is NE in glTF.
+    shore_stones([(0.42, 0.42), (0.32, 0.44), (0.44, 0.31)])
+    reed_clump(0.32, 0.31, 0, 0.70)
 
 
 def build_quay_straight():
     new_asset("quay_straight")
-    kit.box("Quay foundation", (0, 0, 0.025), (0.95, 0.95, 0.05), "soil")
-    kit.box("Quay water", (0, -0.39, 0.055), (0.95, 0.17, 0.02), "water")
-    kit.box("Quay wall", (0, -0.26, 0.10), (0.95, 0.12, 0.16), "ink")
-    kit.box("Quay paving", (0, 0.1375, 0.10), (0.95, 0.675, 0.12), "mist")
-    for index in range(6):
-        x = -0.395 + index * 0.158
-        kit.box("Quay coping", (x, -0.26, 0.185), (0.15, 0.15, 0.03), "plaster")
-    for x in (-0.32, 0.32):
-        kit.cylinder("Quay bollard", (x, -0.14, 0.23), 0.026, 0.14, "ink", 12)
-        kit.tube("Quay bollard cross", (x - 0.045, -0.14, 0.27), (x + 0.045, -0.14, 0.27), 0.015, "ochre", 10)
-    for index in range(3):
-        kit.box("Quay stair", (0, -0.30 + index * 0.05, 0.075 + index * 0.025), (0.18, 0.055, 0.03 + index * 0.02), "plaster")
+    kit.box("Quay wall", (0, -0.461, -0.046), (1.0, 0.082, 0.108), "ink")
+    for index in range(8):
+        x = -0.4375 + index * 0.125
+        kit.box("Quay coping", (x, -0.461, 0.012), (0.121, 0.082, 0.016), "plaster")
 
 
 def ground_base(name, mat="soil"):
@@ -165,9 +147,10 @@ def build_civic_plaza():
 
 def build_vegetation_reeds():
     new_asset("vegetation_reeds")
-    kit.box("Reed bed", (0, 0, 0.015), (0.70, 0.70, 0.03), "soil")
-    for x, y, scale in ((-0.22, -0.18, 1.0), (0.13, -0.20, 0.85), (-0.05, 0.15, 1.15), (0.24, 0.17, 0.9)):
-        reed_clump(x, y, 0.03, scale)
+    # Thin line of roots placed 0.42 toward water by the renderer. No soil bed:
+    # every stem is planted in the real land, never on a floating brown square.
+    for x, y, scale in ((-0.25, 0.005, 1.0), (-0.05, -0.005, 0.85), (0.22, 0, 1.15)):
+        reed_clump(x, y, 0, scale)
 
 
 def build_vegetation_flowers():
@@ -233,10 +216,18 @@ def validate_glb(key):
     assert not any("uri" in item for item in document.get("buffers", [])), key
     minimum, maximum = kit.glb_bounds(document)
     dims = [maximum[i] - minimum[i] for i in range(3)]
-    assert dims[0] <= 0.9501 and dims[2] <= 0.9501, f"{key}: footprint {dims}"
-    assert minimum[0] >= -0.4751 and maximum[0] <= 0.4751, f"{key}: X bounds {minimum[0]}, {maximum[0]}"
-    assert minimum[2] >= -0.4751 and maximum[2] <= 0.4751, f"{key}: Z bounds {minimum[2]}, {maximum[2]}"
-    assert abs(minimum[1]) <= 0.0001, f"{key}: base Y {minimum[1]}"
+    shoreline = key.startswith("bank_") or key == "quay_straight"
+    limit = 0.5021 if shoreline else 0.4751
+    for axis in (0, 2):
+        assert minimum[axis] >= -limit and maximum[axis] <= limit, f"{key}: footprint {minimum}, {maximum}"
+    if shoreline:
+        assert minimum[1] >= -0.1001 and maximum[1] <= 0.20, f"{key}: shoreline height {minimum}, {maximum}"
+        assert not any(mat.get("name") == "water" for mat in document["materials"]), key
+    elif key == "vegetation_reeds":
+        assert abs(minimum[1]) <= 0.001, f"{key}: root Y {minimum[1]}"
+        assert not any(mat.get("name") == "soil" for mat in document["materials"]), key
+    else:
+        assert abs(minimum[1]) <= 0.0001, f"{key}: base Y {minimum[1]}"
     assert maximum[1] > 0.01, f"{key}: empty height"
     triangles = 0
     for mesh in document["meshes"]:
