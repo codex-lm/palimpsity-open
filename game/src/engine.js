@@ -47,7 +47,10 @@ const architectureModuleKeys = architecture => {
 export const VICTORY_POP = 180; // cible MVP (la spec vise 5000 pour le jeu complet ; ici calibré à l'échelle du moteur)
 
 export class CityEngine {
-  constructor() {
+  constructor({ mode = "classic" } = {}) {
+    this.mode = ["sandbox", "creative"].includes(mode) ? mode : "classic";
+    this.creative = this.mode === "creative";
+    this.endless = this.mode === "sandbox" || this.creative;
     this.terrain = genTerrain();
     this.heatField = []; this.congField = []; this.coolField = []; this.occ = [];
     for (let r = 0; r < ROWS; r++) {
@@ -74,7 +77,7 @@ export class CityEngine {
       regime: { survival: 1.0, production: 0, logistics: 0, maintenance_heat: 0 },
       regimePrev: { survival: 1.0, production: 0, logistics: 0, maintenance_heat: 0 },
       phase: 1,
-      unlocked: new Set(INITIAL_UNLOCKED),
+      unlocked: new Set(this.creative ? Object.keys(BUILDINGS) : INITIAL_UNLOCKED),
       newlyUnlocked: [],                   // pour le flash de palette
       tick: 0, year: 0, season: 0,
       lens: "none", speed: 0,
@@ -88,6 +91,26 @@ export class CityEngine {
       outcome: null,                       // "victory" | "defeat" | null
       outcomeInfo: null,
     };
+  }
+
+  // Unlimited construction is a spending rule, never an infinite stock. Real
+  // production, consumption and district services continue in every mode.
+  constructionCost(cost) {
+    return this.creative ? { money: 0, materials: 0 }
+      : { money: cost?.money || 0, materials: cost?.materials || 0 };
+  }
+  costBlockReason(cost) {
+    if (this.creative) return null;
+    const charge = this.constructionCost(cost);
+    if (this.state.res.money < charge.money) return "Not enough money.";
+    if (this.state.res.materials < charge.materials) return "Not enough materials.";
+    return null;
+  }
+  payCost(cost) {
+    const charge = this.constructionCost(cost);
+    this.state.res.money -= charge.money;
+    this.state.res.materials -= charge.materials;
+    return charge;
   }
 
   /* ---- placement ---- */
@@ -111,8 +134,8 @@ export class CityEngine {
     if (this.occ[r][c]) return "This tile is already occupied.";
     if (this.terrain[r][c] === 1) return "You cannot build on the river.";
     const def = BUILDINGS[id];
-    if (this.state.res.money < (def.cost?.money || 0)) return "Not enough money.";
-    if (this.state.res.materials < (def.cost?.materials || 0)) return "Not enough materials.";
+    const costReason = this.costBlockReason(def.cost);
+    if (costReason) return costReason;
     if (id === "river_quay") {
       const sides = this.waterSides(c, r);
       if (!sides.length) return "A river quay needs an adjacent water tile.";
@@ -124,12 +147,10 @@ export class CityEngine {
 
   place(id, c, r, options = {}) {
     if (!this.canPlace(id, c, r, options)) return null;
-    const def = BUILDINGS[id], money = def.cost?.money || 0, materials = def.cost?.materials || 0;
-    this.state.res.money -= money;
-    this.state.res.materials -= materials;
+    const def = BUILDINGS[id], charge = this.payCost(def.cost);
     const b = {
       def, c, r, age: 0, localHeat: 0, localCong: 0, disabled: false,
-      createdAt: this.state.tick, investedMoney: money, history: [],
+      createdAt: this.state.tick, investedMoney: charge.money, history: [],
     };
     if (ARCHITECTURE_DEFAULTS[id]) b.architecture = { ...ARCHITECTURE_DEFAULTS[id] };
     if (id === "house") {
@@ -154,7 +175,7 @@ export class CityEngine {
     if (b.def.id === "river_quay") this.invalidateRiverFlowsForQuay(b);
     this.state.buildings = this.state.buildings.filter(x => x !== b);
     this.occ[r][c] = null;
-    const invested = Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0);
+    const invested = this.creative ? 0 : Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0);
     this.state.res.money += invested * 0.4;
     this.recomputeFields();
     if (b.def.id === "river_quay") this.computeDistricts();
@@ -287,10 +308,8 @@ export class CityEngine {
     if (id.startsWith("variant_") && JSON.stringify(architectureModuleKeys(before)) === JSON.stringify(architectureModuleKeys(spec.after))) {
       return "This variant assembles the same building modules.";
     }
-    if (this.state.phase < spec.phase) return `Available in phase ${spec.phase}.`;
-    if (this.state.res.money < spec.cost.money) return "Not enough money.";
-    if (this.state.res.materials < spec.cost.materials) return "Not enough materials.";
-    return null;
+    if (!this.creative && this.state.phase < spec.phase) return `Available in phase ${spec.phase}.`;
+    return this.costBlockReason(spec.cost);
   }
   transformationOptions(b) {
     if (b?.def?.id === "commons" || !ARCHITECTURE_DEFAULTS[b?.def?.id] || b.conversion) return [];
@@ -308,10 +327,9 @@ export class CityEngine {
   transformBuilding(b, id) {
     if (this.transformationBlockReason(b, id)) return false;
     const spec = this.transformationSpec(b, id);
-    this.state.res.money -= spec.cost.money;
-    this.state.res.materials -= spec.cost.materials;
+    const charge = this.payCost(spec.cost);
     b.architecture = { ...spec.after };
-    b.investedMoney = (Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0)) + spec.cost.money;
+    b.investedMoney = this.creative ? 0 : (Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0)) + charge.money;
     this.recordEvent(b, "transformation", spec.name);
     this.recomputeFields();
     this.toast(`${spec.name}: transformation complete.`);
@@ -331,14 +349,12 @@ export class CityEngine {
     if (this.state.outcome) return "The game has ended.";
     if (b.conversion) return "This building has already been converted.";
     if (b.disabled) return "Wait until the building is back in service.";
-    if (this.state.phase < c.phase) return `Available in phase ${c.phase}.`;
-    if (b.age < c.minAge) {
+    if (!this.creative && this.state.phase < c.phase) return `Available in phase ${c.phase}.`;
+    if (!this.creative && b.age < c.minAge) {
       const name = b.def.id === "workshop" ? "The workshop" : "This building";
       return `${name} must be at least ${c.minAge} turns old (${b.age}/${c.minAge}).`;
     }
-    if (this.state.res.money < c.cost.money) return "Not enough money.";
-    if (this.state.res.materials < c.cost.materials) return "Not enough materials.";
-    return null;
+    return this.costBlockReason(c.cost);
   }
   conversionOptions(b) {
     return Object.values(BUILDING_CONVERSIONS).filter(c => c.source === b?.def.id)
@@ -347,11 +363,10 @@ export class CityEngine {
   convertBuilding(b, id) {
     if (this.conversionBlockReason(b, id)) return false;
     const c = BUILDING_CONVERSIONS[id];
-    this.state.res.money -= c.cost.money;
-    this.state.res.materials -= c.cost.materials;
+    const charge = this.payCost(c.cost);
     b.conversion = id;
     b.convertedAt = this.state.tick;
-    b.investedMoney = (Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0)) + c.cost.money;
+    b.investedMoney = this.creative ? 0 : (Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0)) + charge.money;
     this.recordEvent(b, "conversion", c.name);
     this.recomputeFields();
     this.toast(`${c.name}: conversion complete.`);
@@ -597,7 +612,9 @@ export class CityEngine {
     for (const key of ["food", "water", "energy"]) r[key] = clamp((r[key] || 0) + s.flowNet[key] * 0.5, 0, stockCap);
     this.storeDistrictSurpluses(stockCap);
     r.materials = clamp((r.materials || 0) + s.flowNet.materials * 0.5, 0, 400);
-    r.money = clamp(r.money + s.flowNet.money * 0.6, -300, 999999);
+    // Creative keeps a finite financial anchor; activity flows remain useful
+    // diagnostics, but neither operating costs nor income limit construction.
+    if (!this.creative) r.money = clamp(r.money + s.flowNet.money * 0.6, -300, 999999);
     s.economy = { income: prod.money, expenses: cons.money, upkeep, balance: s.flowNet.money, occupancy,
       cashIncome: prod.money * 0.6, cashExpenses: cons.money * 0.6, cashBalance: s.flowNet.money * 0.6 };
 
@@ -1015,7 +1032,7 @@ export class CityEngine {
     if (R.energyR !== undefined && R.energyR < 0.6 && s.res.population > 5) { this.advisor("Civil engineer", "Energy is running short: your apartment buildings and factories use more than you produce. Build a power plant or scale back industry.", "bad"); this.advisorCooldown = 5; return; }
     if (R.waterR !== undefined && R.waterR < 0.7) { this.advisor("Civil engineer", "Water supply does not cover demand. Add wells in underserved districts, or a water treatment plant if you have enough energy.", "warn"); this.advisorCooldown = 5; return; }
     if (R.foodR !== undefined && R.foodR < 0.7) { this.advisor("Logistics adviser", "Food is running short. Add farms with a water supply, or a continuous link to a district that produces a surplus.", "warn"); this.advisorCooldown = 5; return; }
-    if (s.res.money < 0) { this.advisor("City planner", "Spending exceeds income. Occupied, well-served homes fund services; empty and underused buildings still have upkeep costs.", "bad"); this.advisorCooldown = 6; return; }
+    if (!this.creative && s.res.money < 0) { this.advisor("City planner", "Spending exceeds income. Occupied, well-served homes fund services; empty and underused buildings still have upkeep costs.", "bad"); this.advisorCooldown = 6; return; }
     if (s.phase === 2 && m.congestionPressure > 1.5 && m.congestionPressure <= 3 && !s.events.logisticsFired) { this.advisor("Logistics adviser", "Some deliveries are starting to arrive late. Your main routes are getting busy.", "warn"); this.advisorCooldown = 4; return; }
     if (s.phase >= 2 && s.res.heat > 18 && s.res.heat <= 30 && !s.events.heatFired) { this.advisor("Civil engineer", "The industrial district is hotter than the rest of the city. Watch dense areas with little green space.", "warn"); this.advisorCooldown = 4; return; }
     if (s.regime.logistics > 0.8 && this.countTag("decentralized") >= 2) { this.advisor("City planner", "Your local markets and depots make deliveries more resilient, even when they bring in little income on their own.", ""); this.advisorCooldown = 8; }
@@ -1083,6 +1100,7 @@ export class CityEngine {
   }
 
   checkEndStates(pop, foodR, waterR) {
+    if (this.endless) return;
     const s = this.state;
     if (s.res.money <= -250) this.bankruptTicks++; else this.bankruptTicks = Math.max(0, this.bankruptTicks - 2);
     const settled = pop > 10 || s.districts.reduce((sum, d) => sum + d.demand, 0) >= 30;
@@ -1099,7 +1117,7 @@ export class CityEngine {
     if (this.victorySustain >= 8) this.endGame("victory", `Population ${Math.round(pop)} reached: every district is served, the city is maintained and its services are funded.`);
   }
   endGame(outcome, reason) {
-    if (this.state.outcome) return;
+    if (this.endless || this.state.outcome) return;
     this.state.outcome = outcome;
     this.state.outcomeInfo = { reason, trajectory: this.classifyCity(), year: this.state.year };
   }

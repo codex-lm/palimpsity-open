@@ -317,7 +317,7 @@ export class UI {
     list.id = "building-list";
     const bulldoze = el("button", "build bulldoze" + (this.bulldoze ? " on" : ""), `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="m10 10 20 20M30 10 10 30"/></svg><span class="bname">Demolish</span>`);
     bulldoze.setAttribute("aria-pressed", String(this.bulldoze));
-    bulldoze.title = "Demolish a building and recover 40% of its cost";
+    bulldoze.title = this.engine.creative ? "Demolish a building · no cost or refund" : "Demolish a building and recover 40% of its cost";
     bulldoze.onclick = () => {
       this.bulldoze = !this.bulldoze;
       this.selected = null;
@@ -349,9 +349,9 @@ export class UI {
       const def = BUILDINGS[id];
       const cost = def.cost?.money || 0;
       const materials = def.cost?.materials || 0;
-      const afford = state.res.money >= cost && state.res.materials >= materials;
+      const afford = this.engine.creative || (state.res.money >= cost && state.res.materials >= materials);
       const isNew = state.newlyUnlocked.includes(id);
-      const costLabel = costText(def.cost);
+      const costLabel = this.engine.creative ? "Free" : costText(def.cost);
       const button = el("button", "build" + (this.selected === id ? " on" : "") + (afford ? "" : " poor") + (isNew ? " fresh" : ""));
       button.dataset.id = id;
       button.style.color = def.color;
@@ -392,7 +392,7 @@ export class UI {
     const state = this.engine.state;
     for (const button of this.$.palette.querySelectorAll("[data-id]")) {
       const cost = BUILDINGS[button.dataset.id].cost || {};
-      button.classList.toggle("poor", state.res.money < (cost.money || 0) || state.res.materials < (cost.materials || 0));
+      button.classList.toggle("poor", !this.engine.creative && (state.res.money < (cost.money || 0) || state.res.materials < (cost.materials || 0)));
     }
   }
 
@@ -402,11 +402,12 @@ export class UI {
     let html = "";
     for (const key of list) {
       const meta = RES_META[key];
-      const value = key === "population" ? Math.round(res[key]) : Math.round(res[key] * 10) / 10;
-      const n = net[key];
+      const unlimited = this.engine.creative && ["money", "materials"].includes(key);
+      const value = unlimited ? "∞" : key === "population" ? Math.round(res[key]) : Math.round(res[key] * 10) / 10;
+      const n = unlimited ? 0 : net[key];
       const arrow = n > 0.2 ? "▲" : n < -0.2 ? "▼" : "";
       const cls = n > 0.2 ? "up" : n < -0.2 ? "down" : "";
-      html += `<div class="res${RES_HIDDEN.includes(key) ? " hidden-res" : ""}"><span class="rlbl" style="color:${resourceColor(key)}">${meta.lbl}</span><span class="rval">${value}</span><span class="rarr ${cls}">${arrow}</span></div>`;
+      html += `<div class="res${RES_HIDDEN.includes(key) ? " hidden-res" : ""}"${unlimited ? ' title="Unlimited construction budget"' : ""}><span class="rlbl" style="color:${resourceColor(key)}">${meta.lbl}</span><span class="rval">${value}</span><span class="rarr ${cls}">${arrow}</span></div>`;
     }
     setHTML(this.$["hud-res"], html);
     setHTML(this.$.clock, `Year ${state.year} · ${SEASONS[state.season]} <span class="phase">Phase ${state.phase}</span>`);
@@ -441,6 +442,13 @@ export class UI {
 
   renderObjectives() {
     if (this.challenge) return this.renderChallengeObjectives();
+    if (this.engine.endless) {
+      setHTML(this.$["objectives-summary"], this.engine.creative ? "God mode · build freely" : "Sandbox · grow at your own pace");
+      setHTML(this.$["objectives-list"], this.engine.creative
+        ? "<p>Construction and transformations are free. All buildings are available. Food, water and services still shape your city.</p><p>No deadline or game over. Choose a new game from the mode menu.</p>"
+        : "<p>Start with 600 €. Balance income and services to grow and unlock new buildings.</p><p>No deadline or game over. Choose a new game from the mode menu.</p>");
+      return;
+    }
     const progress = this.engine.victoryProgress();
     const ready = progress.filter(item => item.met).length;
     setHTML(this.$["objectives-summary"], `Thriving city · ${ready}/${progress.length}`);
@@ -488,7 +496,7 @@ export class UI {
     else reason = `Turn ${CHALLENGE.deadlineTicks} arrived before every goal held together.`;
     const best = progress.best != null ? `Best completion: ${formatSimTime(progress.best)}` : "";
     const record = win && progress.newBest ? "New best time!" : "";
-    box.innerHTML = `<div class="end-box ${win ? "win" : "lose"}" role="dialog" aria-modal="true"><h1>${win ? "Challenge completed" : "Out of time"}</h1><p class="end-reason">${reason}</p><div class="end-traj">${[best, record].filter(Boolean).join("<br>") || "First Neighbourhood"}</div><p class="end-metrics">A side challenge — the Thriving city victory stays the classic mode's goal.</p><button id="challenge-retry">Try again</button> <button id="challenge-exit">Back to classic city</button></div>`;
+    box.innerHTML = `<div class="end-box ${win ? "win" : "lose"}" role="dialog" aria-modal="true"><h1>${win ? "Challenge completed" : "Out of time"}</h1><p class="end-reason">${reason}</p><div class="end-traj">${[best, record].filter(Boolean).join("<br>") || "First Neighbourhood"}</div><p class="end-metrics">This record belongs only to the First Neighbourhood challenge.</p><button id="challenge-retry">Try again</button> <button id="challenge-exit">Choose a game mode</button></div>`;
     box.classList.add("on");
     document.getElementById("challenge-retry").onclick = () => this.h.onRestart();
     document.getElementById("challenge-exit").onclick = () => this.h.onExitChallenge();
@@ -516,7 +524,7 @@ export class UI {
       <dl class="quay-facts"><div><dt>Water basin</dt><dd>${info.basin ?? "No water basin"}</dd></div><div><dt>Home district</dt><dd>${districtName}</dd></div><div><dt>Other districts</dt><dd>${others}</dd></div>
       <div><dt>Crew activity</dt><dd>${Math.round(info.activity * 100)}%</dd></div><div><dt>Current network capacity</dt><dd>${metricValue(info.effectiveCapacity)} / ${info.nominalCapacity} units per turn</dd></div>
       <div><dt>Operating costs</dt><dd>${def.upkeep ?? UPKEEP[def.id] ?? 0} €/turn · ${def.inputs?.workers || 0} workers · ${def.ext?.maintenance || 0} maintenance demand</dd></div></dl>
-      <p class="insp-note">Unlocks in phase 2. Place two quays in different districts on the same water basin.</p>
+      <p class="insp-note">${this.engine.creative ? "Place two quays in different districts on the same water basin." : "Unlocks in phase 2. Place two quays in different districts on the same water basin."}</p>
       <button type="button" class="quay-partner" data-quay-partner ${canFocus ? "" : "disabled"}>${uiIcon("focus")}Focus partner</button>
       <div class="quay-flows"><b>Last completed-turn flows</b><p>${Number.isInteger(info.flowTick) ? `Last completed turn: ${info.flowTick}` : "No completed river turn yet"}</p><ul>${flows}</ul></div>
     </section>`;
@@ -527,7 +535,7 @@ export class UI {
     const changedRows = rows.filter(row => row.changed), unchangedRows = rows.filter(row => !row.changed);
     const group = groupOf(option.id);
     const aesthetic = group.id === "appearance";
-    const condition = option.reason || (option.phase ? `Available from phase ${option.phase}.` : "Available now.");
+    const condition = option.reason || (!this.engine?.creative && option.phase ? `Available from phase ${option.phase}.` : "Available now.");
     const architecture = option.after?.architecture;
     const result = architecture ? [
       floorText(architecture.floors), ARCHITECTURE_NAMES.base[architecture.base], ARCHITECTURE_NAMES.roof[architecture.roof],
@@ -537,7 +545,7 @@ export class UI {
       <div class="preview-heading"><span class="section-kicker">Before confirmation</span><h3 tabindex="-1" data-transform-title>${option.name}</h3></div>
       <div class="preview-scroll">
         ${result ? `<p class="preview-architecture"><b>After</b> · ${result}</p>` : ""}
-        <p class="conversion-cost">Cost: ${costText(option.cost)}</p>
+        <p class="conversion-cost">Cost: ${this.engine?.creative ? "Free" : costText(option.cost)}</p>
         <p class="conversion-condition">${condition}</p>
         ${aesthetic ? '<p class="aesthetic-note">Appearance only · no economic advantage.</p>' : ""}
         ${changedRows.length ? comparisonTable(changedRows) : '<p class="aesthetic-note">No economic changes.</p>'}
@@ -680,7 +688,7 @@ export class UI {
         const open = this.layerGroup === group.id;
         return `<section class="transformation-group${open ? " active" : ""}" data-layer-group="${group.id}"><button type="button" class="layer-group-toggle" data-layer-group-toggle="${group.id}" aria-expanded="${open}" aria-controls="layer-group-${group.id}"><span>${group.label}</span><small>${offers.length}</small></button><div class="transformation-list" id="layer-group-${group.id}" ${open ? "" : "hidden"}>${offers.map(option => {
           const current = option.reason === "This transformation is already applied.";
-          return `<article class="transformation-offer${this.transformPreview?.id === option.id ? " selected" : ""}"><div class="offer-heading"><span class="offer-icon">${transformationIcon(option.id)}</span><strong>${option.name}</strong><span>${costText(option.cost)}</span></div><p>${option.desc || ""}</p><p class="offer-state${current ? " current" : ""}">${current ? "Current" : option.reason || "Available now."}</p><button type="button" data-transform-preview="${option.id}" aria-expanded="${this.transformPreview?.id === option.id}">Preview transformation</button>${this.transformPreview?.id === option.id ? this.renderTransformationPreview(option, feedback) : ""}</article>`;
+          return `<article class="transformation-offer${this.transformPreview?.id === option.id ? " selected" : ""}"><div class="offer-heading"><span class="offer-icon">${transformationIcon(option.id)}</span><strong>${option.name}</strong><span>${this.engine.creative ? "Free" : costText(option.cost)}</span></div><p>${option.desc || ""}</p><p class="offer-state${current ? " current" : ""}">${current ? "Current" : option.reason || "Available now."}</p><button type="button" data-transform-preview="${option.id}" aria-expanded="${this.transformPreview?.id === option.id}">Preview transformation</button>${this.transformPreview?.id === option.id ? this.renderTransformationPreview(option, feedback) : ""}</article>`;
         }).join("")}</div></section>`;
       }).join("")}</div></section>`;
     } else {
@@ -693,7 +701,7 @@ export class UI {
     if (building.conversion) {
       html += `<div class="insp-conversion converted" tabindex="-1"><strong><span class="conversion-check" aria-hidden="true">✓</span> <span class="converted-name">${def.name}</span></strong><p>${def.desc}</p></div>`;
     } else if (options.length) {
-      html += `<div class="insp-conversion"><div class="conversion-kicker">Give this building a new role</div>${options.map(option => `<div class="conversion-offer"><strong>${option.name}</strong><p>${option.desc}</p><p class="conversion-cost">${costText(option.cost)}</p><button type="button" data-conversion="${option.id}" ${option.reason ? "disabled" : ""}>Confirm repurposing</button><p class="conversion-condition">${option.reason || `Available from phase ${option.phase}, after ${option.minAge} turns.`}</p></div>`).join("")}</div>`;
+      html += `<div class="insp-conversion"><div class="conversion-kicker">Give this building a new role</div>${options.map(option => `<div class="conversion-offer"><strong>${option.name}</strong><p>${option.desc}</p><p class="conversion-cost">${this.engine.creative ? "Free" : costText(option.cost)}</p><button type="button" data-conversion="${option.id}" ${option.reason ? "disabled" : ""}>Confirm repurposing</button><p class="conversion-condition">${option.reason || (this.engine.creative ? "Available now." : `Available from phase ${option.phase}, after ${option.minAge} turns.`)}</p></div>`).join("")}</div>`;
     }
 
     const history = Array.isArray(building.history) ? building.history : [];
@@ -747,7 +755,7 @@ export class UI {
           const option = this.engine.transformationOptions(building).find(item => item.id === id);
           if (this.engine.transformBuilding(building, id)) {
             this.transformPreview = null;
-            this.transformFeedback = { building, id, type: "success", text: `Changes applied: ${option.name} · Spent ${costText(option.cost)}` };
+            this.transformFeedback = { building, id, type: "success", text: this.engine.creative ? `Changes applied: ${option.name} · No charge` : `Changes applied: ${option.name} · Spent ${costText(option.cost)}` };
             this.renderer.sync();
             this.update();
             const success = this.$.inspector.querySelector("[data-transform-success]");

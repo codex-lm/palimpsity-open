@@ -5,6 +5,13 @@
       "kind": "agent",
       "name": "LOB7 Enhancement",
       "status": "included",
+      "url": "https://github.com/codex-lm/palimpsity-open/tree/codex/living-layers-modes-20261105",
+      "summary": "Choose a budgeted sandbox, a free-building creative mode or the River Pact scenario."
+    },
+    {
+      "kind": "agent",
+      "name": "LOB7 Enhancement",
+      "status": "included",
       "url": "https://github.com/codex-lm/palimpsity-open/tree/codex/living-layers-shore-fix-20261105",
       "summary": "Continuous riverbanks and grounded reeds make the shoreline clearer, even up close."
     },

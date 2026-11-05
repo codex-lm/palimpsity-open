@@ -44,12 +44,13 @@ export class RiverPactView {
 
   render(compact = false) {
     const p = this.pact;
+    this.panel.hidden = !p;
     this.panel.classList.toggle("river-compact", compact);
     this.panel.setAttribute("aria-label", say("River Pact", "Le pacte de la rivière"));
     document.body.classList.toggle("river-mode", !!p);
     this.dialog.classList.toggle("on", !!p && (p.awaitingCharter || p.status !== "running"));
     if (!p) {
-      this.set(this.panel, `<div class="river-kicker">${say("A city in three acts", "Une ville en trois actes")}</div><h2>${say("River Pact", "Le pacte de la rivière")}</h2><p>${say("Found two districts. Choose a civic charter. Keep your city alive through a forecast drought.", "Fonde deux quartiers. Choisis une charte. Prépare ta ville à une sécheresse annoncée.")}</p>${button("river-start", say("Start River Pact", "Commencer le pacte"))}<small>${say("Pause freely · advance in batches of five turns", "Pauses libres · avance par cinq tours")}</small>`);
+      this.set(this.panel, "");
       this.dialogState = "";
       return;
     }
@@ -98,7 +99,7 @@ export class RiverPactView {
   charterDialog() {
     return `<div class="river-kicker">${say("Act I complete · +200 €", "Acte I terminé · +200 €")}</div><h1 id="river-dialog-title">${say("What will your city stand for?", "Quelle ville veux-tu bâtir ?")}</h1><p>${say("Choose once. Keep your commitment in both districts through the drought. The clock is paused.", "Choisis une fois. Tiens cet engagement dans les deux quartiers pendant la sécheresse. Le temps est en pause.")}</p><div class="river-charters">
       <section><div class="charter-symbol" aria-hidden="true">♧</div><h2>${say("Garden commons", "Jardins communs")}</h2><p>${say("+100 € · In each district: 2 parks and 2 wells. A cooler city with a generous water supply.", "+100 € · Dans chaque quartier : 2 parcs et 2 puits. Une ville plus fraîche avec une eau abondante.")}</p>${button("river-gardens", say("Choose the gardens", "Choisir les jardins"))}</section>
-      <section><div class="charter-symbol" aria-hidden="true">⚒</div><h2>${say("Makers quarter", "Quartiers artisans")}</h2><p>${say("+200 € · In each district: 1 workshop and 1 local market. Deliver 40 materials once to complete Act II.", "+200 € · Dans chaque quartier : 1 atelier et 1 marché local. Livre 40 matériaux une fois pour finir l’acte II.")}</p>${button("river-workshops", say("Choose the workshops", "Choisir les ateliers"))}</section></div>${button("river-exit", say("Back to classic city", "Retour à la ville classique"))}`;
+      <section><div class="charter-symbol" aria-hidden="true">⚒</div><h2>${say("Makers quarter", "Quartiers artisans")}</h2><p>${say("+200 € · In each district: 1 workshop and 1 local market. Deliver 40 materials once to complete Act II.", "+200 € · Dans chaque quartier : 1 atelier et 1 marché local. Livre 40 matériaux une fois pour finir l’acte II.")}</p>${button("river-workshops", say("Choose the workshops", "Choisir les ateliers"))}</section></div>${button("river-exit", say("Choose a game mode", "Choisir un mode de jeu"))}`;
   }
 
   endDialog() {
@@ -107,6 +108,6 @@ export class RiverPactView {
       ? say("The districts did not stay supplied for 12 consecutive drought turns. Build more wells before turn 120, and finish Act II early.", "Les quartiers n’ont pas tenu 12 tours consécutifs pendant la sécheresse. Prévois plus de puits avant le tour 120 et termine l’acte II plus tôt.")
       : p.failReason === "collapse" ? say("The city collapsed before the pact was fulfilled. Keep food, water and income in balance.", "La ville s’est effondrée avant de tenir le pacte. Équilibre nourriture, eau et revenus.")
         : say("Turn 240 arrived before the city reached all its goals. Expand housing earlier and keep both districts supplied.", "Le tour 240 est arrivé avant que la ville atteigne ses objectifs. Agrandis les logements plus tôt et approvisionne les deux quartiers.");
-    return `<div class="river-kicker">${say("River Pact", "Le pacte de la rivière")} · ${say("Turn", "Tour")} ${p.finishedAtTick}</div><h1 id="river-dialog-title">${win ? say("The pact holds.", "Le pacte est tenu.") : say("The river asks for another plan.", "La rivière demande un autre plan.")}</h1><p>${win ? say("Two living districts, a promise kept, and a city that survived the drought. Try the other charter for a different city.", "Deux quartiers vivants, une promesse tenue, une ville qui a résisté à la sécheresse. Essaie l’autre charte pour bâtir autrement.") : reason}</p>${button("river-retry", say("Try another pact", "Essayer une autre charte"))} ${button("river-exit", say("Back to classic city", "Retour à la ville classique"))}`;
+    return `<div class="river-kicker">${say("River Pact", "Le pacte de la rivière")} · ${say("Turn", "Tour")} ${p.finishedAtTick}</div><h1 id="river-dialog-title">${win ? say("The pact holds.", "Le pacte est tenu.") : say("The river asks for another plan.", "La rivière demande un autre plan.")}</h1><p>${win ? say("Two living districts, a promise kept, and a city that survived the drought. Try the other charter for a different city.", "Deux quartiers vivants, une promesse tenue, une ville qui a résisté à la sécheresse. Essaie l’autre charte pour bâtir autrement.") : reason}</p>${button("river-retry", say("Try another pact", "Essayer une autre charte"))} ${button("river-exit", say("Choose a game mode", "Choisir un mode de jeu"))}`;
   }
 }

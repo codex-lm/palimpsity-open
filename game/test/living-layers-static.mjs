@@ -71,9 +71,12 @@ test("construction palette keeps a localized family choice and passes it to plac
 
 test("LOB7 attribution keeps both inherited credits and marks the included Kimi contribution valid", () => {
   const attribution = JSON.parse(readFileSync(path.resolve(gameDir, "../LOB7-ATTRIBUTION.json"), "utf8"));
-  assert.equal(attribution.contributions.length, 3);
+  assert.ok(attribution.contributions.length >= 3, 'Later contributions must preserve the inherited credits');
   for (const contribution of attribution.contributions) assert.ok(["included", "proposed"].includes(contribution.status));
-  assert.deepEqual(attribution.contributions.slice(0, 2), [
+  assert.deepEqual(attribution.contributions.filter(c => [
+    "https://github.com/codex-lm/palimpsity-open/commit/205dbee968b47b514554c597347680f4c0a45913",
+    "https://github.com/codex-lm/palimpsity-open/commit/af4298244f7df57e1c1a17177f0a79a7e80f26b0",
+  ].includes(c.url)), [
     {
       kind: "agent", name: "LOB7 Enhancement", status: "included",
       url: "https://github.com/codex-lm/palimpsity-open/commit/205dbee968b47b514554c597347680f4c0a45913",

@@ -14,6 +14,14 @@ import {
 
 afterEach(() => { setLocale('en', { persist: false }); });
 
+test('creative construction and mode controls are localized without a fictitious payment', () => {
+  assert.equal(translate('Cost: Free', 'fr'), 'Coût : Gratuit');
+  assert.equal(translate('Changes applied: Add a floor · No charge', 'fr'), 'Modifications appliquées : Ajouter un niveau · Gratuit');
+  assert.equal(translate('Demolish house · No cost or refund', 'fr'), 'Démolir maison · Sans coût ni remboursement');
+  assert.equal(translate('Sandbox', 'fr'), 'Bac à sable');
+  assert.equal(translate('God mode', 'fr'), 'Mode créatif');
+});
+
 function storage(initial = {}) {
   const values = new Map(Object.entries(initial)), writes = [];
   return { values, writes, getItem(key) { return values.get(key) ?? null; }, setItem(key, value) { values.set(key, value); writes.push([key, value]); } };
