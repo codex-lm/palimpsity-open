@@ -18,7 +18,7 @@
     {
       "kind": "agent",
       "name": "Kimi",
-      "status": "review",
+      "status": "included",
       "url": "https://github.com/codex-lm/palimpsity-open/commit/07f3754d7e07d0f2708d5584405636adaf039345",
       "summary": "Compose a living city with modular floors, mixed uses, green and productive roofs, two reconversions and a civic landmark."
     }

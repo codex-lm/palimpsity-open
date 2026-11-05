@@ -86,9 +86,11 @@ try {
 
   await browser.evaluate("PALIMPSITY.renderer.focusBuilding(__environmentFixture.houses[1])");
   await browser.frames(10);
-  const focus = await browser.evaluate("({ y: PALIMPSITY.renderer._offset.y, viewOffset: !!PALIMPSITY.renderer.camera.view?.enabled, projection: PALIMPSITY.renderer.projectionMode })");
+  const focus = await browser.evaluate("({ y: PALIMPSITY.renderer._offset.y, viewOffset: !!PALIMPSITY.renderer.camera.view?.enabled, projection: PALIMPSITY.renderer.projectionMode, lod: PALIMPSITY.renderer.getDebugInfo().environmentLod, instances: PALIMPSITY.renderer.getDebugInfo().environmentInstances })");
   assert.ok(focus.y < 0.41);
   assert.equal(focus.viewOffset, true);
+  assert.equal(focus.lod, "full");
+  assert.ok(focus.instances >= setup.instances);
   await browser.evaluate("PALIMPSITY.renderer.setProjectionMode('ortho')");
   assert.equal(await browser.evaluate("PALIMPSITY.renderer.camera.view?.enabled"), true);
   await browser.evaluate("PALIMPSITY.renderer.setProjectionMode('perspective')");

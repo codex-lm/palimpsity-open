@@ -4,19 +4,22 @@
   "parent": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
   "source": "a7998e2",
   "artifact": "dist/palimpsity-mvp.html",
-  "artifactSha256": "49fba91a84a7c44da980f0bc228c2c0e04e49ab84e2fc666aef5ff3b2e64f4f0",
-  "artifactBytes": 16445352,
+  "artifactSha256": "873ac161ec63c549067ad11d4c67379ab2df7ca140fda3b06ba86d3ac9b500fd",
+  "artifactBytes": 17073157,
   "legacyModels": 18,
   "livingLayersModules": 45,
-  "referencedGlbs": 84,
+  "environmentModules": 14,
+  "referencedGlbs": 98,
+  "attributionIncluded": true,
   "publicationFilesAreExplicitExport": false,
   "sourceChecks": {
-    "nodeTestsPassed": 100,
-    "embeddedGlbsParsedWithoutFetch": 84,
+    "nodeTestsPassed": 127,
+    "rafCalculationTestsPassed": 5,
+    "embeddedGlbsParsedWithoutFetch": 98,
     "sourceArtifactMatch": true
   },
   "browserValidation": {
-    "scope": "isolated headless Chrome 156, SwiftShader, standalone offline, real public UI and engine actions",
+    "scope": "standalone offline recipe in isolated Chrome; renderer recorded in the observed report",
     "report": "docs/living-layers/observed-results.md",
     "status": "passed",
     "scenariosPassed": 5,
@@ -32,22 +35,6 @@
       "390x844@2",
       "3840x2160@1"
     ],
-    "denseHigh": {
-      "fps": 0.77,
-      "meanFrameMs": 1296.07,
-      "p95FrameMs": 1350.0,
-      "drawCalls": 1311,
-      "triangles": 235799,
-      "drawingBuffer": "3840x2160"
-    },
-    "denseLow": {
-      "fps": 3.65,
-      "meanFrameMs": 273.88,
-      "p95FrameMs": 283.4,
-      "drawCalls": 1301,
-      "triangles": 235559,
-      "drawingBuffer": "1920x1080"
-    },
     "riverCharters": {
       "gardensCompletedAtTick": 161,
       "workshopsCompletedAtTick": 161,
@@ -55,6 +42,40 @@
     },
     "pageErrors": 0,
     "externalRequests": 0
+  },
+  "d1Validation": {
+    "report": "docs/living-layers/d1-roof-matrix-4k.md",
+    "status": "passed",
+    "combinations": 12,
+    "nativePng": "3840x2160"
+  },
+  "d2PerformanceValidation": {
+    "report": "docs/living-layers/d2-performance-comparison.md",
+    "rawResults": "docs/living-layers/d2-performance-results.json",
+    "status": "passed",
+    "rendererMode": "default",
+    "effectiveRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 (0x00002216) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "sameRendererForBaselineAndCurrent": true,
+    "baselineSha256": "49fba91a84a7c44da980f0bc228c2c0e04e49ab84e2fc666aef5ff3b2e64f4f0",
+    "currentSha256": "873ac161ec63c549067ad11d4c67379ab2df7ca140fda3b06ba86d3ac9b500fd",
+    "views": 8,
+    "rawRafIntervalsPerView": 601,
+    "approximateFpsPerView": 60,
+    "deltaP95PercentRange": [
+      -0.5917159762799011,
+      0.595238095186021
+    ],
+    "scope": "These scenes on one RTX 3080 via D3D11 only; synchronized near 60 FPS is not GPU headroom or a general guarantee.",
+    "initialSwiftShaderReportsSeparated": true,
+    "browserClosed": true
+  },
+  "d3Validation": {
+    "automatedReport": "docs/living-layers/d3-natural-results.json",
+    "automatedStatus": "passed",
+    "naturalBudgetEur": 600,
+    "charter": "gardens",
+    "completedAtTick": 161,
+    "manualNiloPlaythrough": "Separate human playthrough; not counted as an automated assertion or an additional measurement in this consolidation."
   },
   "buildFormat": "readable whitespace; compact identifiers and expressions"
 }

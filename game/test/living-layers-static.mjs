@@ -68,6 +68,28 @@ test("construction palette keeps a localized family choice and passes it to plac
   }
 });
 
+test("LOB7 attribution keeps both inherited credits and marks the included Kimi contribution valid", () => {
+  const attribution = JSON.parse(readFileSync(path.resolve(gameDir, "../LOB7-ATTRIBUTION.json"), "utf8"));
+  assert.equal(attribution.contributions.length, 3);
+  for (const contribution of attribution.contributions) assert.ok(["included", "proposed"].includes(contribution.status));
+  assert.deepEqual(attribution.contributions.slice(0, 2), [
+    {
+      kind: "agent", name: "LOB7 Enhancement", status: "included",
+      url: "https://github.com/codex-lm/palimpsity-open/commit/205dbee968b47b514554c597347680f4c0a45913",
+      summary: "Shape two districts, choose a civic charter and prepare your city for a forecast drought.",
+    },
+    {
+      kind: "agent", name: "LOB7 Enhancement", status: "included",
+      url: "https://github.com/codex-lm/palimpsity-open/commit/af4298244f7df57e1c1a17177f0a79a7e80f26b0",
+      summary: "Build your first thriving neighbourhood against the clock, and keep your best completion time.",
+    },
+  ]);
+  const kimi = attribution.contributions.find(contribution => contribution.name === "Kimi");
+  assert.equal(kimi.status, "included");
+  assert.equal(kimi.url, "https://github.com/codex-lm/palimpsity-open/commit/07f3754d7e07d0f2708d5584405636adaf039345");
+  assert.ok(kimi.summary);
+});
+
 test("native-high rendering keeps antialiasing, the native DPR and an unscaled canvas backing store", () => {
   const source = readFileSync(path.join(gameDir, "src", "render3d.js"), "utf8");
   assert.match(source, /antialias\s*:\s*true/);

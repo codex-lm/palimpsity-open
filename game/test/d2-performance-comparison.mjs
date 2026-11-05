@@ -4,7 +4,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
-import { LivingLayersBrowser, machineInfo } from "./helpers-living-layers.mjs";
+import { LivingLayersBrowser, machineInfo, summarizeFrameIntervals } from "./helpers-living-layers.mjs";
 
 const gameDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const rootDir = path.resolve(gameDir, "..");
@@ -16,6 +16,8 @@ const currentFile = path.join(rootDir, "dist", "palimpsity-mvp.html");
 const viewport = { id: "1920x1080-dpr2", width: 1920, height: 1080, dpr: 2 };
 const warmupMs = 5000;
 const sampleMs = 10000;
+const minimumIntervals = 20;
+const maxSampleMs = 60000;
 mkdirSync(capturesDir, { recursive: true });
 
 function artifact(id, file) {
@@ -32,20 +34,21 @@ function artifact(id, file) {
 
 const artifacts = [artifact("baseline", baselineFile), artifact("current", currentFile)];
 assert.equal(artifacts[0].sha256, "49fba91a84a7c44da980f0bc228c2c0e04e49ab84e2fc666aef5ff3b2e64f4f0");
-assert.equal(artifacts[1].sha256, "2c2579f4bc1233a4d0f45b8c8e41393c73d899aacd6da78079c675dac5d1e3fe");
-assert.equal(artifacts[1].bytes, 17071612);
 
 const report = {
   generatedAt: new Date().toISOString(),
   machine: machineInfo(),
   conditions: {
     browser: "one isolated headless Chrome process; baseline and current loaded sequentially",
+    artifactIdentity: "HTML bytes and SHA-256 captured at execution identify the measured builds; Git HEAD is not an artifact identifier",
     viewport,
     scenes: "identical public place/transformBuilding fixtures, homeCamera(true), day, roofs visible, reduced effects false, simulation paused",
-    warmupMs,
+    warmupConfiguredMs: warmupMs,
     minimumSampleMs: sampleMs,
+    minimumIntervals,
+    maxSampleMs,
     gpuValidation: false,
-    note: "SwiftShader is reported separately from hardware GPUs; these observations do not validate hardware performance.",
+    note: "The effective WebGL renderer is recorded for both builds. SwiftShader and hardware GPUs are separate cases; no hardware validation is implied.",
   },
   baselineEvidence,
   artifacts,
@@ -115,7 +118,7 @@ async function measure(scene, quality) {
     PALIMPSITY.ui.showInspector(null);
   }, quality);
   await browser.frames(5);
-  const sample = await browser.page(async ({ warmupMs, sampleMs }) => {
+  const sample = await browser.page(async ({ warmupMs, sampleMs, minimumIntervals, maxSampleMs }) => {
     const r = PALIMPSITY.renderer, renderer = r.renderer, gl = renderer.getContext();
     const debug = gl.getExtension("WEBGL_debug_renderer_info");
     const warmupStart = performance.now();
@@ -124,27 +127,26 @@ async function measure(scene, quality) {
       await new Promise(requestAnimationFrame);
       warmupFrames++;
     }
-    const tickBefore = PALIMPSITY.engine.state.tick;
     const warmupDurationMs = performance.now() - warmupStart;
-    const started = performance.now();
-    const deltas = [];
-    let previous = await new Promise(requestAnimationFrame);
-    while (performance.now() - started < sampleMs || deltas.length < 2) {
+    const tickBefore = PALIMPSITY.engine.state.tick;
+    const firstRafTimestamp = await new Promise(requestAnimationFrame);
+    const rafIntervalsMs = [];
+    let previous = firstRafTimestamp;
+    while (true) {
+      const elapsed = previous - firstRafTimestamp;
+      if (elapsed >= sampleMs && rafIntervalsMs.length >= minimumIntervals) break;
+      if (elapsed >= maxSampleMs) throw new Error(`Only ${rafIntervalsMs.length} RAF intervals collected within ${maxSampleMs} ms`);
       const now = await new Promise(requestAnimationFrame);
-      deltas.push(now - previous);
+      rafIntervalsMs.push(now - previous);
       previous = now;
     }
-    const durationMs = performance.now() - started;
-    const sorted = [...deltas].sort((a, b) => a - b);
     const canvas = renderer.domElement;
     return {
-      warmupMs: warmupDurationMs,
-      durationMs,
-      frames: deltas.length,
-      fps: deltas.length * 1000 / durationMs,
-      medianFrameMs: sorted[Math.floor((sorted.length - 1) * 0.5)],
-      p95FrameMs: sorted[Math.floor((sorted.length - 1) * 0.95)],
-      maxFrameMs: sorted.at(-1),
+      warmupConfiguredMs: warmupMs,
+      warmupDurationMs,
+      firstRafTimestamp,
+      lastRafTimestamp: previous,
+      rafIntervalsMs,
       drawCalls: renderer.info.render.calls,
       triangles: renderer.info.render.triangles,
       drawingBuffer: { width: gl.drawingBufferWidth, height: gl.drawingBufferHeight },
@@ -163,8 +165,11 @@ async function measure(scene, quality) {
       },
       jsHeap: performance.memory ? { usedBytes: performance.memory.usedJSHeapSize } : null,
     };
-  }, { warmupMs, sampleMs });
-  assert.ok(sample.durationMs >= sampleMs, `${scene}/${quality}: sample shorter than 10 seconds`);
+  }, { warmupMs, sampleMs, minimumIntervals, maxSampleMs });
+  Object.assign(sample, summarizeFrameIntervals(sample.rafIntervalsMs));
+  assert.ok(sample.rafIntervalsMs.length >= minimumIntervals, `${scene}/${quality}: fewer than 20 RAF intervals`);
+  assert.ok(sample.durationMs >= sampleMs, `${scene}/${quality}: RAF intervals sum to less than 10 seconds`);
+  assert.ok(Math.abs((sample.lastRafTimestamp - sample.firstRafTimestamp) - sample.durationMs) < 0.001, `${scene}/${quality}: duration must equal the RAF timestamp span`);
   assert.equal(sample.tickAfter, sample.tickBefore, `${scene}/${quality}: simulation advanced during measurement`);
   assert.equal(sample.quality, quality);
   assert.equal(sample.reducedEffects, false);
@@ -202,10 +207,10 @@ function markdown() {
   const lines = ["# D2 — comparaison de performance baseline / courant", "", `Généré : ${report.generatedAt}`, "",
     "## Conditions et portée", "",
     `- Un seul Chrome (${report.browser?.product || "indisponible"}), artifacts chargés séquentiellement, viewport ${viewport.width}×${viewport.height} à DPR ${viewport.dpr}.`,
-    `- Moteur WebGL réel : **${report.measurements[0]?.webgl.renderer || "indisponible"}** (${report.measurements[0]?.webgl.vendor || "vendor indisponible"}).`,
-    `- Après ${warmupMs / 1000} s minimum d’échauffement, chaque vue est échantillonnée pendant **au moins ${sampleMs / 1000} s**, simulation en pause.`,
-    "- Mêmes scènes, caméra de vallée, fixtures publiques, qualité et résolution pour baseline et courant.",
-    "- **SwiftShader uniquement : aucune validation de performance sur GPU matériel.**", "",
+    `- Moteur WebGL réel commun : **${report.effectiveRenderer || report.measurements[0]?.webgl.renderer || "indisponible"}** (${report.measurements[0]?.webgl.vendor || "vendor indisponible"}).`,
+    `- Échauffement configuré à ${warmupMs / 1000} s minimum (durée réelle conservée par vue), puis **au moins ${sampleMs / 1000} s et ${minimumIntervals} intervalles RAF**, avec borne de ${maxSampleMs / 1000} s si le rendu est lent.`,
+    "- Mêmes scènes, caméra de vallée, fixtures publiques, qualité, résolution et renderer effectif pour baseline et courant.",
+    "- Durée et FPS calculés depuis la même somme d’intervalles RAF bruts, conservés dans le JSON. SwiftShader n’est pas un GPU matériel ; aucune validation matérielle n’est déduite.", "",
     "## Artifacts", "",
     "| Artifact | Brut | Gzip | SHA-256 |", "|---|---:|---:|---|"];
   for (const item of artifacts) lines.push(`| ${item.id} | ${item.bytes} o | ${item.gzipBytes} o | \`${item.sha256}\` |`);
@@ -229,7 +234,11 @@ let failure = null;
 try {
   await browser.connect();
   report.browser = browser.browserInfo;
+  report.conditions.rendererMode = browser.rendererMode;
   for (const item of artifacts) await runArtifact(item);
+  const effectiveRenderers = [...new Set(report.measurements.map(measurement => measurement.webgl.renderer))];
+  assert.equal(effectiveRenderers.length, 1, `Baseline and current must share the effective WebGL renderer: ${effectiveRenderers.join(" / ")}`);
+  report.effectiveRenderer = effectiveRenderers[0];
   for (const scene of ["small", "dense"]) for (const quality of ["high", "low"]) {
     const baseline = report.measurements.find(m => m.artifact === "baseline" && m.scene === scene && m.quality === quality);
     const current = report.measurements.find(m => m.artifact === "current" && m.scene === scene && m.quality === quality);

@@ -163,6 +163,67 @@ test("instanced environment batches update only affected parts and dispose clean
   assert.ok(!fixture._disposedMaterials.has(fixture.material));
 });
 
+test("valley LOD omits secondary details and restores full geometry at close range", () => {
+  const fixture = batchFixture();
+  const parts = Renderer3D.prototype._environmentParts.call(fixture, 0, 0, [{ key: "vegetation_flowers", x: 0, y: 0, z: 0, rotation: 0 }]);
+  const [id, part] = parts.entries().next().value;
+  assert.equal(part.lodStride, 0);
+  const batch = { ...part, cells: new Map([[0, part.matrices], [1, part.matrices]]), mesh: null };
+  fixture._environmentDetailReduced = false;
+  Renderer3D.prototype._rebuildEnvironmentBatch.call(fixture, id, batch);
+  assert.equal(batch.mesh.count, 2);
+  fixture._environmentDetailReduced = true;
+  Renderer3D.prototype._rebuildEnvironmentBatch.call(fixture, id, batch);
+  assert.equal(batch.mesh, null);
+  fixture._environmentDetailReduced = false;
+  Renderer3D.prototype._rebuildEnvironmentBatch.call(fixture, id, batch);
+  assert.equal(batch.mesh.count, 2);
+});
+
+test("LOD uses projected distance for orthographic zoom and preserves hysteresis", () => {
+  const fixture = {
+    camera: { position: new THREE.Vector3(30, 0, 0), zoom: 1, isOrthographicCamera: true, top: 8, bottom: -8 },
+    controls: { target: new THREE.Vector3() }, cameraScale: "valley",
+    _environmentDetailReduced: true, _environmentBatches: new Map(),
+  };
+  Renderer3D.prototype._syncEnvironmentLod.call(fixture);
+  assert.equal(fixture._environmentDetailReduced, true);
+  fixture.camera.zoom = 3;
+  Renderer3D.prototype._syncEnvironmentLod.call(fixture);
+  assert.equal(fixture._environmentDetailReduced, false);
+  fixture.camera.zoom = 1.5;
+  Renderer3D.prototype._syncEnvironmentLod.call(fixture);
+  assert.equal(fixture._environmentDetailReduced, false);
+  fixture.camera.zoom = 1;
+  Renderer3D.prototype._syncEnvironmentLod.call(fixture);
+  assert.equal(fixture._environmentDetailReduced, true);
+  fixture.camera.zoom = 3;
+  Renderer3D.prototype._syncEnvironmentLod.call(fixture);
+  assert.equal(fixture._environmentDetailReduced, false);
+  fixture.cameraScale = "building";
+  fixture.camera.zoom = 0.5;
+  Renderer3D.prototype._syncEnvironmentLod.call(fixture);
+  assert.equal(fixture._environmentDetailReduced, false);
+});
+
+test("orthographic LOD ignores camera position when frustum and zoom are identical", () => {
+  const makeFixture = distance => ({
+    camera: { position: new THREE.Vector3(distance, 0, 0), zoom: 1, isOrthographicCamera: true, top: 8, bottom: -8 },
+    controls: { target: new THREE.Vector3() }, cameraScale: "valley",
+    _environmentDetailReduced: true, _environmentBatches: new Map(),
+  });
+  const near = makeFixture(10), far = makeFixture(30);
+  Renderer3D.prototype._syncEnvironmentLod.call(near);
+  Renderer3D.prototype._syncEnvironmentLod.call(far);
+  assert.equal(near._environmentDetailReduced, far._environmentDetailReduced);
+  assert.equal(near._environmentDetailReduced, true);
+  near.camera.zoom = far.camera.zoom = 3;
+  Renderer3D.prototype._syncEnvironmentLod.call(near);
+  Renderer3D.prototype._syncEnvironmentLod.call(far);
+  assert.equal(near._environmentDetailReduced, far._environmentDetailReduced);
+  assert.equal(near._environmentDetailReduced, false);
+});
+
 test("reducedEffects freezes workshop, tram, smoke and resident motion", () => {
   const building = { c: 0, r: 0, activity: 1, occupancy: 1, disabled: false };
   const group = new THREE.Group();
@@ -181,7 +242,7 @@ test("reducedEffects freezes workshop, tram, smoke and resident motion", () => {
     haloRoot: new THREE.Group(), smokePuffs: [puff], _people: [person],
     controls: { update() {} }, camera: {}, renderer: { render() {} },
     _syncHalo() {}, _animateDisabled() {}, _updateCameraTransition() {}, _updateLandscape() {},
-    _updateGhost() {}, applyLens() {}, _updateFog() {},
+    _updateGhost() {}, applyLens() {}, _updateFog() {}, _syncEnvironmentLod() {},
     _activityOf: Renderer3D.prototype._activityOf, _occupancyOf: Renderer3D.prototype._occupancyOf,
   };
   Renderer3D.prototype.frame.call(fixture);

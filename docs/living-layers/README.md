@@ -1,39 +1,43 @@
-# Recette Living Layers
+# Preuves Living Layers — socle A–D
 
-Cette recette utilise uniquement Node 22+ et Chrome/Chromium via le protocole CDP. Elle n'ajoute aucune dépendance npm et ne lance pas de profil navigateur personnel.
+Le point d’entrée consolidé est [`DELIVERY.md`](DELIVERY.md) : fonctionnalités, retours NILO-001 à NILO-012, architecture, commandes, captures, performances finales et limites.
 
-## Exécution
+## Commandes
 
-Depuis `game/`, après que le chantier d'intégration a reconstruit `../dist/palimpsity-mvp.html` :
+Depuis `game/`, après reconstruction de `../dist/palimpsity-mvp.html` par le chantier d’intégration :
 
 ```bash
-node --test test/living-layers-static.mjs
-node test/living-layers-browser.mjs
-node test/d2-performance-comparison.mjs
+npm test                         # 127 tests
+npm run test:d2-calculation      # 5 tests RAF distincts
+npm run test:living-layers-browser
+npm run test:d1
+npm run test:d2
+npm run test:d3
 ```
 
-`CHROME_EXE` peut désigner un exécutable Chrome, Chromium ou Edge. `LIVING_LAYERS_FRAMES` change le nombre d'intervalles mesurés par vue (30 par défaut, minimum 20). La recette ne reconstruit pas elle-même le livrable afin de tester exactement le fichier autonome présent.
+`CHROME_EXE` peut sélectionner Chrome, Chromium ou Edge. `LIVING_LAYERS_RENDERER=default` laisse Chrome choisir son renderer ; `swiftshader` est une option explicite. `LIVING_LAYERS_FRAMES` concerne l’ancienne recette générale, tandis que D2 exige au moins 10 secondes et 20 intervalles RAF bruts par vue. Aucune recette ne reconstruit le livrable à la place de l’intégrateur.
 
 ## Couverture
 
-- petite ville élevée par `place`, `tick` et `transformBuilding`, avec captures avant/après ;
-- ville mixte avec transformation commerciale, toit-jardin et les deux conversions publiques `workshop_repair` et `warehouse_hall`, avec inspecteurs rapprochés ;
-- trois cycles de rotation, zoom, changement de projection, recentrage et inspection ;
-- ville dense avec 12 maisons portées à quatre niveaux, mesurée au même viewport en qualité `high` puis `low` ;
-- River Pact joué depuis 600 € avec les chartes Garden commons et Makers quarter, y compris la sécheresse et la victoire ;
-- vues générales et rapprochées à 1280×720, 1920×1080 DPR 2, 390×844 DPR 2 et 3840×2160 ;
-- FPS et temps de frame issus de `requestAnimationFrame`, draw calls, triangles, mémoire WebGL/JS, DPR, drawing buffer, dimensions natives PNG et taille du HTML autonome ;
-- contrats statiques des modules, profils clonés, traductions anglaises/françaises et rendu `high` au DPR natif.
+- transformations jusqu’à quatre niveaux, boutiques, trois toits, deux conversions et Commons ;
+- familles/variantes, focus, photo, qualité, effets et LOD orthographique ;
+- ville élevée, ville mixte, ville dense, caméra/inspection répétées et deux chartes River Pact ;
+- viewports 1280×720, 1920×1080 DPR 2, 390×844 DPR 2 et 3840×2160 ;
+- D1 : 12 combinaisons niveaux/toits ;
+- D2 : baseline/courant avec renderer effectif commun et intervalles RAF bruts ;
+- D3 : route naturelle automatisée, distincte de la partie manuelle de Nilo.
 
-Les scènes visuelles élevée, mixte et dense préparent explicitement la phase 4, 5000 € et 500 matériaux, comme `first-house-4k`, puis exécutent les vraies transformations et conversions publiques. Ces fixtures ne prouvent pas la jouabilité naturelle. Les deux parcours River Pact restent séparés et conservent leur budget naturel de 600 €. Les mesures sont faites en pause. Le mode headless demande SwiftShader : les chiffres décrivent cette configuration logicielle, pas les performances d'un GPU matériel.
+Les scènes visuelles préparent explicitement phase et ressources ; elles ne prouvent pas une progression naturelle. D3 et les playthroughs Node apportent cette preuve séparément. Les anciennes mesures SwiftShader sont conservées à part et ne sont pas mélangées au résultat RTX 3080.
 
-## Résultats
+## Rapports
 
-- [`DELIVERY.md`](DELIVERY.md) : synthèse de livraison, architecture, commandes, captures comparables, mesures et limites ;
-- [`d2-performance-comparison.md`](d2-performance-comparison.md) et [`d2-performance-results.json`](d2-performance-results.json) : comparaison séquentielle baseline/courant, au moins 10 s par vue sous SwiftShader, avec deltas p95 et captures séparées ;
-- `results.json` : rapport brut, actions, erreurs, métriques et environnement ;
-- `observed-results.md` : résultats effectivement observés lors de la dernière exécution navigateur ;
-- `static-results.md` : résultats et blocages des contrôles hors navigateur ;
-- `captures/` : PNG natifs, sans redimensionnement après capture.
+- [`DELIVERY.md`](DELIVERY.md) : synthèse complète A–D et limites ;
+- [`observed-results.md`](observed-results.md) et [`results.json`](results.json) : recette navigateur 5/5 ;
+- [`d1-roof-matrix-4k.md`](d1-roof-matrix-4k.md) : 12 combinaisons D1 ;
+- [`d2-performance-comparison.md`](d2-performance-comparison.md) et [`d2-performance-results.json`](d2-performance-results.json) : finale RTX 3080 D3D11, 601 intervalles/vue ;
+- [`d2-performance-initial.md`](d2-performance-initial.md) et [`d2-performance-initial.json`](d2-performance-initial.json) : preuves initiales préservées, captures dans `captures/d2-initial/` ;
+- [`d3-natural-results.json`](d3-natural-results.json) : route naturelle automatisée ;
+- [`static-results.md`](static-results.md) : contrôles hors navigateur ;
+- `captures/` : PNG natifs, sans redimensionnement documentaire.
 
-Un statut `blocked` signifie que le livrable autonome ne contient pas encore une API ou un manifeste requis. Un statut `failed` signale une erreur de recette ou de comportement. Dans les deux cas, le rapport reste écrit et la commande échoue ; les autres scénarios indépendants continuent afin de documenter ce qui a réellement été vérifié.
+Un statut `blocked` indique une API ou un asset absent du livrable testé. Un statut `failed` signale une erreur de recette ou de comportement. Les rapports initiaux et la baseline HTML ne sont pas écrasés lors des consolidations finales.

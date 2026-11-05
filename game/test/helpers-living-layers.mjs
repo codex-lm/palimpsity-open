@@ -54,6 +54,29 @@ export function machineInfo() {
   };
 }
 
+export function chromeRendererOptions(env = process.env) {
+  const mode = env.LIVING_LAYERS_RENDERER || "default";
+  if (mode === "default") return { mode, args: [] };
+  if (mode === "swiftshader") return { mode, args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] };
+  throw new Error(`Unsupported LIVING_LAYERS_RENDERER=${mode}; use default or swiftshader.`);
+}
+
+export function summarizeFrameIntervals(intervals) {
+  if (!Array.isArray(intervals) || !intervals.length || intervals.some(value => !Number.isFinite(value) || value <= 0)) {
+    throw new Error("RAF intervals must be a non-empty array of positive finite numbers.");
+  }
+  const durationMs = intervals.reduce((sum, value) => sum + value, 0);
+  const sorted = [...intervals].sort((a, b) => a - b);
+  return {
+    durationMs,
+    frames: intervals.length,
+    fps: intervals.length * 1000 / durationMs,
+    medianFrameMs: sorted[Math.floor((sorted.length - 1) * 0.5)],
+    p95FrameMs: sorted[Math.floor((sorted.length - 1) * 0.95)],
+    maxFrameMs: sorted.at(-1),
+  };
+}
+
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export class LivingLayersBrowser {
@@ -96,10 +119,12 @@ export class LivingLayersBrowser {
     const chrome = findChrome();
     assert.ok(chrome, "Chrome/Chromium not found; set CHROME_EXE.");
     this.chrome = chrome;
+    const renderer = chromeRendererOptions();
+    this.rendererMode = renderer.mode;
     this.child = spawn(chrome, [
       "--headless=new", "--no-first-run", "--no-default-browser-check", "--disable-extensions",
       "--disable-background-networking", "--disable-component-update", "--disable-sync",
-      "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--remote-allow-origins=*",
+      ...renderer.args, "--remote-allow-origins=*",
       "--remote-debugging-address=127.0.0.1", "--remote-debugging-port=0",
       `--user-data-dir=${this.profile}`, "--window-size=1280,720", "about:blank",
     ], { stdio: ["ignore", "ignore", "pipe"], windowsHide: true });

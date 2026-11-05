@@ -1,88 +1,120 @@
-# Living Layers — livraison et preuves
+# Living Layers — livraison du socle A–D
 
-## Fonctionnalités terminées
+## Périmètre terminé
 
-- Architecture propre à chaque bâtiment transformable, avec jusqu’à **quatre niveaux au total**, initialisée à la pose ou paresseusement pour les anciennes instances.
-- Boutiques en rez-de-chaussée conservant les logements supérieurs, avec consommation, ventes, énergie et distribution réellement simulées.
-- Trois familles constructives — **Banks**, **Works**, **Gardens** — et trois variantes résidentielles géométriques, avec étages correspondants.
-- Toits **traditionnel**, **jardin** et **productif**, sans ancien toit emprisonné entre les niveaux ; effets économiques et environnementaux distincts.
-- Deux conversions complètes : **Maintenance workshop** et **Neighborhood hall**, avec coûts, ancienneté minimale, historique et changement de rôle réel.
-- **Commons**, bâtiment civique autonome à tour d’horloge, sans empilement ni toit générique.
-- Inspecteur bilingue avec profils avant/après, confirmation atomique, historique et suivi de l’investissement pour le remboursement de démolition.
-- **Focus building**, visibilité des toits, qualités **High / Balanced / Low**, **Reduced effects**, mode photo et quatre ambiances lumineuses.
-- Interface anglaise par défaut et française à la demande, y compris offres, différences de profil et raisons de blocage.
+Cette passe consolide les chantiers **A, B et C**, les retours **NILO-001 à NILO-012**, puis les validations **D1, D2 et D3**. Elle ajoute notamment :
 
-## Architecture technique
+- architecture par instance avec jusqu’à **quatre niveaux au total**, boutiques en rez-de-chaussée et effets économiques réels ;
+- familles **Banks**, **Works**, **Gardens**, variantes géométriques et étages correspondants ;
+- toits **traditionnel**, **jardin** et **productif**, sans toit intermédiaire emprisonné ;
+- conversions **Maintenance workshop** et **Neighborhood hall**, historique et investissement suivi pour la démolition ;
+- **Commons** civique autonome, sans empilement ni toit générique ;
+- inspecteur bilingue avec avant/après complet, prévisualisation, confirmation atomique et focus bâtiment ;
+- palette de familles, qualités **High / Balanced / Low**, effets réduits, visibilité des toits, mode photo et ambiances ;
+- environnement enrichi avec **14 modules environment**, séparés des 45 modules Living Layers ;
+- corrections de revue incluant le **LOD orthographique**, le cadrage mobile, la sélection des modules et le banc de mesure RAF.
 
-Le moteur conserve `b.architecture` par instance et ne mute jamais le catalogue `BUILDINGS`. `profileOf`, `transformationOptions`, `transformationBlockReason` et `transformBuilding` constituent l’API commune ; les offres portent des profils effectifs `before/after` complets et clonés. Les conversions existantes restent distinctes via `conversionOptions` et `convertBuilding`.
+Les preuves de revue sont notamment conservées dans les captures River mobile bilingues (`NILO-001`), Commons (`NILO-006`), familles mobiles (`NILO-010`) et projections orthographiques (`NILO-011`). Le retour `NILO-012` concerne l’attribution : le statut `review`, refusé par le parseur LOB7, est remplacé par `included`, accepté avec les trois crédits conservés. Les cinq tests du calcul RAF et la méthode D2 finale couvrent séparément les corrections du banc de mesure.
 
-Le manifeste `game/art/diorama/asset-manifest.json` référence **84 GLB** : les assets existants et **45 modules Living Layers**. Les 18 bâtiments legacy gardent leurs modèles ; Commons utilise le module civique autonome. La hauteur d’un niveau est `0.48`. Le renderer assemble la base à `Y=0`, les étages à `Y=i×0.48`, puis un toit à `Y=floors×0.48`. Les bâtiments non modulaires continuent d’utiliser leur modèle legacy.
+L’attribution est **included** : `LOB7-ATTRIBUTION.json` contient les contributions LOB7 Enhancement et la contribution Kimi Living Layers avec ce statut. Aucune attribution n’est déduite d’un nom de branche ou d’un ancien HEAD.
 
-Le kit procédural est décrit dans le [catalogue Living Layers](../../game/art/LIVING_LAYERS.md). Les 45 modules couvrent neuf bases de maisons, six ateliers, trois entrepôts, trois boutiques, neuf étages, six toits traditionnels, trois toits jardins, trois toits productifs, le civique et deux conversions.
+## Architecture et assets
+
+Le moteur conserve `b.architecture` par instance sans mutation de `BUILDINGS`. Les transformations passent par `profileOf`, `transformationOptions`, `transformationBlockReason` et `transformBuilding` ; les conversions existantes utilisent `conversionOptions` et `convertBuilding`. Les offres contiennent des profils `before/after` complets et clonés.
+
+Le manifeste référence **98 GLB embarqués** :
+
+- **18 modèles legacy** ;
+- **45 modules Living Layers** ;
+- **14 modules environment** ;
+- les autres références existantes du diorama.
+
+La hauteur d’un niveau est `0.48`. Le renderer assemble la base à `Y=0`, chaque étage à `Y=i×0.48`, puis un toit unique à `Y=floors×0.48`. Les bâtiments non modulaires conservent leur modèle legacy. Le LOD orthographique conserve une échelle apparente cohérente lors des changements de projection et du zoom.
+
+Le [catalogue `game/art/LIVING_LAYERS.md`](../../game/art/LIVING_LAYERS.md) reste la référence pour les clés, ancrages, familles, matériaux et plafonds. Les `.blend` sont régénérables par les scripts Blender et ne constituent pas des sources indépendantes.
+
+## Vérifications et preuves
+
+| Contrôle | Résultat consigné | Preuve |
+|---|---|---|
+| Suite npm | **127/127 tests** | simulation, moteur, renderer, UI, localisation, assets et River Pact |
+| Calcul RAF | **5/5 tests**, comptés séparément des 127 | `test/d2-performance-calculation.mjs` |
+| Recette navigateur | **5/5 scénarios PASS** | [`observed-results.md`](observed-results.md) et [`results.json`](results.json) |
+| D1 — matrice étages/toits | **12 combinaisons PASS**, 1–4 niveaux × 3 toits | [`d1-roof-matrix-4k.md`](d1-roof-matrix-4k.md) |
+| D2 — comparaison finale | baseline/courant sur **RTX 3080 D3D11**, 8 vues, 601 intervalles/vue | [`d2-performance-comparison.md`](d2-performance-comparison.md) |
+| D3 — route naturelle automatisée | 600 €, charte Gardens, transformations et conversions par UI, victoire au tour 161 | [`d3-natural-results.json`](d3-natural-results.json) |
+| Partie jouée par Nilo, agent, via les commandes du navigateur | victoire au tour 161, **distincte** de D3 automatisée et non présentée comme un essai humain | non comptée comme assertion automatique ni comme mesure supplémentaire de cette consolidation |
+
+Les scènes élevée, mixte et dense de la recette préparent explicitement phase et ressources pour leurs fixtures. Elles ne remplacent pas les routes naturelles. D3 automatisée et la partie jouée par Nilo via les commandes du navigateur ne sont pas fusionnées en une seule preuve.
 
 ## Commandes
 
 Depuis `game/` :
 
 ```sh
-npm test                            # 100 tests exécutés et réussis
-npm run test:artifact               # correspondance source / standalone
-npm run test:living-layers-browser # recette standalone complète et captures natives
-npm run assets:diorama              # régénération, BLENDER_EXE requis
-npm run build                       # reconstruction du standalone sans Blender
+npm test                         # 127 tests, sans les 5 tests RAF séparés
+npm run test:d2-calculation      # 5 tests du calcul RAF
+npm run test:artifact            # correspondance source / standalone
+npm run test:living-layers-browser
+npm run test:d1                  # matrice des 12 combinaisons
+npm run test:d2                  # comparaison baseline/courant
+npm run test:d3                  # route naturelle automatisée
+npm run assets:diorama           # régénération, BLENDER_EXE requis
+npm run build                    # build HTML sans Blender
 ```
 
-Avec `npm run dev` dans un autre terminal :
+D1 et les recettes `test:first-house-4k` / `test:renderer-visual` utilisent le serveur de développement lorsqu’elles sont configurées avec leur URL par défaut. D2 charge directement les deux HTML autonomes. `LIVING_LAYERS_RENDERER=default` laisse Chrome choisir son renderer ; `swiftshader` reste une option explicite et distincte.
 
-```sh
-npm run test:first-house-4k         # ancrages, quatre niveaux, picking, focus et DPR 2
-npm run test:renderer-visual        # Commons autonome et visibilité des toits
-```
+## Captures principales
 
-La recette `test:living-layers-browser` utilise directement `dist/palimpsity-mvp.html`, hors ligne, dans un profil Chrome temporaire. `CHROME_EXE` peut sélectionner le navigateur et `LIVING_LAYERS_FRAMES` le nombre d’intervalles mesurés, 30 par défaut. Les rapports bruts sont [`results.json`](results.json) et [`observed-results.md`](observed-results.md) ; le contrôle fournisseur détaillé est dans [`first-house-4k.md`](first-house-4k.md).
+| Sujet | Liens |
+|---|---|
+| Premier bâtiment, un puis quatre niveaux | [Un niveau](captures/first-house-1-level.png) · [Quatre niveaux](captures/first-house-general.png) · [Zoom](captures/first-house-zoom-max.png) |
+| Prévisualisation architecturale | [Cartes](captures/architecture-preview-cards.png) · [Avant](captures/architecture-preview-before.png) · [Après](captures/architecture-preview-after.png) |
+| Neuf maisons et familles | [Neuf maisons](captures/c1-nine-houses.png) · [Familles jour](captures/environment-families-day.png) · [Familles golden hour](captures/environment-families-golden.png) |
+| Environnement et construction | [Avant](captures/environment-before-construction.png) · [Après](captures/environment-after-construction.png) · [Rapprochement golden hour](captures/environment-close-golden.png) |
+| D1, toit productif au niveau 4 | [Général 4K](captures/d1-house-4-productive-general.png) · [Zoom 4K](captures/d1-house-4-productive-zoom.png) · [Prévisualisation](captures/d1-preview-traditional-after.png) |
+| Deux conversions | [Maintenance workshop](captures/mixed-workshop-repair-close-inspector.png) · [Neighborhood hall](captures/mixed-warehouse-hall-close-inspector.png) |
+| Mobile | [Ville 390 CSS px, PNG 780×1688](captures/mixed-390x844-high-general.png) · [Inspecteur](captures/mixed-390x844-high-close-inspector.png) · [Familles NILO-010](captures/nilo-010-mobile-family.png) |
+| LOD orthographique | [Perspective équivalente](captures/nilo-011-perspective-equivalent.png) · [Perspective vers ortho](captures/nilo-011-perspective-close-to-ortho.png) · [Ortho vallée](captures/nilo-011-ortho-valley.png) · [Ortho zoom](captures/nilo-011-ortho-zoom.png) · [Ortho dézoom](captures/nilo-011-ortho-dezoom.png) |
+| D3 automatisée | [Inspecteur](captures/d3-natural-inspector.png) · [Photo golden hour](captures/d3-natural-photo-golden.png) · [Victoire](captures/d3-natural-victory.png) |
+| D2 final, ville dense courante | [High](captures/d2/d2-current-dense-high.png) · [Low](captures/d2/d2-current-dense-low.png) |
 
-## Captures comparables
+Les preuves D2 initiales sont préservées dans [`d2-performance-initial.md`](d2-performance-initial.md), [`d2-performance-initial.json`](d2-performance-initial.json) et `captures/d2-initial/`.
 
-Les liens ouvrent les PNG natifs, sans redimensionnement documentaire.
+## Performance finale D2 — RTX 3080
 
-| Sujet | Avant | Après / rapprochement |
-|---|---|---|
-| Maison Banks, un puis quatre niveaux, même cadrage DPR 2 | [Un niveau](captures/first-house-1-level.png) | [Quatre niveaux](captures/first-house-general.png) · [Zoom maximal](captures/first-house-zoom-max.png) |
-| Ville surélevée, 1280×720, même cadrage général | [Avant](captures/elevated-before-general.png) | [Après](captures/elevated-after-general.png) · [Inspecteur trois niveaux](captures/elevated-after-close-inspector.png) |
-| Ville mixte, 1280×720, même cadrage général | [Avant](captures/mixed-before-general.png) | [Après](captures/mixed-after-general.png) |
-| Conversions | [Maintenance workshop](captures/mixed-workshop-repair-close-inspector.png) | [Neighborhood hall](captures/mixed-warehouse-hall-close-inspector.png) |
-| Mobile, viewport CSS 390×844 à DPR 2 | [Vue générale 780×1688](captures/mixed-390x844-high-general.png) | [Inspecteur 780×1688](captures/mixed-390x844-high-close-inspector.png) |
-| Ville dense, même viewport et cadrage | [High, buffer 3840×2160](captures/dense-1920x1080-high-general.png) | [Low, buffer 1920×1080](captures/dense-1920x1080-low-general.png) |
-| Grand écran natif | [3840×2160 général](captures/mixed-3840x2160-general.png) | [3840×2160 rapproché](captures/mixed-3840x2160-close-inspector.png) |
-| River Pact | [Choix Garden commons](captures/river-gardens-after-charter.png) · [Victoire](captures/river-gardens-success-dialog.png) | [Choix Makers quarter](captures/river-workshops-after-charter.png) · [Victoire](captures/river-workshops-success-dialog.png) |
+Méthode : un seul Chrome avec `LIVING_LAYERS_RENDERER=default`, baseline puis courant chargés séquentiellement, mêmes scènes/caméra/fixtures/qualité/résolution et même renderer effectif. Viewport 1920×1080 à DPR 2, simulation en pause. Après au moins 5 s d’échauffement réel, chaque fenêtre exige au moins 10 s et 20 intervalles RAF. Durée et FPS sont calculés depuis la même somme d’intervalles bruts, conservés dans [`d2-performance-results.json`](d2-performance-results.json).
 
-L’inspection visuelle a porté sur les raccords de niveaux, l’absence de toits intermédiaires, les deux conversions, la netteté native, le mobile et la ville dense. Les captures `high/low` ont les mêmes dimensions de PNG ; seul le drawing buffer et la politique d’effets changent.
+Renderer commun relevé : **ANGLE / NVIDIA GeForce RTX 3080 / Direct3D11**. Chaque vue contient **601 intervalles RAF**.
 
-## Mesures effectivement observées
+| Scène | Qualité | FPS baseline / courant | Médiane baseline / courant | p95 baseline / courant | Delta p95 |
+|---|---|---|---|---|---:|
+| Petite ville | High | 60,00 / 60,00 | 16,70 / 16,70 ms | 16,80 / 16,80 ms | 0,000 % |
+| Petite ville | Low | 60,00 / 60,00 | 16,70 / 16,70 ms | 16,80 / 16,80 ms | 0,000 % |
+| Dense | High | 60,00 / 60,00 | 16,70 / 16,70 ms | 16,90 / 16,80 ms | **−0,592 %** |
+| Dense | Low | 60,00 / 60,00 | 16,70 / 16,70 ms | 16,80 / 16,90 ms | **+0,595 %** |
 
-Conditions : Windows x64, AMD Ryzen 9 5950X, Node 24.22.1, Chrome 156 headless, profil isolé, simulation en pause, **SwiftShader**. Chaque échantillon contient 30 intervalles `requestAnimationFrame` après 15 frames de préchauffage. Ce sont des observations de rendu logiciel, pas des objectifs ni des mesures de GPU matériel.
+Les deltas exacts vont de **−0,591716 % à +0,595238 %**. Les deux builds sont synchronisés autour de 60 FPS **sur ces scènes et dans ces conditions seulement**. Cela ne mesure pas une marge GPU disponible, ne garantit pas 60 FPS dans d’autres villes ou résolutions et ne constitue pas une validation matérielle générale.
 
-| Vue | FPS | Frame moyen | p95 | Draw calls | Triangles | DPR écran / renderer | Drawing buffer | JS heap utilisé |
-|---|---:|---:|---:|---:|---:|---|---|---:|
-| Mixte 1280×720 | 3,85 | 259,99 ms | 266,70 ms | 905 | 185 424 | 1 / 1 | 1280×720 | 56 800 000 o |
-| Mixte 1920×1080 High | 0,88 | 1131,64 ms | 1183,40 ms | 905 | 185 424 | 2 / 2 | 3840×2160 | 56 800 000 o |
-| Mixte mobile 390×844 High | 4,27 | 234,44 ms | 250,00 ms | 914 | 186 580 | 2 / 2 | 780×1688 | 56 800 000 o |
-| Mixte 3840×2160 | 0,89 | 1118,30 ms | 1150,00 ms | 905 | 185 424 | 1 / 1 | 3840×2160 | 56 800 000 o |
-| Dense 1920×1080 High | 0,77 | 1296,07 ms | 1350,00 ms | 1 311 | 235 799 | 2 / 2 | 3840×2160 | 56 800 000 o |
-| Dense 1920×1080 Low | 3,65 | 273,88 ms | 283,40 ms | 1 301 | 235 559 | 2 / 1 | 1920×1080 | 56 800 000 o |
+### Anciens résultats SwiftShader
 
-Le standalone mesuré fait **16 445 352 octets** (**2 668 053 octets gzip**), SHA-256 `49fba91a84a7c44da980f0bc228c2c0e04e49ab84e2fc666aef5ff3b2e64f4f0`.
+Les anciennes mesures SwiftShader sont des preuves de rendu logiciel distinctes, conservées dans [`observed-results.md`](observed-results.md) et les rapports D2 initiaux. Elles ne sont **pas mélangées** à la comparaison RTX 3080 et ne servent pas à estimer la performance matérielle.
 
-La recette navigateur finale passe les cinq scénarios : ville surélevée, ville mixte avec deux conversions et cycles caméra/inspection, ville dense `high/low`, puis les deux chartes River Pact. Les chartes conservent le budget naturel de 600 € et gagnent au tour 161. Aucune exception de page, erreur CDP ou requête externe n’a été observée.
+## Artefact exact
 
-## Limites honnêtes
+- Fichier : `dist/palimpsity-mvp.html`
+- Taille : **17 073 157 octets**
+- SHA-256 : `873ac161ec63c549067ad11d4c67379ab2df7ca140fda3b06ba86d3ac9b500fd`
 
-- **SwiftShader ne valide pas 60 FPS ni 30 FPS sur GPU.** Les valeurs ci-dessus sont lentes par construction et ne préjugent pas des pilotes ou performances matérielles.
-- Les scènes élevée, mixte et dense préparent explicitement phase 4 et ressources pour tester les contrats visuels ; elles ne démontrent pas une progression naturelle. Les routes River Pact et les playthroughs Node prouvent séparément la jouabilité à budget normal.
-- Pas de grandes emprises multi-cases, de passerelles ou de vue éclatée interactive dans cette livraison.
-- Les `.blend` sont régénérables par les scripts Blender ; ils ne constituent pas des sources indépendantes à éditer manuellement. Blender n’est nécessaire qu’à la régénération, pas au jeu ni au build HTML.
-- Les tests statiques et les captures ne remplacent pas une inspection sur d’autres GPU, navigateurs ou appareils tactiles physiques.
+L’identifiant du build mesuré est le couple taille/SHA-256 de l’artefact, pas un ancien HEAD. Cette variante source reste **non publiée** : `publicationFilesAreExplicitExport=false`.
 
-## Ajouter un module ou une famille
+## Limites et ajout de modules
 
-Suivre la procédure du [catalogue `game/art/LIVING_LAYERS.md`](../../game/art/LIVING_LAYERS.md#ajouter-un-étage-un-toit-ou-une-famille) : conserver l’empreinte `0.95×0.95`, les bases à `Y=0`, les niveaux à `0.48`, ajouter les clés au générateur et aux contrôles Node, régénérer puis vérifier géométrie, picking, assemblage et captures. Le catalogue reste la référence pour les clés, matériaux, exceptions civiques et plafonds de complexité.
+- Pas de grandes emprises multi-cases, de passerelles ou de vue éclatée interactive dans ce socle.
+- Les fixtures visuelles ne prouvent pas une progression naturelle ; D3 et les playthroughs Node conservent cette preuve séparément.
+- La partie manuelle de Nilo n’est pas revendiquée comme automatisation.
+- Les captures et un GPU ne remplacent pas d’autres navigateurs, GPU ou appareils tactiles physiques.
+- Blender est nécessaire uniquement pour régénérer les assets, pas pour jouer ou reconstruire le HTML.
+
+Pour ajouter un étage, un toit ou une famille, suivre la [procédure du catalogue](../../game/art/LIVING_LAYERS.md#ajouter-un-étage-un-toit-ou-une-famille) : conserver l’empreinte `0.95×0.95`, les bases à `Y=0`, les niveaux à `0.48`, enregistrer les clés dans le générateur et les contrôles Node, puis vérifier assemblage, picking et captures.

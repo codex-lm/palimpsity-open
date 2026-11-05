@@ -70,6 +70,7 @@ export class Renderer3D {
     this._environmentCellParts = new Map();
     this._environmentSignatures = new Map();
     this._environmentRebuiltCells = 0;
+    this._environmentDetailReduced = true;
     this._reactiveMaterials = [];
     this._people = [];
     this._buildingRotations = new WeakMap();
@@ -465,9 +466,17 @@ export class Renderer3D {
       if (!object.isMesh) return;
       const materials = Array.isArray(object.material) ? object.material : [object.material];
       const materialKey = materials.map(material => material?.uuid || "none").join(":");
+      const materialNames = materials.map(material => material?.name || "").join("|");
+      const lodStride = key.startsWith("vegetation_") || key.startsWith("furniture_")
+        || key === "ground_planted" && /pine|leaf|wood/.test(materialNames)
+        || (key === "ground_fertile" || key === "ground_soil") && materialNames === "wood"
+        || key.startsWith("bank_") && /leaf|mist/.test(materialNames)
+        || key === "quay_straight" && materialNames === "ochre"
+        || key === "ground_path" && /patina|plaster/.test(materialNames)
+        || key === "civic_plaza" && /patina|plum|ochre/.test(materialNames) ? 0 : 1;
       parts.push({
         id: `${object.geometry.uuid}:${materialKey}`, geometry: object.geometry, material: object.material,
-        matrix: object.matrixWorld.clone(), castShadow: object.castShadow, receiveShadow: object.receiveShadow,
+        matrix: object.matrixWorld.clone(), castShadow: object.castShadow, receiveShadow: object.receiveShadow, lodStride,
       });
     });
     this._environmentTemplateCache.set(key, parts);
@@ -488,7 +497,15 @@ export class Renderer3D {
   }
 
   _rebuildEnvironmentBatch(id, batch) {
-    const count = [...batch.cells.values()].reduce((sum, matrices) => sum + matrices.length, 0);
+    const stride = this._environmentDetailReduced ? batch.lodStride ?? 1 : 1;
+    const included = (cellKey, index) => {
+      if (stride === 1) return true;
+      if (stride === 0) return false;
+      const c = cellKey % COLS, r = Math.floor(cellKey / COLS);
+      const hash = Math.imul(c + 1, 73856093) ^ Math.imul(r + 1, 19349663) ^ Math.imul(index + 1, 83492791);
+      return (hash >>> 0) % stride === 0;
+    };
+    const count = [...batch.cells].reduce((sum, [cellKey, matrices]) => sum + matrices.filter((_, index) => included(cellKey, index)).length, 0);
     if (!count) {
       if (batch.mesh) this.disposeObj(batch.mesh);
       batch.mesh = null;
@@ -507,7 +524,9 @@ export class Renderer3D {
     const mesh = batch.mesh;
     mesh.count = count;
     let index = 0;
-    for (const matrices of batch.cells.values()) for (const matrix of matrices) mesh.setMatrixAt(index++, matrix);
+    for (const [cellKey, matrices] of batch.cells) for (let matrixIndex = 0; matrixIndex < matrices.length; matrixIndex++) {
+      if (included(cellKey, matrixIndex)) mesh.setMatrixAt(index++, matrices[matrixIndex]);
+    }
     mesh.instanceMatrix.needsUpdate = true;
     mesh.computeBoundingSphere();
   }
@@ -550,6 +569,17 @@ export class Renderer3D {
       this._environmentSignatures.set(cellKey, signature);
       this._rebuildEnvironmentCell(c, r, plan);
     }
+  }
+
+  _syncEnvironmentLod() {
+    const distance = this.camera.position.distanceTo(this.controls.target);
+    const projectedDistance = this.camera.isOrthographicCamera
+      ? (this.camera.top - this.camera.bottom) / Math.max(0.001, this.camera.zoom) / (2 * HALF_TAN)
+      : distance / Math.max(0.001, this.camera.zoom || 1);
+    const reduced = this.cameraScale === "valley" && (this._environmentDetailReduced ? projectedDistance > 20 : projectedDistance > 26);
+    if (reduced === this._environmentDetailReduced) return;
+    this._environmentDetailReduced = reduced;
+    for (const [id, batch] of this._environmentBatches) this._rebuildEnvironmentBatch(id, batch);
   }
 
   _syncDecor() {
@@ -1230,6 +1260,7 @@ export class Renderer3D {
     this._updateGhost(); // includes canPlace even when money/unlocks change under a still pointer
     this.applyLens();
     this.controls.update();
+    this._syncEnvironmentLod();
     this._updateFog();
     this.renderer.render(this.scene, this.camera);
   }
@@ -1244,6 +1275,7 @@ export class Renderer3D {
       decorCount: [...this.decorByCell.values()].filter(decor => decor.visible).length,
       environmentBatches: [...this._environmentBatches.values()].filter(batch => !!batch.mesh).length,
       environmentInstances: [...this._environmentBatches.values()].reduce((sum, batch) => sum + (batch.mesh?.count || 0), 0),
+      environmentLod: this._environmentDetailReduced ? "valley" : "full",
       environmentRebuiltCells: this._environmentRebuiltCells,
       peopleCount: this._people.filter(person => person.visible).length,
       smokeCount: this.smokePuffs.filter(puff => puff.visible).length, projectionMode: this.projectionMode,

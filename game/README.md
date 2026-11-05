@@ -142,7 +142,8 @@ this version.
 From `game/`:
 
 ```powershell
-npm test                           # 100 tests: simulation, Living Layers, UI/rendering, assets and bilingual checks
+npm test                           # 127 tests: simulation, Living Layers, UI/rendering, assets and bilingual checks
+npm run test:d2-calculation         # 5 separate RAF calculation tests
 npm run test:gameplay               # gameplay regressions and normal playthroughs
 npm run test:victory                # normal-budget victory playthroughs
 npm run test:ui                     # UI/rendering contracts, outside a browser
@@ -151,6 +152,9 @@ npm run test:localization           # French/English switching, saved preference
 npm run build                       # rebuild the standalone file
 npm run test:artifact               # compare the shipped code and assets with their sources
 npm run test:living-layers-browser # standalone browser recipe, native captures and measurements
+npm run test:d1                     # 12 floor/roof combinations
+npm run test:d2                     # baseline/current performance comparison
+npm run test:d3                     # automated natural-budget playthrough
 ```
 
 With `npm run dev` running in another terminal, two focused visual recipes are
@@ -167,10 +171,10 @@ that a complete playthrough is achievable. Node-based tests do not replace WebGL
 or human visual inspection; the browser recipes use an isolated Chrome profile
 and write their evidence under `../docs/living-layers/`.
 
-The November 4 integrated build passes `test:artifact`: embedded code matches its
-sources, with **18 legacy building models, 45 Living Layers modules and 84 embedded
-GLBs**. The asset generator separately checks **85 GLBs**, adding the presentation
-`terrain.glb` to the 84 references used by the game manifest. See
+The integrated Living Layers build passes `test:artifact`: embedded code matches its
+sources, with **18 legacy building models, 45 Living Layers modules, 14 environment
+modules and 98 embedded GLBs**. The asset generator separately checks **99 GLBs**,
+adding the presentation `terrain.glb` to the 98 references used by the game manifest. See
 [the delivery report](../docs/living-layers/DELIVERY.md) for actual browser results.
 
 ## Editable source and models

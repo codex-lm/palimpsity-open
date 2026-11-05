@@ -74,8 +74,8 @@ The inspector's **Focus building** button frames the selected structure. The
 effects and modular-roof visibility. Photo mode hides the interface and offers
 Day, Golden hour, Evening and Night lighting; Escape restores the interface.
 
-The standalone contains 18 legacy building models, 45 architectural modules and
-**84 embedded GLBs**. See the [player guide](game/README.md), the
+The standalone contains 18 legacy building models, 45 Living Layers modules,
+14 environment modules and **98 embedded GLBs**. See the [player guide](game/README.md), the
 [asset catalogue and regeneration guide](game/art/LIVING_LAYERS.md), and the
 [delivery notes with native captures and measurements](docs/living-layers/DELIVERY.md).
 
@@ -97,8 +97,9 @@ Blender generator and active game tests. Historical prototypes are not part of
 this distribution. No private project history is included.
 
 The standalone loader parses embedded GLBs directly from memory, without fetching
-data URLs. The current `npm test` run passes **100 tests**, including parsing all
-84 embedded GLBs with network requests disabled.
+data URLs. The current `npm test` run passes **127 tests**, including parsing all
+98 embedded GLBs with network requests disabled. Five additional RAF calculation
+checks run separately through `npm run test:d2-calculation`.
 The export keeps readable JavaScript whitespace so static analyzers can parse
 conditional decimal expressions without confusing them with optional chaining.
 
