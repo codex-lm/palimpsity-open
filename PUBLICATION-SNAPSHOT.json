@@ -1,22 +1,21 @@
 {
   "game": "Palimpsity",
-  "version": "0.1.2-river-pact",
-  "artifactSha256": "6c175309ca5f08324f8c8052d63b38a8cbb42d8b5abe73f9d1daf995005dc012",
-  "artifactBytes": 13339084,
-  "models": 18,
-  "referencedGlbs": 39,
+  "version": "living-layers-1.0.0",
+  "entrypoint": "index.html",
+  "artifactSha256": "e64d86ca4db435f693f26fbc90380b720032ba9700bc21a902e0ad5341979fb8",
+  "artifactBytes": 17378796,
+  "referencedGlbs": 102,
   "publicationFilesAreExplicitExport": true,
+  "editableSourceRepository": "https://github.com/codex-lm/palimpsity-open",
+  "editableSourceRef": "e8fe549a5a755f2e8d5d6d2406366e430189c8bf",
+  "gameplayCommit": "0a5ac8569175ec018a41b0cf531d73aae859e239",
+  "parentReleaseId": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
   "sourceChecks": {
-    "nodeTestsPassed": 73,
-    "embeddedGlbsParsedWithoutFetch": 39,
+    "nodeTestsPassed": 157,
+    "rafCalculationTestsPassed": 5,
     "sourceArtifactMatch": true
   },
   "browserValidation": {
-    "scope": "Recorded separately in the source PR; do not infer hosted validation from a build."
-  },
-  "buildFormat": "readable whitespace; compact identifiers and expressions",
-  "entrypoint": "index.html",
-  "editableSourceRepository": "https://github.com/codex-lm/palimpsity-open",
-  "editableSourceRef": "205dbee968b47b514554c597347680f4c0a45913",
-  "parentReleaseId": "br_s_e6d00f7a-74be-4cc7-8271-355f6da9e39a"
+    "scope": "Local reviewed game and final artifact smoke; see source docs/living-layers/DELIVERY.md. Hosted validation is recorded separately after publication."
+  }
 }

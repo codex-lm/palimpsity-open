@@ -1,6 +1,6 @@
 {
-  "title": "Palimpsity - River Pact",
-  "description": "Found two districts, choose between garden commons and makers quarters, and prepare for a forecast drought. Start River Pact in the side panel; advance five turns at a time or use the usual speed controls. Automatically produced by LOB7 Enhancement.",
+  "title": "Palimpsity - Living Layers",
+  "description": "Grow a modular city up to four levels, mix building uses and reshape its rooftops. In River Pact, connect districts with river quays, move real food and water surpluses, and prepare for a drought that halves transport capacity. Automatically produced by LOB7 Enhancement, with Kimi implementation and Nilo review.",
   "entrypoint": "index.html",
   "license": "CC0-1.0",
   "genre": [
@@ -18,7 +18,10 @@
     "English / Français: switch language without restarting.",
     "Start River Pact: a fresh three-act scenario. Choose a charter after Act I, then keep both districts supplied through the drought on turns 120-149.",
     "Advance 5 turns: run up to five real simulation turns and pause; stops at a choice or result. Pauses are free. Hiding the tab pauses; resume manually.",
-    "First Neighbourhood starts the earlier challenge (24 residents, 8 healthy turns, deadline 120). Classic city returns to a fresh original game."
+    "First Neighbourhood starts the earlier challenge (24 residents, 8 healthy turns, deadline 120). Classic city returns to a fresh original game.",
+    "Inspect a building to preview and confirm floors, roof changes or conversions; costs, needs and outputs are shown before spending.",
+    "Choose Banks, Works or Gardens for the building palette. Focus, camera views, photo mode and quality settings help inspect the city.",
+    "River quays unlock in phase 2. Rotate with R before placement: connect two districts to the same water basin and inspect the last-turn flows."
   ],
   "credits": [
     "Created by Cédric, developed with AI assistance from Codex, Claude and Kimi.",

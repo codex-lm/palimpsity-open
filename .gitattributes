@@ -1,0 +1,2 @@
+# Preserve the exact reviewed standalone bytes.
+index.html -text
