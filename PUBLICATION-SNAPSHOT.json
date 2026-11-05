@@ -1,21 +1,23 @@
 {
   "game": "Palimpsity",
-  "version": "living-layers-1.0.0",
+  "version": "living-layers-1.0.1",
   "entrypoint": "index.html",
-  "artifactSha256": "e64d86ca4db435f693f26fbc90380b720032ba9700bc21a902e0ad5341979fb8",
-  "artifactBytes": 17378796,
+  "artifactSha256": "ae2c4e773fce51275f32b9eedbd1a75113bf4cce10fa6f86b1b13ed09a464b78",
+  "artifactBytes": 17278335,
   "referencedGlbs": 102,
   "publicationFilesAreExplicitExport": true,
   "editableSourceRepository": "https://github.com/codex-lm/palimpsity-open",
-  "editableSourceRef": "e8fe549a5a755f2e8d5d6d2406366e430189c8bf",
+  "editableSourceRef": "02a4648cab0073248ae8c0be9b7167b2d8fc1341",
   "gameplayCommit": "0a5ac8569175ec018a41b0cf531d73aae859e239",
   "parentReleaseId": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
   "sourceChecks": {
-    "nodeTestsPassed": 157,
-    "rafCalculationTestsPassed": 5,
-    "sourceArtifactMatch": true
+    "nodeTestsPassed": 166,
+    "sourceArtifactMatch": true,
+    "realGlbTestsPassed": 8
   },
   "browserValidation": {
-    "scope": "Local reviewed game and final artifact smoke; see source docs/living-layers/DELIVERY.md. Hosted validation is recorded separately after publication."
-  }
+    "scope": "Local Edge close zoom/rotations and IAB 4K render. Hosted validation recorded after preparation/publication."
+  },
+  "previousReleaseId": "br_s_01d5d1b9-52c9-41b8-849d-912d7b2cd3c4",
+  "variantId": "bv_s_80c6ce13-7b83-4638-a4a4-9ab24ce5ae61"
 }

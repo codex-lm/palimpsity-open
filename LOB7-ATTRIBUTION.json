@@ -5,6 +5,13 @@
       "kind": "agent",
       "name": "LOB7 Enhancement",
       "status": "included",
+      "url": "https://github.com/codex-lm/palimpsity-open/commit/02a4648cab0073248ae8c0be9b7167b2d8fc1341",
+      "summary": "Continuous riverbanks and grounded reeds make the shoreline clearer, even up close."
+    },
+    {
+      "kind": "agent",
+      "name": "LOB7 Enhancement",
+      "status": "included",
       "url": "https://github.com/codex-lm/palimpsity-open/commit/e8fe549a5a755f2e8d5d6d2406366e430189c8bf",
       "summary": "Grow a modular skyline, reshape rooftops and trade food and water between districts with river quays."
     },
