@@ -84,7 +84,7 @@ export class CityEngine {
       reportsShown: new Set(),
       events: { logisticsFired: false, heatFired: false, maintFired: false },
       districts: [],                       // bilans par quartier (UI / explication)
-      riverNetworks: [], riverFlows: [],
+      riverNetworks: [], riverFlows: [], riverFlowTick: null,
       outcome: null,                       // "victory" | "defeat" | null
       outcomeInfo: null,
     };
@@ -144,9 +144,14 @@ export class CityEngine {
     return b;
   }
 
+  invalidateRiverFlowsForQuay(b) {
+    const involvesQuay = quay => quay.c === b.c && quay.r === b.r;
+    this.state.riverFlows = this.state.riverFlows.filter(flow => !involvesQuay(flow.sourceQuay) && !involvesQuay(flow.destinationQuay));
+  }
   removeAt(c, r) {
     const b = this.occ?.[r]?.[c];
     if (!b) return false;
+    if (b.def.id === "river_quay") this.invalidateRiverFlowsForQuay(b);
     this.state.buildings = this.state.buildings.filter(x => x !== b);
     this.occ[r][c] = null;
     const invested = Number.isFinite(b.investedMoney) ? b.investedMoney : (b.def.cost?.money || 0);
@@ -428,7 +433,9 @@ export class CityEngine {
       b.heatFuelLh = lh;
       heatField[b.r][b.c] = Math.max(0, lh - need);
     }
-    if (this.state.buildings.some(b => b.def.id === "river_quay" && b.disabled)) this.computeDistricts();
+    const disabledQuays = this.state.buildings.filter(b => b.def.id === "river_quay" && b.disabled);
+    for (const b of disabledQuays) this.invalidateRiverFlowsForQuay(b);
+    if (disabledQuays.length) this.computeDistricts();
   }
   localHeatAt(c, r) { return this.heatField[r][c] || 0; }
   localCongAt(c, r) { return this.congField[r][c] || 0; }
@@ -542,7 +549,7 @@ export class CityEngine {
         + Math.max(0, Math.min(b.age - 30, 80)) * 0.02 * (p.tags.includes("repairable") ? 0.4 : 1);
     }
     cons.money += upkeep;
-    this.computeDistricts();
+    this.computeDistricts(s.tick + 1);
 
     let storageN = 0;
     for (const b of s.buildings) if (!b.disabled && this.profileOf(b).tags.includes("storage")) storageN++;
@@ -713,9 +720,9 @@ export class CityEngine {
     for (let cell = { c: end.c, r: end.r }; cell; cell = parent.get(`${cell.c},${cell.r}`)) path.push(cell);
     return path.reverse();
   }
-  computeRiverNetworks(districts) {
-    const s = this.state, basins = this.waterBasins(), weather = this.riverNetworkMultiplier();
-    s.riverNetworks = []; s.riverFlows = [];
+  computeRiverNetworks(districts, riverFlowTick = null) {
+    const s = this.state, basins = this.waterBasins(), weather = this.riverNetworkMultiplier(), executedFlows = [];
+    s.riverNetworks = [];
     for (const basin of basins) {
       const best = new Map();
       for (const b of s.buildings) {
@@ -754,7 +761,7 @@ export class CityEngine {
           if (sent <= 1e-9) continue;
           const sourceQuay = quayFor(id), destinationQuay = quayFor(destination.id);
           source[resource + "Exports"] += sent; destination[resource + "Imports"] += sent; remaining -= sent;
-          s.riverFlows.push({
+          executedFlows.push({
             basin: basin.id, resource, amount: sent, sourceDistrict: id, destinationDistrict: destination.id,
             sourceQuay: { c: sourceQuay.c, r: sourceQuay.r, quaySide: { ...sourceQuay.quaySide } },
             destinationQuay: { c: destinationQuay.c, r: destinationQuay.r, quaySide: { ...destinationQuay.quaySide } },
@@ -763,6 +770,10 @@ export class CityEngine {
           });
         }
       }
+    }
+    if (riverFlowTick !== null) {
+      s.riverFlows = executedFlows;
+      s.riverFlowTick = riverFlowTick;
     }
   }
   quayInfo(b) {
@@ -782,11 +793,11 @@ export class CityEngine {
     return {
       basin: basin?.id ?? null, otherDistricts: network ? network.districts.filter(id => id !== districtOf(b.c, b.r)) : [],
       activity, nominalCapacity: 12, effectiveCapacity: network?.effectiveCapacity ?? 0,
-      flows, status, reductionReason: network?.reductionReason ?? null,
+      network, flowTick: this.state.riverFlowTick, flows, status, reductionReason: network?.reductionReason ?? null,
     };
   }
 
-  computeDistricts() {
+  computeDistricts(riverFlowTick = null) {
     const districts = Array.from({ length: 4 }, (_, id) => ({
       id, name: DISTRICT_NAMES[id], pop: 0, foodOut: 0, waterOut: 0, distribution: 0, demand: 0, count: 0,
       foodNeed: 0, waterNeed: 0, foodUse: 0, waterUse: 0,
@@ -835,7 +846,7 @@ export class CityEngine {
         }
       }
     }
-    this.computeRiverNetworks(districts);
+    this.computeRiverNetworks(districts, riverFlowTick);
     for (const [id, d] of districts.entries()) {
       d.distributionCapacity = 36 + d.distribution * 8 + d.networkCapacity * 8;
       d.distributionEfficiency = clamp(d.distributionCapacity / Math.max(36, d.demand), 0.2, 1);

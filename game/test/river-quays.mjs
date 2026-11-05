@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CityEngine } from '../src/engine.js';
-import { RiverCityEngine } from '../src/river-pact.js';
+import { RiverCityEngine, RiverPact } from '../src/river-pact.js';
 import { BUILDINGS, UPKEEP } from '../src/data.js';
 
 function engine(Engine = CityEngine) {
@@ -32,7 +32,7 @@ function networkFixture({ food = 10, water = 10, needFood = 8, needWater = 8 } =
   const southwest = quay(e, 4, 6);
   resourceBuilding(e, 0, 6, { out: { food, water } });
   resourceBuilding(e, 0, 0, { need: { food: needFood, water: needWater } });
-  e.computeDistricts();
+  e.computeDistricts(1);
   return { e, northwest, alternate, southwest };
 }
 function assertWaterPath(e, flow) {
@@ -97,7 +97,7 @@ test('four orthogonal water basins and an explicit single quay side prevent diag
   const multi = quay(e, 1, 2);
   assert.deepEqual(multi.quaySide, { c: 1, r: 3 }, 'N/E/S/W deterministic orientation');
   const tiny = quay(e, 0, 3, 1, { c: 0, r: 2 });
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.notEqual(e.quayBasin(multi).id, e.quayBasin(tiny).id);
   assert.deepEqual(e.state.riverNetworks, []);
   const explicit = engine();
@@ -110,7 +110,7 @@ test('four orthogonal water basins and an explicit single quay side prevent diag
 test('one quay or two in one district waits for another district', () => {
   const e = engine();
   const first = quay(e, 2, 5), second = quay(e, 6, 5);
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.deepEqual(e.state.riverNetworks, []);
   assert.equal(e.quayInfo(first).status, 'waiting');
   assert.equal(e.quayInfo(second).status, 'waiting');
@@ -144,7 +144,7 @@ test('the highest-activity quay represents its district without adding another b
   const { e, northwest, alternate } = networkFixture({ food: 20, water: 0, needFood: 20, needWater: 0 });
   northwest.activity = 0.5;
   alternate.activity = 1;
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.equal(e.state.riverNetworks[0].effectiveCapacity, 12);
   assert.ok(e.state.riverFlows.every(flow => flow.destinationQuay.c === alternate.c));
   assert.equal(e.state.riverFlows.reduce((sum, flow) => sum + flow.amount, 0), 12);
@@ -167,7 +167,7 @@ test('suspending another basin only invalidates that basin', () => {
   const { e } = networkFixture({ food: 1, water: 0, needFood: 1, needWater: 0 });
   quay(e, 7, 2);
   const other = quay(e, 9, 3);
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.equal(e.state.riverNetworks.length, 2);
   const basin = e.state.riverFlows[0].basin, tick = e.state.tick;
   other.disabled = true;
@@ -179,37 +179,37 @@ test('suspending another basin only invalidates that basin', () => {
   assert.equal(e.state.riverFlows[0].amount, 1);
 });
 
-test('suspending the selected quay recomputes the route through its active alternate without duplication', () => {
+test('suspending the selected quay recomputes only the current route and invalidates its dated cargo', () => {
   const { e, northwest, alternate } = networkFixture({ food: 1, water: 0, needFood: 1, needWater: 0 });
   const tick = e.state.tick;
   northwest.disabled = true;
   e.recomputeFields();
   assert.equal(e.state.tick, tick);
   assert.equal(e.state.riverNetworks.length, 1);
-  assert.equal(e.state.riverFlows.length, 1);
-  assert.equal(e.state.riverFlows[0].amount, 1);
-  assert.equal(e.state.riverFlows[0].destinationQuay.c, alternate.c);
+  assert.deepEqual(e.state.riverFlows, [], 'No replacement cargo is invented before the next tick');
+  assert.equal(e.state.riverNetworks[0].quays.find(quay => quay.district === 0).c, alternate.c);
   assert.equal(e.state.districts[0].foodImports, 1);
   assert.equal(e.state.districts[2].foodExports, 1);
   assert.equal(e.quayInfo(northwest).status, 'suspended');
-  assert.equal(e.quayInfo(alternate).status, 'active');
+  assert.equal(e.quayInfo(alternate).status, 'no_surplus');
+  assert.equal(e.quayInfo(alternate).flowTick, 1);
 });
 
 test('crew shortage reduces the shared basin and zero crew or suspension invalidates it immediately', () => {
   const { e, northwest, southwest } = networkFixture({ food: 20, water: 0, needFood: 20, needWater: 0 });
   southwest.activity = 0.5;
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.equal(e.state.riverNetworks[0].effectiveCapacity, 6);
   assert.equal(e.state.riverNetworks[0].reductionReason, 'crew');
   assert.equal(e.state.riverFlows[0].amount, 6);
   assert.equal(e.quayInfo(southwest).status, 'crew');
   southwest.activity = 0;
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.deepEqual(e.state.riverNetworks, []);
   assert.equal(e.quayInfo(southwest).status, 'crew');
   assert.equal(e.quayInfo(northwest).status, 'waiting');
   southwest.activity = 1;
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.equal(e.state.riverFlows.length, 1);
   const tick = e.state.tick;
   southwest.disabled = true;
@@ -234,7 +234,7 @@ test('demolition invalidates routes immediately without an economic tick', () =>
 test('land transport consumes surplus first and a river basin never doubles it', () => {
   const { e } = networkFixture({ food: 20, water: 0, needFood: 20, needWater: 0 });
   e.transportNetworks = () => [{ districts: [0, 2], capacity: 5, nodes: [] }];
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.equal(e.state.riverFlows.reduce((sum, flow) => sum + flow.amount, 0), 12);
   assert.equal(e.state.districts[2].foodExports, 17);
   assert.equal(e.state.districts[0].foodImports, 17);
@@ -245,14 +245,55 @@ test('land transport consumes surplus first and a river basin never doubles it',
 test('an operational basin without available surplus or deficit reports no_surplus and no flow', () => {
   const e = engine();
   const first = quay(e, 2, 5), second = quay(e, 4, 6);
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.equal(e.state.riverNetworks.length, 1);
   assert.deepEqual(e.state.riverFlows, []);
   assert.equal(e.quayInfo(first).status, 'no_surplus');
   assert.equal(e.quayInfo(second).status, 'no_surplus');
   resourceBuilding(e, 0, 6, { out: { food: 20 } });
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.deepEqual(e.state.riverFlows, [], 'A surplus without any deficit is not transported');
+});
+
+test('pause construction preserves the dated cargo ledger until the next economic tick', () => {
+  const e = new RiverCityEngine(), pact = new RiverPact(e);
+  for (const [c, r] of [[0, 6], [1, 6], [2, 6], [3, 6], [6, 6], [7, 6], [0, 8]]) assert.ok(e.place('house', c, r));
+  assert.ok(e.place('well', 6, 7)); assert.ok(e.place('well', 5, 7));
+  assert.ok(e.place('farm', 4, 7)); assert.ok(e.place('workshop', 3, 7)); assert.ok(e.place('market', 2, 7));
+  const advanceTo = target => {
+    while (e.state.tick < target) {
+      e.tick(); pact.update();
+      if (pact.awaitingCharter) assert.equal(pact.chooseCharter('workshops'), true);
+    }
+  };
+  advanceTo(7);
+  for (const [c, r] of [[0, 0], [1, 0]]) assert.ok(e.place('house', c, r));
+  assert.ok(e.place('well', 5, 0)); assert.ok(e.place('market', 3, 0)); assert.ok(e.place('workshop', 4, 0));
+  advanceTo(17);
+  assert.ok(e.place('farm', 1, 7));
+  advanceTo(27);
+  const northwest = e.place('river_quay', 2, 5), southwest = e.place('river_quay', 4, 6);
+  assert.ok(northwest && southwest);
+  advanceTo(28);
+  const food = e.state.riverFlows.find(flow => flow.resource === 'food');
+  const water = e.state.riverFlows.find(flow => flow.resource === 'water');
+  assert.equal(food.amount, 4);
+  assert.ok(Math.abs(water.amount - 1.7496597908508473) < 1e-9);
+  assert.equal(e.state.riverFlowTick, 28);
+  assert.ok(e.place('house', 2, 0));
+  const pausedHouse = JSON.stringify({ flows: e.state.riverFlows, tick: e.state.riverFlowTick });
+  const duplicate = e.place('river_quay', 6, 5);
+  assert.ok(duplicate);
+  assert.equal(JSON.stringify({ flows: e.state.riverFlows, tick: e.state.riverFlowTick }), pausedHouse);
+  assert.equal(e.state.tick, 28);
+  assert.equal(e.quayInfo(northwest).flowTick, 28);
+  e.tick(); pact.update();
+  assert.equal(e.state.tick, 29);
+  assert.equal(e.state.riverFlowTick, 29);
+  assert.notEqual(JSON.stringify(e.state.riverFlows), pausedHouse);
+  assert.equal(e.state.riverFlows.find(flow => flow.resource === 'food').amount, 5);
+  const nextWater = e.state.riverFlows.find(flow => flow.resource === 'water').amount;
+  assert.ok(Number.isFinite(nextWater) && nextWater > 0 && nextWater !== water.amount);
 });
 
 test('a real tick computes crews before replacing the flow record and transferring shared capacity', () => {
@@ -268,7 +309,7 @@ test('a real tick computes crews before replacing the flow record and transferri
   assert.equal(e.state.riverFlows.find(flow => flow.resource === 'food').amount, 8);
   assert.equal(e.state.riverFlows.find(flow => flow.resource === 'water').amount, 4);
   const records = e.state.riverFlows;
-  e.computeDistricts();
+  e.computeDistricts(1);
   assert.equal(e.state.riverFlows.length, records.length, 'Recomputation replaces rather than accumulates flows');
   assert.equal(e.state.riverFlows.reduce((sum, flow) => sum + flow.amount, 0), 12);
 });
