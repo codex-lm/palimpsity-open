@@ -72,9 +72,18 @@ export class RiverCityEngine extends CityEngine {
     const kind = t < startsAt ? "normal" : t < endsAt ? "drought" : "recovery";
     return { kind, multiplier: kind === "drought" ? waterMultiplier : 1, startsAt, endsAt };
   }
+  riverNetworkMultiplier() {
+    const { startsAt, endsAt } = PACT.drought;
+    const turn = this._producingTurn ?? this.state.tick;
+    return turn >= startsAt && turn < endsAt ? 0.5 : 1;
+  }
   tick() {
     this._producingTurn = this.state.tick + 1;
     try { super.tick(); } finally { this._producingTurn = null; }
+  }
+  endGame(outcome, reason) {
+    if (outcome === "victory") return;
+    super.endGame(outcome, reason);
   }
   profileOf(building) {
     const profile = super.profileOf(building);

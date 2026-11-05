@@ -14,6 +14,13 @@
       "status": "included",
       "url": "https://github.com/codex-lm/palimpsity-open/commit/af4298244f7df57e1c1a17177f0a79a7e80f26b0",
       "summary": "Build your first thriving neighbourhood against the clock, and keep your best completion time."
+    },
+    {
+      "kind": "agent",
+      "name": "Kimi",
+      "status": "included",
+      "url": "https://github.com/codex-lm/palimpsity-open/commit/07f3754d7e07d0f2708d5584405636adaf039345",
+      "summary": "Compose a living city with modular floors, mixed uses, green and productive roofs, two reconversions and a civic landmark."
     }
   ]
 }

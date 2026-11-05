@@ -4,9 +4,11 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { UI } from '../src/ui.js';
 import { CityEngine } from '../src/engine.js';
+import { BUILDINGS } from '../src/data.js';
 import { Renderer3D } from '../src/render3d.js';
 
 class InspectorBoundary {
@@ -48,6 +50,7 @@ function fixture() {
     engine, renderer: { sync() { syncs++; } },
     $: { inspector, 'objectives-summary': {}, 'objectives-list': {} },
     showInspector: UI.prototype.showInspector,
+    renderQuayInspector: UI.prototype.renderQuayInspector,
     update() { this.showInspector(this.inspectBuilding); UI.prototype.renderObjectives.call(this); },
   };
   return { engine, workshop, inspector, ui, syncs: () => syncs };
@@ -60,6 +63,53 @@ test('l’inspecteur explique la condition bloquante et désactive la rénovatio
   assert.ok(option.reason);
   assert.ok(inspector.innerHTML.includes(option.reason));
   assert.equal(inspector.querySelectorAll('[data-conversion]')[0].disabled, true);
+});
+
+test('NILO-003 Commons affiche le blocage exact sans offres de travaux', () => {
+  const { engine, inspector, ui } = fixture();
+  engine.state.phase = 3; engine.state.res.money = 1000; engine.state.res.materials = 20;
+  engine.state.unlocked.add('commons');
+  const commons = engine.place('commons', 0, 0);
+  assert.ok(commons);
+  ui.showInspector(commons);
+  assert.ok(inspector.innerHTML.includes('This civic building cannot be expanded.'));
+  assert.doesNotMatch(inspector.innerHTML, /living-layers|data-transform-preview|data-transform-confirm/);
+});
+
+test('LOT015 quay affiche bassin, équipage, capacité et flux datés sans activité vide', () => {
+  const { engine, inspector, ui } = fixture();
+  engine.state.phase = 2; engine.state.unlocked.add('river_quay'); engine.state.res.money = 1000; engine.state.res.materials = 100;
+  const quay = engine.place('river_quay', 2, 5);
+  ui.showInspector(quay);
+  assert.ok(inspector.innerHTML.includes('River network'));
+  assert.ok(inspector.innerHTML.includes('No completed-turn flow'));
+  assert.ok(inspector.innerHTML.includes('0 / 12 units per turn'));
+  assert.ok(inspector.innerHTML.includes('0.5 €/turn · 2 workers · 0.4 maintenance demand'));
+  assert.ok(inspector.innerHTML.includes('data-quay-partner disabled'));
+
+  const second = engine.place('river_quay', 4, 6);
+  quay.activity = second.activity = 1;
+  const outputDef = { ...BUILDINGS.farm, tags: [], inputs: {}, outputs: { food: 10, water: 10 }, ext: {} };
+  engine.state.buildings.push({ def: outputDef, c: 0, r: 6, age: 0, disabled: false, activity: 1, flowOutput: { food: 10, water: 10 }, flowInput: {}, grossMaintenance: 0 });
+  engine.occ[6][0] = engine.state.buildings.at(-1);
+  const needDef = { ...BUILDINGS.farm, tags: [], inputs: { food: 8, water: 8 }, outputs: {}, ext: {} };
+  engine.state.buildings.push({ def: needDef, c: 0, r: 0, age: 0, disabled: false, activity: 1, flowOutput: {}, flowInput: { food: 8, water: 8 }, grossMaintenance: 0 });
+  engine.occ[0][0] = engine.state.buildings.at(-1);
+  engine.computeDistricts(1);
+  ui.renderer.focusQuayPartner = () => {};
+  ui.showInspector(quay);
+  assert.ok(inspector.innerHTML.includes('12 / 12 units per turn'));
+  assert.ok(inspector.innerHTML.includes('Last completed turn: 1'));
+  assert.ok(inspector.innerHTML.includes('Import: 8 food'));
+  assert.ok(inspector.innerHTML.includes('Import: 4 water'));
+  assert.ok(!inspector.innerHTML.includes('data-quay-partner disabled'));
+
+  const duplicate = engine.place('river_quay', 3, 5);
+  duplicate.activity = 0.5;
+  engine.computeDistricts(2);
+  ui.showInspector(duplicate);
+  assert.ok(engine.quayInfo(duplicate).otherDistricts.length > 0);
+  assert.ok(!inspector.innerHTML.includes('data-quay-partner disabled'), 'A secondary quay can focus a partner in another district');
 });
 
 test('la commande de rénovation paie le moteur, actualise le profil et conserve le modèle', () => {
@@ -77,6 +127,20 @@ test('la commande de rénovation paie le moteur, actualise le profil et conserve
   assert.equal(inspector.querySelectorAll('[data-conversion]').length, 0);
   assert.equal(document.activeElement, inspector.converted);
   assert.equal(syncs(), 1);
+});
+
+test('NILO-007 les deux bannières séparent la coche et le nom converti', () => {
+  const { engine, workshop, inspector, ui } = fixture();
+  engine.state.phase = 3; workshop.age = 30; engine.state.res.materials = 100; engine.state.res.money = 1000;
+  engine.convertBuilding(workshop, 'workshop_repair');
+  ui.showInspector(workshop);
+  assert.match(inspector.innerHTML, /class="conversion-check" aria-hidden="true">✓<\/span> <span class="converted-name">Maintenance workshop/);
+  engine.state.unlocked.add('warehouse');
+  const warehouse = engine.place('warehouse', 2, 7);
+  warehouse.age = 20;
+  engine.convertBuilding(warehouse, 'warehouse_hall');
+  ui.showInspector(warehouse);
+  assert.match(inspector.innerHTML, /class="conversion-check" aria-hidden="true">✓<\/span> <span class="converted-name">Neighborhood hall/);
 });
 
 test('un contrôle devenu périmé ne rénove pas un bâtiment démoli', () => {
@@ -145,4 +209,90 @@ test('la lentille usure tient compte de l’entretien plutôt que du seul âge',
   assert.equal(engine.state.buildings[0].age, 130);
   assert.notEqual(mesh.material.color.getHex(), unattended);
   assert.equal(mesh.material.color.getHex(), context._lensColors.maintenance[0].getHex());
+});
+
+function focusFixture() {
+  const control = visible => ({
+    isConnected: true,
+    closest() { return null; },
+    getClientRects() { return visible ? [{}] : []; },
+    setAttribute() {},
+    focus() { document.activeElement = this; },
+  });
+  const canvas = control(true), toggle = control(true), display = control(true), hidden = control(false);
+  globalThis.document = {
+    activeElement: null,
+    body: { classList: { toggle() {} } },
+    getElementById(id) { return id === 'cv' ? canvas : null; },
+  };
+  return { canvas, toggle, display, hidden };
+}
+
+test('la fermeture du tiroir cible le bouton visible puis le canvas en repli', () => {
+  const { canvas, toggle } = focusFixture();
+  const ui = { sideOpen: true, $: { 'side-toggle': toggle } };
+  UI.prototype.setSideOpen.call(ui, false);
+  assert.equal(document.activeElement, toggle);
+  toggle.getClientRects = () => [];
+  ui.sideOpen = true;
+  UI.prototype.setSideOpen.call(ui, false);
+  assert.equal(document.activeElement, canvas);
+});
+
+test('la sortie photo ignore les retours masqués par CSS et garde un focus visible', () => {
+  const { canvas, toggle, display, hidden } = focusFixture();
+  const ui = {
+    photoMode: true, photoTime: 'day', photoReturnFocus: hidden,
+    renderer: { setPhotoMode() {} }, h: { onPhotoMode() {} },
+    $: { 'photo-controls': toggle, 'display-toggle': display },
+  };
+  UI.prototype.setPhotoMode.call(ui, false);
+  assert.equal(document.activeElement, display);
+  display.getClientRects = () => [];
+  ui.photoMode = true;
+  UI.prototype.setPhotoMode.call(ui, false);
+  assert.equal(document.activeElement, canvas);
+});
+
+test('le refund affiché vient du crédit réel et P reste inerte derrière une modale', () => {
+  const source = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
+  assert.match(source, /const moneyBefore = engine\.state\.res\.money/);
+  assert.match(source, /engine\.state\.res\.money - moneyBefore/);
+  assert.doesNotMatch(source, /building\.def\.cost\?\.money[^\n]*0\.4/);
+  assert.match(source, /document\.querySelector\("#modal\.on, #end\.on, #challenge-end\.on, #river-dialog\.on"\)\) return/);
+});
+
+test('les contrôles mobiles du défi et du statut conservent leurs propres zones', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /#challenge\{position:fixed;top:94px;right:10px/);
+  assert.match(html, /#placement-status\{bottom:145px;max-width:calc\(100vw - 20px\)\}/);
+});
+
+test('A3 sépare charge et apport d’entretien, coût argent et singuliers', () => {
+  const engine = new CityEngine();
+  engine.state.phase = 4; engine.state.res.money = 1000; engine.state.res.materials = 100;
+  const house = engine.place('house', 0, 0);
+  const singular = UI.prototype.renderTransformationPreview.call({}, engine.transformationOptions(house).find(option => option.id === 'variant_1'));
+  assert.match(singular, /1 floor/);
+  assert.match(singular, /1 material/);
+  assert.match(singular, /data-architecture-comparison/);
+  assert.match(singular, /unchanged-details/);
+  assert.match(singular, /No economic changes\./);
+  const use = UI.prototype.renderTransformationPreview.call({}, engine.transformationOptions(house).find(option => option.id === 'base_shop'));
+  assert.doesNotMatch(use, /data-architecture-comparison/);
+  assert.equal(engine.transformBuilding(house, 'add_floor'), true);
+  assert.equal(engine.transformBuilding(house, 'add_floor'), true);
+  const option = engine.transformationOptions(house).find(item => item.id === 'add_floor');
+  const demand = UI.prototype.renderTransformationPreview.call({}, option);
+  assert.match(demand, /Maintenance demand \(engine units\)/);
+  assert.match(demand, /Upkeep \(€ \/ turn\)/);
+  assert.match(demand, /data-tone="cost"/);
+  const provided = UI.prototype.renderTransformationPreview.call({}, {
+    ...option,
+    before: { ...option.before, ext: { maintenance: -3 } },
+    after: { ...option.after, ext: { maintenance: -6 } },
+  });
+  assert.match(provided, /Maintenance provided \(engine units\)/);
+  assert.match(provided, /<td>6<\/td>/);
+  assert.doesNotMatch(provided, /<td>-6<\/td>/);
 });

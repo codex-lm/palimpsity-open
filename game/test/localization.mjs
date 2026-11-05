@@ -79,7 +79,7 @@ test('locale subscribers can update the current screen and unsubscribe', () => {
 });
 
 test('the whole building catalog and dynamic messages have French equivalents', () => {
-  const expected = ['Maison', 'Puits', 'Ferme', 'Atelier', 'Marché local', 'Chemin', 'Parc', 'Route', 'Centrale thermique', 'Usine', 'Entrepôt central', "Station d'eau", 'Immeuble dense', 'Dépôt local', 'Tram', 'Centre de maintenance', 'Serre chauffée', 'Centre de recyclage'];
+  const expected = ['Maison', 'Puits', 'Ferme', 'Atelier', 'Marché local', 'Chemin', 'Parc', 'Route', 'Centrale thermique', 'Usine', 'Entrepôt central', "Station d'eau", 'Quai fluvial', 'Immeuble dense', 'Dépôt local', 'Tram', 'Communs', 'Centre de maintenance', 'Serre chauffée', 'Centre de recyclage'];
   assert.deepEqual(Object.values(BUILDINGS).map(building => translate(building.name, 'fr')), expected);
   for (const building of Object.values(BUILDINGS)) assert.notEqual(translate(building.desc, 'fr'), building.desc, `${building.id} description needs French copy`);
   assert.equal(translate('Choose a tile for house · R to rotate', 'fr'), 'Choisis une case pour maison · R pour pivoter');
@@ -89,6 +89,49 @@ test('the whole building catalog and dynamic messages have French equivalents', 
   assert.equal(translate('65 € + 20 materials', 'fr'), '65 € + 20 matériaux');
   assert.equal(translate('An unfamiliar technical error', 'fr'), 'An unfamiliar technical error');
   assert.equal(translate('House', 'en'), 'House');
+});
+
+test('Living Layers shop profiles, tags and controls have complete French copy', () => {
+  const engine = new CityEngine();
+  engine.state.phase = 4;
+  engine.state.res.money = 1000;
+  engine.state.res.materials = 100;
+  const building = engine.place('house', 0, 0);
+  assert.equal(engine.transformBuilding(building, 'base_shop'), true);
+  const profile = engine.profileOf(building);
+  assert.equal(profile.name, 'Ground-floor shop');
+  assert.equal(translate(profile.name, 'fr'), 'Boutique au rez-de-chaussée');
+  assert.equal(translate(profile.desc, 'fr'), 'Une boutique au rez-de-chaussée avec du personnel, des livraisons locales et des logements aux étages. Ses besoins en nourriture, eau et énergie sont réels.');
+  assert.equal(translate('commercial', 'fr'), 'marchand');
+  assert.equal(translate('dense', 'fr'), 'densifié');
+  assert.equal(translate('Living Layers', 'fr'), 'Couches vivantes');
+  assert.equal(translate('Pause', 'fr'), 'Pause');
+  assert.equal(translate('This civic building cannot be expanded.', 'fr'), 'Ce bâtiment civique ne peut pas être agrandi.');
+  assert.equal(translate('Apply changes', 'fr'), 'Appliquer les modifications');
+  assert.equal(translate('Maintenance demand (engine units)', 'fr'), 'Demande d’entretien (unités moteur)');
+  assert.equal(translate('Maintenance provided (engine units)', 'fr'), 'Entretien fourni (unités moteur)');
+  assert.equal(translate('Upkeep (€ / turn)', 'fr'), 'Coût d’entretien (€ / tour)');
+  assert.equal(translate('1 floor', 'fr'), '1 niveau');
+  assert.equal(translate('Cost: 8 € + 1 material', 'fr'), 'Coût : 8 € + 1 matériau');
+  assert.equal(translate('Changes applied: Original details · Spent 8 € + 1 material', 'fr'), 'Modifications appliquées : Détails d’origine · Dépense : 8 € + 1 matériau');
+  assert.equal(translate('Levels', 'fr'), 'Niveaux');
+  assert.equal(translate('Use', 'fr'), 'Usage');
+  assert.equal(translate('Roof', 'fr'), 'Toit');
+  assert.equal(translate('Appearance', 'fr'), 'Apparence');
+  assert.equal(translate('Current', 'fr'), 'Actuel');
+  assert.equal(translate('Potential income (€ / turn)', 'fr'), 'Revenus potentiels (€ / tour)');
+  assert.equal(translate('No economic changes.', 'fr'), 'Aucun changement économique.');
+  assert.equal(translate('Unchanged values (3)', 'fr'), 'Valeurs inchangées (3)');
+  assert.equal(translate('1–2 of 7 · Scroll for more', 'fr'), '1–2 sur 7 · Faire défiler');
+  const commons = BUILDINGS.commons;
+  assert.equal(translate(`${commons.name}, 105 € + 8 materials. ${commons.desc}`, 'fr'), `Communs, 105 € + 8 matériaux. ${translate(commons.desc, 'fr')}`);
+  assert.equal(translate(`${commons.desc} Cost: 105 € + 8 materials`, 'fr'), `${translate(commons.desc, 'fr')} Coût : 105 € + 8 matériaux`);
+  assert.equal(translate('River quay', 'fr'), 'Quai fluvial');
+  assert.equal(translate('Waiting for a partner district', 'fr'), 'En attente d’un quartier partenaire');
+  assert.equal(translate('Last completed turn: 1', 'fr'), 'Dernier tour terminé : 1');
+  assert.equal(translate('Import: 8 food ← northwest district', 'fr'), 'Import : 8 nourriture ← quartier nord-ouest');
+  assert.equal(translate('0.5 €/turn · 2 workers · 0.4 maintenance demand', 'fr'), '0.5 €/tour · 2 travailleurs · 0.4 demande d’entretien');
+  assert.equal(translate('Place river quay · 60 € + 4 materials · Enter to confirm', 'fr'), 'Poser quai fluvial · 60 € + 4 matériaux · Entrée pour confirmer');
 });
 
 class TextBoundary {

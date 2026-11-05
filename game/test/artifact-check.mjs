@@ -7,7 +7,9 @@ import path from 'node:path';
 import * as esbuild from 'esbuild';
 
 const game = fileURLToPath(new URL('../', import.meta.url));
-const source = readFileSync(path.resolve(game, '../dist/palimpsity-mvp.html'), 'utf8');
+const artifactPath = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve(game, '../dist/palimpsity-mvp.html');
+const sourceBytes = readFileSync(artifactPath);
+const source = sourceBytes.toString('utf8');
 assert.match(source, /<html\b[^>]*\blang="en"/i, 'The delivered game declares English as its language');
 const manifest = JSON.parse(readFileSync(path.join(game, 'art/diorama/asset-manifest.json'), 'utf8'));
 const prefix = 'window.__PALIMPSITY_ASSET_MANIFEST=';
@@ -17,7 +19,10 @@ assert.ok(start >= 0 && middle > start && end > middle, 'Offline asset data must
 const embeddedManifest = JSON.parse(source.slice(start + prefix.length, middle));
 const assets = JSON.parse(source.slice(middle + separator.length, end));
 assert.deepEqual(embeddedManifest, manifest, 'The deliverable embeds the current manifest');
-assert.equal(Object.keys(manifest.models).length, 18);
+const legacyModels = Object.keys(manifest.models || {});
+assert.ok(legacyModels.length > 0, 'Legacy buildings retain their models');
+assert.equal(manifest.models.commons, undefined, 'Commons is intentionally modular rather than legacy');
+assert.match(manifest.layers?.modules?.base_civic?.file || '', /\.glb$/i, 'Commons has a civic base module');
 const files = new Set();
 function collect(value) {
   if (typeof value === 'string' && /\.glb$/i.test(value)) files.add(value);
@@ -50,5 +55,14 @@ const bundle = await esbuild.build({
 });
 const js = bundle.outputFiles[0].text.replace(/<\/script/gi, '<\\/script').replace(/[ \t]+$/gm, '');
 assert.ok(!js.includes('./art/diorama/'), 'Standalone code must not retain development asset URLs');
-assert.ok(source.includes(`<script type="module">\n${js}\n</script>`), 'The actual delivered code exactly matches the current source bundle');
-console.log(JSON.stringify({ result: 'PASS', sourceBundleMatches: true, models: 18, embeddedGLBs: files.size, bytes: Buffer.byteLength(source), sha256: createHash('sha256').update(source).digest('hex'), browserValidation: false }, null, 2));
+const normalizeLines = text => text.replace(/\r\n?/g, '\n');
+const expectedScript = `<script type="module">\n${normalizeLines(js)}\n</script>`;
+const scriptMatches = html => normalizeLines(html).includes(expectedScript);
+assert.ok(scriptMatches(source), 'The complete delivered JavaScript matches the source bundle after CRLF/LF normalization');
+const sourceLF = normalizeLines(source), sourceCRLF = sourceLF.replace(/\n/g, '\r\n');
+assert.ok(scriptMatches(sourceLF), 'LF line endings are accepted');
+assert.ok(scriptMatches(sourceCRLF), 'CRLF line endings are accepted');
+const mutatedSource = sourceLF.replace(expectedScript, () => `<script type="module">\n/* deliberate JS mutation */\n${normalizeLines(js)}\n</script>`);
+assert.notEqual(mutatedSource, sourceLF, 'The mutation fixture really changes inline JavaScript');
+assert.equal(scriptMatches(mutatedSource), false, 'A real JavaScript mutation is detected');
+console.log(JSON.stringify({ result: 'PASS', sourceBundleMatches: true, lineEndingCoverage: ['LF', 'CRLF'], mutationDetected: true, legacyModels: legacyModels.length, modular: !manifest.models.commons, embeddedGLBs: files.size, bytes: sourceBytes.length, sha256: createHash('sha256').update(sourceBytes).digest('hex'), browserValidation: false }, null, 2));

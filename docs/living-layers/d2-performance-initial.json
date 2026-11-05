@@ -1,0 +1,501 @@
+{
+  "generatedAt": "2026-11-05T00:31:44.646Z",
+  "machine": {
+    "platform": "win32",
+    "architecture": "x64",
+    "node": "v24.22.1",
+    "processor": "AMD Ryzen 9 5950X 16-Core Processor            ",
+    "logicalProcessors": 32,
+    "totalMemoryBytes": 68645154816
+  },
+  "conditions": {
+    "browser": "one isolated headless Chrome process; baseline and current loaded sequentially",
+    "viewport": {
+      "id": "1920x1080-dpr2",
+      "width": 1920,
+      "height": 1080,
+      "dpr": 2
+    },
+    "scenes": "identical public place/transformBuilding fixtures, homeCamera(true), day, roofs visible, reduced effects false, simulation paused",
+    "warmupMs": 5000,
+    "minimumSampleMs": 10000,
+    "gpuValidation": false,
+    "note": "SwiftShader is reported separately from hardware GPUs; these observations do not validate hardware performance."
+  },
+  "baselineEvidence": "C:\\dev\\lob7-publication-flow\\.work\\kimi-palimpsity-living-layers-artifacts\\baseline-results-70c306f.json",
+  "artifacts": [
+    {
+      "id": "baseline",
+      "file": "C:\\dev\\lob7-publication-flow\\.work\\kimi-palimpsity-living-layers-artifacts\\baseline-70c306f.html",
+      "url": "file:///C:/dev/lob7-publication-flow/.work/kimi-palimpsity-living-layers-artifacts/baseline-70c306f.html",
+      "bytes": 16445352,
+      "gzipBytes": 2668053,
+      "sha256": "49fba91a84a7c44da980f0bc228c2c0e04e49ab84e2fc666aef5ff3b2e64f4f0"
+    },
+    {
+      "id": "current",
+      "file": "C:\\dev\\lob7-publication-flow\\.work\\kimi-palimpsity-living-layers\\dist\\palimpsity-mvp.html",
+      "url": "file:///C:/dev/lob7-publication-flow/.work/kimi-palimpsity-living-layers/dist/palimpsity-mvp.html",
+      "bytes": 17072793,
+      "gzipBytes": 2772778,
+      "sha256": "7904f1105f831815e8d33aaf1e710c9ab2cab03173b1e467314bed71f59c534b"
+    }
+  ],
+  "measurements": [
+    {
+      "scene": "small",
+      "quality": "high",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 5488.200000047684,
+      "durationMs": 10298.599999904633,
+      "frames": 9,
+      "fps": 0.8739051910049271,
+      "medianFrameMs": 1016.6000000000058,
+      "p95FrameMs": 1066.5999999999985,
+      "maxFrameMs": 1100.0999999999985,
+      "drawCalls": 940,
+      "triangles": 190073,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 2,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "baseline"
+    },
+    {
+      "scene": "small",
+      "quality": "low",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 5168.600000143051,
+      "durationMs": 10124.799999952316,
+      "frames": 48,
+      "fps": 4.740834386874413,
+      "medianFrameMs": 200,
+      "p95FrameMs": 216.6999999999971,
+      "maxFrameMs": 233.39999999999418,
+      "drawCalls": 940,
+      "triangles": 190073,
+      "drawingBuffer": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "baseline"
+    },
+    {
+      "scene": "dense",
+      "quality": "high",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 5715.200000047684,
+      "durationMs": 11024.099999904633,
+      "frames": 9,
+      "fps": 0.8163931749601199,
+      "medianFrameMs": 1100.1000000000058,
+      "p95FrameMs": 1150,
+      "maxFrameMs": 1166.6000000000058,
+      "drawCalls": 1343,
+      "triangles": 240199,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 2,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "baseline"
+    },
+    {
+      "scene": "dense",
+      "quality": "low",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 5103.5,
+      "durationMs": 10111,
+      "frames": 40,
+      "fps": 3.9560874295321926,
+      "medianFrameMs": 250,
+      "p95FrameMs": 266.6000000000058,
+      "maxFrameMs": 283.3000000000029,
+      "drawCalls": 1343,
+      "triangles": 240199,
+      "drawingBuffer": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "baseline"
+    },
+    {
+      "scene": "small",
+      "quality": "high",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 5414.099999904633,
+      "durationMs": 10814,
+      "frames": 9,
+      "fps": 0.8322544849269465,
+      "medianFrameMs": 1083.199999999997,
+      "p95FrameMs": 1100,
+      "maxFrameMs": 1116.6000000000058,
+      "drawCalls": 957,
+      "triangles": 203393,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 2,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "current"
+    },
+    {
+      "scene": "small",
+      "quality": "low",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 5185.700000047684,
+      "durationMs": 10109.400000095367,
+      "frames": 44,
+      "fps": 4.352384909053447,
+      "medianFrameMs": 216.70000000001164,
+      "p95FrameMs": 233.39999999999418,
+      "maxFrameMs": 250,
+      "drawCalls": 957,
+      "triangles": 203393,
+      "drawingBuffer": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "current"
+    },
+    {
+      "scene": "dense",
+      "quality": "high",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 6086,
+      "durationMs": 10024,
+      "frames": 7,
+      "fps": 0.6983240223463687,
+      "medianFrameMs": 1283.2999999999884,
+      "p95FrameMs": 1316.6000000000058,
+      "maxFrameMs": 1316.699999999997,
+      "drawCalls": 1360,
+      "triangles": 248687,
+      "drawingBuffer": {
+        "width": 3840,
+        "height": 2160
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 2,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "current"
+    },
+    {
+      "scene": "dense",
+      "quality": "low",
+      "viewport": {
+        "id": "1920x1080-dpr2",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "warmupMs": 5037.200000047684,
+      "durationMs": 10322.600000143051,
+      "frames": 36,
+      "fps": 3.487493460901431,
+      "medianFrameMs": 266.70000000001164,
+      "p95FrameMs": 350,
+      "maxFrameMs": 433.29999999998836,
+      "drawCalls": 1360,
+      "triangles": 248687,
+      "drawingBuffer": {
+        "width": 1920,
+        "height": 1080
+      },
+      "canvasCss": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1,
+      "reducedEffects": false,
+      "cameraScale": "valley",
+      "tickBefore": 0,
+      "tickAfter": 0,
+      "webgl": {
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "jsHeap": {
+        "usedBytes": 56800000
+      },
+      "artifact": "current"
+    }
+  ],
+  "comparisons": [
+    {
+      "scene": "small",
+      "quality": "high",
+      "baselineP95Ms": 1066.5999999999985,
+      "currentP95Ms": 1100,
+      "deltaP95Percent": 3.1314457153573505,
+      "exceedsAbsolute10Percent": false
+    },
+    {
+      "scene": "small",
+      "quality": "low",
+      "baselineP95Ms": 216.6999999999971,
+      "currentP95Ms": 233.39999999999418,
+      "deltaP95Percent": 7.706506691277025,
+      "exceedsAbsolute10Percent": false
+    },
+    {
+      "scene": "dense",
+      "quality": "high",
+      "baselineP95Ms": 1150,
+      "currentP95Ms": 1316.6000000000058,
+      "deltaP95Percent": 14.486956521739636,
+      "exceedsAbsolute10Percent": true
+    },
+    {
+      "scene": "dense",
+      "quality": "low",
+      "baselineP95Ms": 266.6000000000058,
+      "currentP95Ms": 350,
+      "deltaP95Percent": 31.282820705173425,
+      "exceedsAbsolute10Percent": true
+    }
+  ],
+  "screenshots": [
+    {
+      "artifact": "baseline",
+      "scene": "small",
+      "quality": "high",
+      "name": "d2-baseline-small-high.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1398506
+    },
+    {
+      "artifact": "baseline",
+      "scene": "small",
+      "quality": "low",
+      "name": "d2-baseline-small-low.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1224598
+    },
+    {
+      "artifact": "baseline",
+      "scene": "dense",
+      "quality": "high",
+      "name": "d2-baseline-dense-high.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1767374
+    },
+    {
+      "artifact": "baseline",
+      "scene": "dense",
+      "quality": "low",
+      "name": "d2-baseline-dense-low.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1564922
+    },
+    {
+      "artifact": "current",
+      "scene": "small",
+      "quality": "high",
+      "name": "d2-current-small-high.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1605791
+    },
+    {
+      "artifact": "current",
+      "scene": "small",
+      "quality": "low",
+      "name": "d2-current-small-low.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1465549
+    },
+    {
+      "artifact": "current",
+      "scene": "dense",
+      "quality": "high",
+      "name": "d2-current-dense-high.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1965548
+    },
+    {
+      "artifact": "current",
+      "scene": "dense",
+      "quality": "low",
+      "name": "d2-current-dense-low.png",
+      "width": 3840,
+      "height": 2160,
+      "bytes": 1814352
+    }
+  ],
+  "errors": [],
+  "browser": {
+    "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.80",
+    "revision": "@fb096c0011f9d50f0a264a9376420cdea9c421e3",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.27"
+  },
+  "status": "passed",
+  "browserClosed": true
+}

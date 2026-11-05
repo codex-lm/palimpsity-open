@@ -46,6 +46,11 @@ export const EXACT_FR = {
   "Stores and distributes goods. Efficient during early industrial growth, but creates dependence on a single vulnerable hub.": "Stocke et redistribue. Très efficace au début de l'industrialisation — mais crée une dépendance à un hub unique et fragile.",
   "Water treatment plant": "Station d'eau",
   "Supplies water efficiently at scale, but relies on energy and central infrastructure. Old wells become vital again during outages and crises.": "Traite l'eau à grande échelle, efficace. Mais dépend du réseau et de l'énergie : en panne ou en crise, les vieux puits redeviennent vitaux.",
+  "River quay": "Quai fluvial",
+  "river quay": "quai fluvial",
+  "Two quays in different districts on the same water basin share food and water surpluses. River transport is halved during the drought.": "Deux quais dans des quartiers différents sur le même bassin partagent les surplus de nourriture et d'eau. Le transport fluvial est réduit de moitié pendant la sécheresse.",
+  "A river quay needs an adjacent water tile.": "Un quai fluvial doit être adjacent à une case d'eau.",
+  "Choose one adjacent water tile for the quay.": "Choisis une case d'eau adjacente pour le quai.",
   "Apartment building": "Immeuble dense",
   "Houses many residents in a small space, but adds heat, local demand and pressure on services.": "Loge beaucoup d'habitants, efficace spatialement. Mais augmente chaleur, besoins locaux et pression sur les services.",
   "Local depot": "Dépôt local",
@@ -161,6 +166,7 @@ export const EXACT_FR = {
   "Underserved districts and local congestion": "Quartiers mal desservis et congestion locale",
   "Unmet maintenance needs in each district": "Charge d'entretien non couverte dans chaque quartier",
   "Build": "Construire",
+  "House family": "Famille des maisons",
   "Choose a building, then an empty tile": "Choisis un modèle, puis une case libre",
   "Demolish a building and recover 40% of its cost": "Démolir un bâtiment et récupérer 40 % de son coût",
   "Thriving city": "Ville accomplie",
@@ -348,7 +354,163 @@ export const EXACT_FR = {
   "Try again": "Réessayer",
   "Back to classic city": "Retour à la ville classique",
   "New best time!": "Nouveau meilleur temps !",
-  "A side challenge — the Thriving city victory stays the classic mode's goal.": "Un défi à part — la victoire Ville accomplie reste le but du mode classique."
+  "A side challenge — the Thriving city victory stays the classic mode's goal.": "Un défi à part — la victoire Ville accomplie reste le but du mode classique.",
+  "Display and photo mode": "Affichage et mode photo",
+  "City panels": "Panneaux de la ville",
+  "Close panels": "Fermer les panneaux",
+  "Panels": "Panneaux",
+  "View preferences": "Préférences d’affichage",
+  "Display & photo": "Affichage et photo",
+  "Close display settings": "Fermer les réglages d’affichage",
+  "Rendering quality": "Qualité de rendu",
+  "High": "Élevée",
+  "Balanced": "Équilibrée",
+  "Low": "Basse",
+  "Reduced effects": "Effets réduits",
+  "Limits animation and visual effects.": "Limite les animations et les effets visuels.",
+  "Photo mode": "Mode photo",
+  "Hide the interface, orbit freely and choose the light. Press Escape to return.": "Masque l’interface, tourne librement autour de la ville et choisis la lumière. Échap pour revenir.",
+  "Enter photo mode": "Entrer en mode photo",
+  "Photo lighting": "Lumière de la photo",
+  "Day": "Jour",
+  "Golden hour": "Heure dorée",
+  "Evening": "Crépuscule",
+  "Night": "Nuit",
+  "Exit photo mode": "Quitter le mode photo",
+  "Focus building": "Centrer sur le bâtiment",
+  "Current output": "Production actuelle",
+  "Current needs": "Besoins actuels",
+  "Transformation preview": "Aperçu de la transformation",
+  "Before confirmation": "Avant confirmation",
+  "Close preview": "Fermer l’aperçu",
+  "Effect": "Effet",
+  "Before": "Avant",
+  "After": "Après",
+  "Appearance only · no economic advantage.": "Apparence uniquement · aucun avantage économique.",
+  "Available now.": "Disponible maintenant.",
+  "No capacity, needs, production or service changes.": "Aucun changement de capacité, besoin, production ou service.",
+  "Confirm transformation": "Confirmer la transformation",
+  "Preview transformation": "Aperçu de la transformation",
+  "Transform this building": "Transformer ce bâtiment",
+  "Review every effect before spending anything.": "Examine chaque effet avant de dépenser quoi que ce soit.",
+  "Confirm repurposing": "Confirmer la reconversion",
+  "Building history": "Historique du bâtiment",
+  "No transformations recorded yet.": "Aucune transformation enregistrée pour le moment.",
+  "Housing": "Logement",
+  "Shop": "Boutique",
+  "Warehouse": "Entrepôt",
+  "Civic": "Civique",
+  "Traditional roof": "Toit traditionnel",
+  "Garden roof": "Toit-jardin",
+  "Productive roof": "Toit productif",
+  "Banks": "Rives",
+  "Works": "Fabriques",
+  "Gardens": "Jardins",
+  "Floors": "Niveaux",
+  "Housing capacity": "Capacité de logement",
+  "Worker capacity": "Capacité de main-d’œuvre",
+  "Income": "Revenus",
+  "Food production": "Production de nourriture",
+  "Water production": "Production d’eau",
+  "Energy production": "Production d’énergie",
+  "Materials production": "Production de matériaux",
+  "Trust services": "Confiance produite",
+  "Food need": "Besoin de nourriture",
+  "Water need": "Besoin d’eau",
+  "Energy need": "Besoin d’énergie",
+  "Materials need": "Besoin de matériaux",
+  "Worker need": "Besoin de travailleurs",
+  "Money need": "Besoin d’argent",
+  "Heat need": "Besoin de chaleur",
+  "Heat output": "Chaleur produite",
+  "Cooling": "Refroidissement",
+  "Maintenance service": "Service d’entretien",
+  "Distribution service": "Service de distribution",
+  "Distribution capacity": "Capacité de distribution",
+  "Upkeep": "Entretien",
+  "Show modular roofs": "Afficher les toits modulaires",
+  "Hide roofs to inspect the upper floors.": "Masque les toits pour examiner les étages.",
+  "Commons": "Communs",
+  "A shared hall, lookout and garden. Provides nearby services, care and cooling through paid staff and real water use.": "Un hall partagé, un belvédère et un jardin. Offre des services de proximité, du soin et du rafraîchissement grâce à du personnel salarié et à une réelle consommation d’eau.",
+  "Add a floor": "Ajouter un niveau",
+  "Extend this building by one level, adding its per-floor capacity and resource demand.": "Ajoute un niveau au bâtiment, avec la capacité et les besoins en ressources correspondants.",
+  "Restore housing": "Rétablir le logement",
+  "Replace the ground-floor shop with six homes while keeping every upper floor.": "Remplace la boutique du rez-de-chaussée par six logements en conservant tous les étages.",
+  "Open a ground-floor shop": "Ouvrir une boutique au rez-de-chaussée",
+  "Trade the six ground-floor homes for local distribution and sales; upper homes remain.": "Remplace les six logements du rez-de-chaussée par une distribution locale et des ventes ; les logements des étages sont conservés.",
+  "A simple roof with no production or environmental bonus.": "Un toit simple, sans bonus de production ni d’environnement.",
+  "Add cooling and amenity using extra water. This is a roof, not a park.": "Ajoute rafraîchissement et agrément en consommant davantage d’eau. C’est un toit, pas un parc.",
+  "Solar greenhouse roof": "Toit serre solaire",
+  "Grow food and generate solar power on the roof using a reliable water supply.": "Produit de la nourriture et de l’électricité solaire sur le toit grâce à un approvisionnement fiable en eau.",
+  "Banks style": "Style des rives",
+  "Apply the riverside architectural family without changing the building's function.": "Applique la famille architecturale des rives sans changer la fonction du bâtiment.",
+  "Works style": "Style des fabriques",
+  "Apply the makers' architectural family without changing the building's function.": "Applique la famille architecturale des fabriques sans changer la fonction du bâtiment.",
+  "Gardens style": "Style des jardins",
+  "Apply the garden architectural family without changing the building's function.": "Applique la famille architecturale des jardins sans changer la fonction du bâtiment.",
+  "Original details": "Détails d’origine",
+  "Restore the original architectural details.": "Rétablit les détails architecturaux d’origine.",
+  "Alternate details": "Détails alternatifs",
+  "Apply alternate architectural details without changing the building's function.": "Applique des détails architecturaux alternatifs sans changer la fonction du bâtiment.",
+  "Civic details": "Détails civiques",
+  "Apply a third set of architectural details without changing the building's function.": "Applique un troisième jeu de détails architecturaux sans changer la fonction du bâtiment.",
+  "This building cannot be transformed.": "Ce bâtiment ne peut pas être transformé.",
+  "This civic building cannot be expanded.": "Ce bâtiment civique ne peut pas être agrandi.",
+  "A reconverted building cannot be transformed.": "Un bâtiment reconverti ne peut pas être transformé.",
+  "This transformation is not available for this building.": "Cette transformation n’est pas disponible pour ce bâtiment.",
+  "This building already has four floors.": "Ce bâtiment a déjà quatre niveaux.",
+  "This transformation is already applied.": "Cette transformation est déjà appliquée.",
+  "This variant assembles the same building modules.": "Cette variante assemble les mêmes modules du bâtiment.",
+  "Neighborhood hall": "Maison de quartier",
+  "Turn an aging central warehouse into a staffed neighborhood hall, giving up central storage for local services and trust.": "Transforme un vieil entrepôt central en maison de quartier avec du personnel, en remplaçant le stockage central par des services locaux et de la confiance.",
+  "The former warehouse now hosts neighborhood services. It has no central storage capacity and relies on food, staff and funding.": "L’ancien entrepôt accueille désormais des services de quartier. Il n’a plus de capacité de stockage central et dépend de nourriture, de personnel et de financement.",
+  "social": "social",
+  "Living Layers": "Couches vivantes",
+  "Pause": "Pause",
+  "Ground-floor shop": "Boutique au rez-de-chaussée",
+  "A staffed ground-floor shop with local deliveries and upper-floor homes. Its food, water and energy needs are real.": "Une boutique au rez-de-chaussée avec du personnel, des livraisons locales et des logements aux étages. Ses besoins en nourriture, eau et énergie sont réels.",
+  "commercial": "marchand",
+  "dense": "densifié",
+  "distribution": "distribution",
+  "local": "local",
+  "Apply changes": "Appliquer les modifications",
+  "Cancel": "Annuler",
+  "Maintenance demand (engine units)": "Demande d’entretien (unités moteur)",
+  "Maintenance provided (engine units)": "Entretien fourni (unités moteur)",
+  "Upkeep (€ / turn)": "Coût d’entretien (€ / tour)",
+  "This transformation could not be applied.": "Cette transformation n’a pas pu être appliquée.",
+  "Levels": "Niveaux",
+  "Use": "Usage",
+  "Roof": "Toit",
+  "Appearance": "Apparence",
+  "Current": "Actuel",
+  "Potential income (€ / turn)": "Revenus potentiels (€ / tour)",
+  "No economic changes.": "Aucun changement économique.",
+  "Current architecture": "Architecture actuelle",
+  "Proposed architecture": "Architecture proposée",
+  "Scroll for more buildings": "Faire défiler pour voir plus de bâtiments",
+  "river": "rivière",
+  "River network": "Réseau fluvial",
+  "Water basin": "Bassin",
+  "No water basin": "Aucun bassin",
+  "Home district": "Quartier du quai",
+  "Other districts": "Autres quartiers",
+  "No partner district": "Aucun quartier partenaire",
+  "Crew activity": "Activité de l’équipage",
+  "Current network capacity": "Capacité actuelle du réseau",
+  "Operating costs": "Coûts d’exploitation",
+  "Unlocks in phase 2. Place two quays in different districts on the same water basin.": "Déblocage en phase 2. Place deux quais dans des quartiers différents du même bassin.",
+  "Focus partner": "Centrer sur le partenaire",
+  "Last completed-turn flows": "Flux du dernier tour terminé",
+  "No completed river turn yet": "Aucun tour fluvial terminé",
+  "No completed-turn flow": "Aucun flux au dernier tour terminé",
+  "Active (current turn)": "Actif (tour courant)",
+  "Active (last completed turn)": "Actif (dernier tour terminé)",
+  "Waiting for a partner district": "En attente d’un quartier partenaire",
+  "No surplus to transport": "Aucun excédent à transporter",
+  "Crew unavailable": "Équipage indisponible",
+  "Quay suspended": "Quai suspendu",
+  "Drought reduced capacity": "Capacité réduite par la sécheresse"
 };
 
 export const TEMPLATES_FR = [
@@ -478,8 +640,8 @@ export const TEMPLATES_FR = [
     "fr": "Démolir {0} · remboursement de 40 %"
   },
   {
-    "en": "Place {0} · {1} € · Enter to confirm",
-    "fr": "Poser {0} · {1} € · Entrée pour confirmer"
+    "en": "Place {0} · {1} · Enter to confirm",
+    "fr": "Poser {0} · {1} · Entrée pour confirmer"
   },
   {
     "en": "{0} · Enter to inspect",
@@ -536,6 +698,14 @@ export const TEMPLATES_FR = [
   {
     "en": "{0} Cost: {1} €",
     "fr": "{0} Coût : {1} €"
+  },
+  {
+    "en": "{0}, {1}. {2}",
+    "fr": "{0}, {1}. {2}"
+  },
+  {
+    "en": "{0} Cost: {1}",
+    "fr": "{0} Coût : {1}"
   },
   {
     "en": "Age: {0} turns · {1} · local heat: {2}",
@@ -644,5 +814,97 @@ export const TEMPLATES_FR = [
   {
     "en": "First Neighbourhood: reach {0} residents with healthy food, water and finances for {1} consecutive turns, before turn {2}.",
     "fr": "Premier quartier : atteins {0} habitants, avec nourriture, eau et finances saines pendant {1} tours consécutifs, avant le tour {2}."
+  },
+  {
+    "en": "Cost: {0} € + {1} materials",
+    "fr": "Coût : {0} € + {1} matériaux"
+  },
+  {
+    "en": "{0} floors",
+    "fr": "{0} niveaux"
+  },
+  {
+    "en": "Variant {0}",
+    "fr": "Variante {0}"
+  },
+  {
+    "en": "Available from phase {0}.",
+    "fr": "Disponible dès la phase {0}."
+  },
+  {
+    "en": "Built on turn {0}",
+    "fr": "Construit au tour {0}"
+  },
+  {
+    "en": "Turn {0}",
+    "fr": "Tour {0}"
+  },
+  {
+    "en": "This building must be at least {0} turns old ({1}/{2}).",
+    "fr": "Ce bâtiment doit avoir au moins {0} tours d’âge ({1}/{2})."
+  },
+  {
+    "en": "{0}: transformation complete.",
+    "fr": "{0} : transformation terminée."
+  },
+  {
+    "en": "{0}: conversion complete.",
+    "fr": "{0} : reconversion terminée."
+  },
+  {
+    "en": "{0} floor",
+    "fr": "{0} niveau"
+  },
+  {
+    "en": "{0} material",
+    "fr": "{0} matériau"
+  },
+  {
+    "en": "{0} € + {1} material",
+    "fr": "{0} € + {1} matériau"
+  },
+  {
+    "en": "Cost: {0} € + {1} material",
+    "fr": "Coût : {0} € + {1} matériau"
+  },
+  {
+    "en": "Changes applied: {0} · Spent {1} € + {2} materials",
+    "fr": "Modifications appliquées : {0} · Dépense : {1} € + {2} matériaux"
+  },
+  {
+    "en": "Changes applied: {0} · Spent {1} € + {2} material",
+    "fr": "Modifications appliquées : {0} · Dépense : {1} € + {2} matériau"
+  },
+  {
+    "en": "Unchanged values ({0})",
+    "fr": "Valeurs inchangées ({0})"
+  },
+  {
+    "en": "{0}–{1} of {2} · Scroll for more",
+    "fr": "{0}–{1} sur {2} · Faire défiler"
+  },
+  {
+    "en": "{0} buildings",
+    "fr": "{0} bâtiments"
+  },
+  {
+    "en": "{0} / {1} units per turn",
+    "fr": "{0} / {1} unités par tour"
+  },
+  {
+    "en": "{0} €/turn · {1} workers · {2} maintenance demand",
+    "fr": "{0} €/tour · {1} travailleurs · {2} demande d’entretien"
+  },
+  {
+    "en": "Last completed turn: {0}",
+    "fr": "Dernier tour terminé : {0}"
+  },
+  {
+    "en": "Export: {0} {1} → {2}",
+    "fr": "Export : {0} {1} → {2}"
+  },
+  {
+    "en": "Import: {0} {1} ← {2}",
+    "fr": "Import : {0} {1} ← {2}"
   }
 ];

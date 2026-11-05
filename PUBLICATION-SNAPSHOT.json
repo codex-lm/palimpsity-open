@@ -1,25 +1,139 @@
 {
   "game": "Palimpsity",
-  "version": "0.1.1-neighbourhood",
+  "version": "living-layers",
+  "parent": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
+  "source": "0a5ac8569175ec018a41b0cf531d73aae859e239",
   "artifact": "dist/palimpsity-mvp.html",
-  "artifactSha256": "4f559952ed9b897c2d0efc34fab70f400204b8cf10fd6983d99ed5acded80f9b",
-  "artifactBytes": 13301869,
-  "models": 18,
-  "referencedGlbs": 39,
-  "publicationFilesAreExplicitExport": true,
+  "artifactSha256": "e64d86ca4db435f693f26fbc90380b720032ba9700bc21a902e0ad5341979fb8",
+  "artifactBytes": 17378796,
+  "legacyModels": 19,
+  "livingLayersModules": 45,
+  "environmentModules": 14,
+  "quayBargeAssets": 4,
+  "referencedGlbs": 102,
+  "attributionIncluded": true,
+  "publicationFilesAreExplicitExport": false,
   "sourceChecks": {
-    "nodeTestsPassed": 55,
-    "embeddedGlbsParsedWithoutFetch": 39,
+    "nodeTestsPassed": 157,
+    "rafCalculationTestsPassed": 5,
+    "embeddedGlbsParsedWithoutFetch": 102,
     "sourceArtifactMatch": true
   },
   "browserValidation": {
-    "scope": "isolated headless Chromium, normal UI and canvas keyboard only",
-    "challengeCompletedAtTick": 13,
-    "timeoutAtTick": 120,
-    "bestSurvivesReload": true,
-    "classicReset": true,
-    "frenchResult": true,
-    "pageErrors": 0
+    "scope": "standalone offline recipe in isolated Chrome with LIVING_LAYERS_RENDERER=default",
+    "report": "docs/living-layers/observed-results.md",
+    "status": "passed",
+    "scenariosPassed": 5,
+    "elevatedCity": true,
+    "mixedCityConversions": [
+      "workshop_repair",
+      "warehouse_hall"
+    ],
+    "cameraInspectionCycles": 3,
+    "nativeViewports": [
+      "1280x720@1",
+      "1920x1080@2",
+      "390x844@2",
+      "3840x2160@1"
+    ],
+    "riverCharters": {
+      "gardensCompletedAtTick": 161,
+      "workshopsCompletedAtTick": 161,
+      "naturalBudgetEur": 600
+    },
+    "pageErrors": 0,
+    "externalRequests": 0
+  },
+  "d1Validation": {
+    "report": "docs/living-layers/d1-roof-matrix-4k.md",
+    "status": "passed",
+    "combinations": 12,
+    "nativePng": "3840x2160"
+  },
+  "d2PerformanceValidation": {
+    "report": "docs/living-layers/d2-performance-comparison.md",
+    "rawResults": "docs/living-layers/d2-performance-results.json",
+    "status": "passed",
+    "rendererMode": "default",
+    "effectiveRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 (0x00002216) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "sameRendererForBaselineAndCurrent": true,
+    "baselineSha256": "49fba91a84a7c44da980f0bc228c2c0e04e49ab84e2fc666aef5ff3b2e64f4f0",
+    "currentSha256": "873ac161ec63c549067ad11d4c67379ab2df7ca140fda3b06ba86d3ac9b500fd",
+    "views": 8,
+    "rawRafIntervalsPerView": 601,
+    "approximateFpsPerView": 60,
+    "deltaP95PercentRange": [
+      -0.5917159762799011,
+      0.595238095186021
+    ],
+    "scope": "Historical D2 build and scenes on one RTX 3080 via D3D11 only; synchronized near 60 FPS is not GPU headroom or a general guarantee.",
+    "initialSwiftShaderReportsSeparated": true,
+    "browserClosed": true
+  },
+  "d3Validation": {
+    "automatedReport": "docs/living-layers/d3-natural-results.json",
+    "automatedStatus": "passed",
+    "naturalBudgetEur": 600,
+    "charter": "gardens",
+    "completedAtTick": 161,
+    "manualNiloPlaythrough": "Separate agent-operated browser playthrough, not a human test or an automated assertion."
+  },
+  "lot015Validation": {
+    "report": "docs/living-layers/015-natural-summary.md",
+    "rawResults": "docs/living-layers/015-natural-results.json",
+    "status": "passed",
+    "naturalBudgetEur": 600,
+    "resourcePhasePopulationInjection": false,
+    "charter": "workshops",
+    "quaysAtTick27": [
+      "NW(2,5)",
+      "SW(4,6)"
+    ],
+    "flowTick28": {
+      "food": 4,
+      "water": 1.7496597908508473,
+      "barges": 2
+    },
+    "secondaryQuayAddsCapacity": false,
+    "partnerFocus": true,
+    "frenchMobile": true,
+    "tick120": {
+      "effectiveCapacity": 6,
+      "food": 3.896157598306317,
+      "water": 2.103842401693683,
+      "totalFlow": 6,
+      "southwestBackupWells": 3
+    },
+    "completedAtTick": 161,
+    "graphicComparison": {
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 (0x00002216) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sameSceneCameraQuality": true,
+      "rawRafIntervalsPerView": 601,
+      "present": {
+        "durationMs": 10016.300000000001,
+        "fps": 60.00219641983566,
+        "medianFrameMs": 16.69999999999891,
+        "p95FrameMs": 16.899999999997817,
+        "drawCalls": 1295,
+        "triangles": 319908,
+        "drawingBuffer": "3840x2160"
+      },
+      "absent": {
+        "durationMs": 10016.400000000001,
+        "fps": 60.0015973802963,
+        "medianFrameMs": 16.69999999999709,
+        "p95FrameMs": 16.899999999997817,
+        "drawCalls": 1256,
+        "triangles": 310526,
+        "drawingBuffer": "3840x2160"
+      },
+      "additionalP95Ms": 0,
+      "additionalP95Percent": 0,
+      "additionalDrawCalls": 39,
+      "additionalTriangles": 9382,
+      "scope": "Two views synchronized at 60 FPS; zero p95 delta does not prove zero GPU cost or available headroom."
+    },
+    "browserClosed": true
   },
   "buildFormat": "readable whitespace; compact identifiers and expressions"
 }

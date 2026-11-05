@@ -35,6 +35,31 @@ test('real output is reduced on exactly turns 120–149; base engine and catalog
   assert.equal(JSON.stringify(BUILDINGS),catalogue);
 });
 
+test('a classical victory never freezes River Pact, while engine defeats still stop the city',()=>{
+  const river=new RiverCityEngine(), pact=new RiverPact(river);
+  river.victoryProgress=()=>[];
+  river.victorySustain=8;
+  river.tick();pact.update();
+  assert.equal(river.state.outcome,null);
+  assert.equal(river.state.tick,1);
+  assert.equal(pact.status,'running');
+  assert.equal(pact.countedTick,1);
+  river.tick();pact.update();
+  assert.equal(river.state.tick,2,'The scenario keeps advancing after the classical victory threshold');
+  assert.equal(pact.countedTick,2);
+  river.endGame('defeat','Essential supply crisis.');
+  const stoppedAt=river.state.tick;
+  river.tick();
+  assert.equal(river.state.outcome,'defeat');
+  assert.equal(river.state.tick,stoppedAt);
+
+  const classic=new CityEngine();
+  classic.victoryProgress=()=>[];
+  classic.victorySustain=8;
+  classic.tick();
+  assert.equal(classic.state.outcome,'victory','Classic mode retains its normal victory');
+});
+
 // Synthetic snapshots below isolate controller boundaries, not playability.
 function fixture(stage=0,tick=0,charter=null) {
   const buildings=[];

@@ -37,7 +37,7 @@ function checkOutput(engine, label) {
 }
 
 test('the catalog, districts, resources and conversion offer use English', () => {
-  const names = ['House', 'Well', 'Farm', 'Workshop', 'Local market', 'Path', 'Park', 'Road', 'Thermal power plant', 'Factory', 'Central warehouse', 'Water treatment plant', 'Apartment building', 'Local depot', 'Tram', 'Maintenance center', 'Heated greenhouse', 'Recycling center'];
+  const names = ['House', 'Well', 'Farm', 'Workshop', 'Local market', 'Path', 'Park', 'Road', 'Thermal power plant', 'Factory', 'Central warehouse', 'Water treatment plant', 'River quay', 'Apartment building', 'Local depot', 'Tram', 'Commons', 'Maintenance center', 'Heated greenhouse', 'Recycling center'];
   assert.deepEqual(Object.values(BUILDINGS).map(b => b.name), names);
   for (const building of Object.values(BUILDINGS)) { assertEnglish(building.name, building.id); assertEnglish(building.desc, `${building.id} description`); }
   for (const district of DISTRICT_NAMES) assertEnglish(district, 'district');

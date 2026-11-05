@@ -79,7 +79,7 @@ export const RES_META = {
 };
 
 /* ---------------------------------------------------------------------
-   CATALOGUE DE BÂTIMENTS (18) — data-driven
+   CATALOGUE DE BÂTIMENTS (20) — data-driven
    Champs : id, name, color, cost, tags, inputs, outputs, ext (externalités),
    mods (regime_modifiers), desc (player_description), phase, flags.
    Les 14 premiers reprennent les valeurs CALIBRÉES du POC validé ; les 4
@@ -188,6 +188,14 @@ export const BUILDINGS = {
     mods: { survival: 1.0, production: 1.1, logistics: 0.7, maintenance_heat: 0.7 },
     phase: 2,
   },
+  river_quay: {
+    id: "river_quay", name: "River quay", color: "#4f8f9d", cost: { money: 60, materials: 4 },
+    tags: ["local", "decentralized", "distribution", "maintenance", "river"],
+    inputs: { workers: 2 }, outputs: {}, ext: { maintenance: +0.4 },
+    desc: "Two quays in different districts on the same water basin share food and water surpluses. River transport is halved during the drought.",
+    mods: { survival: 1.0, production: 0.7, logistics: 1.6, maintenance_heat: 1.1 },
+    phase: 2,
+  },
   tower: {
     id: "tower", name: "Apartment building", color: "#a98c6b", cost: { money: 110 },
     tags: ["dense", "centralized", "maintenance", "high_capacity", "residential"],
@@ -213,6 +221,15 @@ export const BUILDINGS = {
     inputs: { energy: 3, workers: 2 }, outputs: { trust: 1 }, ext: { capacity: +3, congestion: -6 },
     desc: "Carries residents and workers. Reduces congestion and improves access to services, at the cost of energy and maintenance.",
     mods: { survival: 0.9, production: 0.9, logistics: 1.9, maintenance_heat: 1.1 },
+    phase: 3,
+  },
+  commons: {
+    id: "commons", name: "Commons", color: "#72ad91", cost: { money: 105, materials: 8 },
+    tags: ["local", "social", "distribution", "maintenance", "local_service", "green"],
+    inputs: { workers: 2, money: 1, water: 1 }, outputs: { trust: 3 },
+    ext: { distribution: +3, maintenance: -3, cooling: +2, congestion: -2 },
+    desc: "A shared hall, lookout and garden. Provides nearby services, care and cooling through paid staff and real water use.",
+    mods: { survival: 1.1, production: 0.6, logistics: 1.8, maintenance_heat: 2.0 },
     phase: 3,
   },
 
@@ -249,8 +266,8 @@ export const BUILDINGS = {
 // Ordre d'affichage dans la palette.
 export const ORDER = [
   "house", "well", "farm", "workshop", "market", "path", "park",
-  "road", "generator", "factory", "warehouse", "water_plant", "tower",
-  "depot", "tram", "maint_center", "greenhouse", "recycler",
+  "road", "generator", "factory", "warehouse", "water_plant", "river_quay", "tower",
+  "depot", "tram", "commons", "maint_center", "greenhouse", "recycler",
 ];
 
 // Débloqués dès le départ (phase 1).
@@ -261,11 +278,38 @@ export const INITIAL_UNLOCKED = ["house", "well", "farm", "workshop", "market", 
 export const UPKEEP = {
   house: 0.25, well: 0.15, farm: 0.3, workshop: 0.4, market: 0.4,
   path: 0.015, park: 0.15, road: 0.035, generator: 2.5, factory: 2.3,
-  warehouse: 1.2, water_plant: 1.4, tower: 1.5, depot: 0.6, tram: 1,
-  maint_center: 0, greenhouse: 0.5, recycler: 0.6,
+  warehouse: 1.2, water_plant: 1.4, river_quay: 0.5, tower: 1.5, depot: 0.6, tram: 1,
+  commons: 0.9, maint_center: 0, greenhouse: 0.5, recycler: 0.6,
 };
 
-// Une reconversion conserve le bâtiment et son modèle 3D. Son profil effectif
+// L'architecture appartient à chaque instance. Ces valeurs servent uniquement
+// à initialiser les nouvelles poses et les bâtiments des anciennes parties.
+export const ARCHITECTURE_DEFAULTS = {
+  house: { base: "residential", floors: 1, roof: "traditional", family: "banks", variant: 0 },
+  workshop: { base: "workshop", floors: 1, roof: "traditional", family: "works", variant: 0 },
+  warehouse: { base: "warehouse", floors: 1, roof: "traditional", family: "works", variant: 0 },
+  commons: { base: "civic", floors: 1, roof: "garden", family: "gardens", variant: 0 },
+};
+
+export const BUILDING_TRANSFORMATIONS = {
+  add_floor: {
+    name: "Add a floor", desc: "Extend this building by one level, adding its per-floor capacity and resource demand.",
+    costs: { 2: { money: 30, materials: 4 }, 3: { money: 45, materials: 8 }, 4: { money: 70, materials: 14 } },
+  },
+  base_residential: { name: "Restore housing", desc: "Replace the ground-floor shop with six homes while keeping every upper floor.", phase: 2, cost: { money: 20, materials: 2 } },
+  base_shop: { name: "Open a ground-floor shop", desc: "Trade the six ground-floor homes for local distribution and sales; upper homes remain.", phase: 2, cost: { money: 35, materials: 6 } },
+  roof_traditional: { name: "Traditional roof", desc: "A simple roof with no production or environmental bonus.", phase: 1, cost: { money: 0, materials: 0 } },
+  roof_garden: { name: "Garden roof", desc: "Add cooling and amenity using extra water. This is a roof, not a park.", phase: 3, cost: { money: 55, materials: 10 } },
+  roof_productive: { name: "Solar greenhouse roof", desc: "Grow food and generate solar power on the roof using a reliable water supply.", phase: 4, cost: { money: 80, materials: 16 } },
+  family_banks: { name: "Banks style", desc: "Apply the riverside architectural family without changing the building's function.", phase: 1, cost: { money: 12, materials: 2 } },
+  family_works: { name: "Works style", desc: "Apply the makers' architectural family without changing the building's function.", phase: 1, cost: { money: 12, materials: 2 } },
+  family_gardens: { name: "Gardens style", desc: "Apply the garden architectural family without changing the building's function.", phase: 1, cost: { money: 12, materials: 2 } },
+  variant_0: { name: "Original details", desc: "Restore the original architectural details.", phase: 1, cost: { money: 8, materials: 1 } },
+  variant_1: { name: "Alternate details", desc: "Apply alternate architectural details without changing the building's function.", phase: 1, cost: { money: 8, materials: 1 } },
+  variant_2: { name: "Civic details", desc: "Apply a third set of architectural details without changing the building's function.", phase: 1, cost: { money: 8, materials: 1 } },
+};
+
+// Une reconversion conserve le bâtiment et son emprise. Son profil effectif
 // est propre à l'instance ; BUILDINGS n'est jamais modifié en cours de partie.
 export const BUILDING_CONVERSIONS = {
   workshop_repair: {
@@ -273,11 +317,23 @@ export const BUILDING_CONVERSIONS = {
     desc: "Repurposes an old workshop to maintain its district, replacing its material production and sales revenue.",
     phase: 3, minAge: 24, cost: { money: 65, materials: 20 },
     profile: {
-      ...BUILDINGS.workshop, name: "Maintenance workshop",
+      ...BUILDINGS.workshop, name: "Maintenance workshop", upkeep: 0.5,
       tags: ["local", "repairable", "maintenance", "local_service", "reconverted"],
       inputs: { workers: 2, money: 1 }, outputs: { trust: 1 },
       ext: { maintenance: -6 },
       desc: "This old workshop now maintains its district. It no longer produces materials or sales revenue.",
+    },
+  },
+  warehouse_hall: {
+    id: "warehouse_hall", source: "warehouse", name: "Neighborhood hall",
+    desc: "Turn an aging central warehouse into a staffed neighborhood hall, giving up central storage for local services and trust.",
+    phase: 3, minAge: 18, cost: { money: 70, materials: 12 },
+    profile: {
+      ...BUILDINGS.warehouse, name: "Neighborhood hall", upkeep: 0.8,
+      tags: ["local", "social", "distribution", "redundant", "local_service", "reconverted"],
+      inputs: { workers: 2, food: 1, money: 1 }, outputs: { trust: 2 },
+      ext: { distribution: +4, congestion: -2 },
+      desc: "The former warehouse now hosts neighborhood services. It has no central storage capacity and relies on food, staff and funding.",
     },
   },
 };

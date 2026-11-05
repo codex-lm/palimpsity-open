@@ -133,6 +133,11 @@
         ],
         "axis": "y"
       }
+    },
+    "river_quay": {
+      "file": "river_quay.glb",
+      "footprint": 0.95,
+      "height": 0.671
     }
   },
   "transportVariants": {
@@ -162,5 +167,202 @@
     "forest": "forest.glb",
     "hill": "hill.glb",
     "fertile": "fertile.glb"
+  },
+  "layers": {
+    "floorHeight": 0.48,
+    "modules": {
+      "base_house_banks_0": {
+        "file": "layers/base_house_banks_0.glb"
+      },
+      "base_house_banks_1": {
+        "file": "layers/base_house_banks_1.glb"
+      },
+      "base_house_banks_2": {
+        "file": "layers/base_house_banks_2.glb"
+      },
+      "base_house_works_0": {
+        "file": "layers/base_house_works_0.glb"
+      },
+      "base_house_works_1": {
+        "file": "layers/base_house_works_1.glb"
+      },
+      "base_house_works_2": {
+        "file": "layers/base_house_works_2.glb"
+      },
+      "base_house_gardens_0": {
+        "file": "layers/base_house_gardens_0.glb"
+      },
+      "base_house_gardens_1": {
+        "file": "layers/base_house_gardens_1.glb"
+      },
+      "base_house_gardens_2": {
+        "file": "layers/base_house_gardens_2.glb"
+      },
+      "base_workshop_banks_0": {
+        "file": "layers/base_workshop_banks_0.glb"
+      },
+      "base_workshop_banks_1": {
+        "file": "layers/base_workshop_banks_1.glb"
+      },
+      "base_workshop_works_0": {
+        "file": "layers/base_workshop_works_0.glb"
+      },
+      "base_workshop_works_1": {
+        "file": "layers/base_workshop_works_1.glb"
+      },
+      "base_workshop_gardens_0": {
+        "file": "layers/base_workshop_gardens_0.glb"
+      },
+      "base_workshop_gardens_1": {
+        "file": "layers/base_workshop_gardens_1.glb"
+      },
+      "base_warehouse_banks": {
+        "file": "layers/base_warehouse_banks.glb"
+      },
+      "base_warehouse_works": {
+        "file": "layers/base_warehouse_works.glb"
+      },
+      "base_warehouse_gardens": {
+        "file": "layers/base_warehouse_gardens.glb"
+      },
+      "base_shop_banks": {
+        "file": "layers/base_shop_banks.glb"
+      },
+      "base_shop_works": {
+        "file": "layers/base_shop_works.glb"
+      },
+      "base_shop_gardens": {
+        "file": "layers/base_shop_gardens.glb"
+      },
+      "base_civic": {
+        "file": "layers/base_civic.glb"
+      },
+      "floor_banks_0": {
+        "file": "layers/floor_banks_0.glb"
+      },
+      "floor_banks_1": {
+        "file": "layers/floor_banks_1.glb"
+      },
+      "floor_banks_2": {
+        "file": "layers/floor_banks_2.glb"
+      },
+      "floor_works_0": {
+        "file": "layers/floor_works_0.glb"
+      },
+      "floor_works_1": {
+        "file": "layers/floor_works_1.glb"
+      },
+      "floor_works_2": {
+        "file": "layers/floor_works_2.glb"
+      },
+      "floor_gardens_0": {
+        "file": "layers/floor_gardens_0.glb"
+      },
+      "floor_gardens_1": {
+        "file": "layers/floor_gardens_1.glb"
+      },
+      "floor_gardens_2": {
+        "file": "layers/floor_gardens_2.glb"
+      },
+      "roof_traditional_banks_0": {
+        "file": "layers/roof_traditional_banks_0.glb"
+      },
+      "roof_traditional_banks_1": {
+        "file": "layers/roof_traditional_banks_1.glb"
+      },
+      "roof_traditional_works_0": {
+        "file": "layers/roof_traditional_works_0.glb"
+      },
+      "roof_traditional_works_1": {
+        "file": "layers/roof_traditional_works_1.glb"
+      },
+      "roof_traditional_gardens_0": {
+        "file": "layers/roof_traditional_gardens_0.glb"
+      },
+      "roof_traditional_gardens_1": {
+        "file": "layers/roof_traditional_gardens_1.glb"
+      },
+      "roof_garden_banks": {
+        "file": "layers/roof_garden_banks.glb"
+      },
+      "roof_garden_works": {
+        "file": "layers/roof_garden_works.glb"
+      },
+      "roof_garden_gardens": {
+        "file": "layers/roof_garden_gardens.glb"
+      },
+      "roof_productive_banks": {
+        "file": "layers/roof_productive_banks.glb"
+      },
+      "roof_productive_works": {
+        "file": "layers/roof_productive_works.glb"
+      },
+      "roof_productive_gardens": {
+        "file": "layers/roof_productive_gardens.glb"
+      },
+      "conversion_workshop_repair": {
+        "file": "layers/conversion_workshop_repair.glb"
+      },
+      "conversion_warehouse_hall": {
+        "file": "layers/conversion_warehouse_hall.glb"
+      }
+    }
+  },
+  "environment": {
+    "modules": {
+      "bank_straight": {
+        "file": "environment/bank_straight.glb"
+      },
+      "bank_corner_inner": {
+        "file": "environment/bank_corner_inner.glb"
+      },
+      "bank_corner_outer": {
+        "file": "environment/bank_corner_outer.glb"
+      },
+      "quay_straight": {
+        "file": "environment/quay_straight.glb"
+      },
+      "ground_path": {
+        "file": "environment/ground_path.glb"
+      },
+      "ground_soil": {
+        "file": "environment/ground_soil.glb"
+      },
+      "ground_fertile": {
+        "file": "environment/ground_fertile.glb"
+      },
+      "ground_planted": {
+        "file": "environment/ground_planted.glb"
+      },
+      "civic_plaza": {
+        "file": "environment/civic_plaza.glb"
+      },
+      "vegetation_reeds": {
+        "file": "environment/vegetation_reeds.glb"
+      },
+      "vegetation_flowers": {
+        "file": "environment/vegetation_flowers.glb"
+      },
+      "furniture_bench": {
+        "file": "environment/furniture_bench.glb"
+      },
+      "furniture_lamp": {
+        "file": "environment/furniture_lamp.glb"
+      },
+      "furniture_planter": {
+        "file": "environment/furniture_planter.glb"
+      }
+    }
+  },
+  "riverAssets": {
+    "barge": {
+      "file": "river_barge.glb"
+    },
+    "cargoFood": {
+      "file": "river_cargo_food.glb"
+    },
+    "cargoWater": {
+      "file": "river_cargo_water.glb"
+    }
   }
 }
