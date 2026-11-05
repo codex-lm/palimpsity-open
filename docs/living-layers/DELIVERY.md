@@ -111,9 +111,9 @@ Les anciennes mesures SwiftShader sont des preuves de rendu logiciel distinctes,
 
 La route démarre avec **600 €, zéro matériau, population et phase initiaux**, sans injection ultérieure. Les quais sont payés à **t27 en NW(2,5) et SW(4,6)**. À **t28**, le registre et les deux barges concordent : **4 food** de SW vers NW et **1,7496597908508473 water** de NW vers SW ; l’inspecteur affiche l’arrondi cohérent `1.7 water`. Le quai secondaire ne change ni capacité ni registre daté. Le focus partenaire et l’inspecteur FR mobile sont vérifiés.
 
-À **t120**, la sécheresse réduit la capacité à **6**, saturée par **3,896157598306317 food + 2,103842401693683 water**. Trois puits de secours SW sont construits en `(0,10)`, `(1,10)` et `(2,10)`. Des achats réels de logements créent le déficit, puis une ferme et deux puits NW stabilisent la suite. La victoire arrive à **t161**, avec 155,51994 habitants, 3 157,04370 € et 67,45682 matériaux.
+À **t120**, la sécheresse réduit la capacité à **6**, saturée par **3,896157598306317 food + 2,103842401693683 water**. Trois puits de secours SW sont construits en `(0,10)`, `(1,10)` et `(2,10)`. Des achats réels de logements créent le déficit, puis une ferme et deux puits NW stabilisent la suite. La victoire arrive à **t161**, avec 155,51994 habitants, **3 144,0437043 €** et 67,45682 matériaux.
 
-La mesure graphique est séparée de D2 et utilise le build 015 actuel. À t120, la même ville, caméra et qualité High est mesurée avec trois quais et deux barges, puis sans quai ni barge. Renderer Chrome `default` commun : **RTX 3080 D3D11**, viewport 1920×1080 à DPR 2 et buffer 3840×2160. Chaque vue dépasse 10 s et contient 601 intervalles RAF bruts.
+La mesure graphique est séparée de D2 et a été enregistrée sur l’artefact intermédiaire `0607876973808eadea7cd95c6e3f8a68530c750e5b29d667475697517f96f896`. À t120, la même ville, caméra et qualité High est mesurée avec trois quais et deux barges, puis sans quai ni barge. Renderer Chrome `default` commun : **RTX 3080 D3D11**, viewport 1920×1080 à DPR 2 et buffer 3840×2160. Chaque vue dépasse 10 s et contient 601 intervalles RAF bruts.
 
 | État | Durée | FPS | Médiane | p95 | Draw calls | Triangles |
 |---|---:|---:|---:|---:|---:|---:|
@@ -131,7 +131,7 @@ Les derniers raccords intègrent le partenaire depuis un quai secondaire, des re
 - Taille : **17 378 796 octets**
 - SHA-256 : `e64d86ca4db435f693f26fbc90380b720032ba9700bc21a902e0ad5341979fb8`
 
-L’identifiant du build mesuré est le couple taille/SHA-256 de l’artefact, pas un ancien HEAD. Cette variante source reste **non publiée** : `publicationFilesAreExplicitExport=false`.
+La mesure 015 et les cinq scénarios de régression ont été enregistrés sur l’artefact intermédiaire `0607876973808eadea7cd95c6e3f8a68530c750e5b29d667475697517f96f896`. L’artefact final après les derniers raccords est `e64d86ca4db435f693f26fbc90380b720032ba9700bc21a902e0ad5341979fb8`, vérifié séparément par Nilo ; ces preuves ne sont pas rétroactivement attribuées au hash final. Cette variante source reste **non publiée** : `publicationFilesAreExplicitExport=false`.
 
 ## Limites et ajout de modules
 

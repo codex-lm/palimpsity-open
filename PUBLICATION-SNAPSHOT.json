@@ -2,7 +2,7 @@
   "game": "Palimpsity",
   "version": "living-layers",
   "parent": "br_s_8196c2a3-57e8-4ce9-b834-dff2791f9a24",
-  "source": "0b4d278",
+  "source": "0a5ac8569175ec018a41b0cf531d73aae859e239",
   "artifact": "dist/palimpsity-mvp.html",
   "artifactSha256": "e64d86ca4db435f693f26fbc90380b720032ba9700bc21a902e0ad5341979fb8",
   "artifactBytes": 17378796,
