@@ -5,7 +5,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { COLS, ROWS, BUILDINGS, ARCHITECTURE_DEFAULTS, districtOf } from "./data.js";
 import { localizeDOM } from "./localization.js";
-import { loadDioramaManifest, loadDioramaGLB, layerPlanForBuilding, environmentPlanForCell } from "./diorama-assets.js";
+import { loadDioramaManifest, loadDioramaGLB, layerPlanForBuilding, environmentPlanForCell, quayRotationForTarget, quayTargetForRotation, riverVisualFlows } from "./diorama-assets.js";
 import { ArchitecturePreview } from "./architecture-preview.js";
 
 const worldX = c => c - (COLS - 1) / 2;
@@ -71,6 +71,9 @@ export class Renderer3D {
     this._environmentSignatures = new Map();
     this._environmentRebuiltCells = 0;
     this._environmentDetailReduced = true;
+    this._barges = [];
+    this._riverFlowSignature = this._riverSelectionSignature = null;
+    this._selectedQuay = null;
     this._reactiveMaterials = [];
     this._people = [];
     this._buildingRotations = new WeakMap();
@@ -132,7 +135,7 @@ export class Renderer3D {
     const fill = this.fill = new THREE.DirectionalLight(0xc6e1dd, 0.4);
     fill.position.set(12, 8, -10);
     scene.add(fill);
-    for (const name of ["terrainRoot", "decorRoot", "environmentRoot", "haloRoot", "overlayRoot", "pickRoot", "peopleRoot"]) {
+    for (const name of ["terrainRoot", "decorRoot", "environmentRoot", "haloRoot", "overlayRoot", "pickRoot", "peopleRoot", "bargeRoot", "riverSelectionRoot"]) {
       this[name] = new THREE.Group();
       scene.add(this[name]);
     }
@@ -433,6 +436,10 @@ export class Renderer3D {
 
   _syncTransport(b, rec) {
     const id = b.def.id;
+    if (id === "river_quay") {
+      rec.group.rotation.y = quayRotationForTarget(b.c, b.r, b.quaySide);
+      return;
+    }
     if (!TRANSPORT.has(id)) { rec.group.rotation.y = this.getBuildingRotation(b); return; }
     const choice = this.getTransportChoice(id, b.c, b.r);
     const file = fileOf(this.manifest.transportVariants[id][choice.variant]);
@@ -600,6 +607,118 @@ export class Renderer3D {
     }
   }
 
+  _clearBarges() {
+    for (const rec of this._barges) this.disposeObj(rec.group);
+    this._barges = [];
+    this.bargeRoot.clear();
+  }
+
+  _positionBarge(rec, phase) {
+    if (rec.points.length === 1) {
+      const point = rec.points[0], side = rec.flow.resource === "food" ? -1 : 1;
+      rec.group.position.set(point.x + side * 0.18, point.y, point.z + (rec.stationaryIndex % 3 - 1) * 0.08);
+      rec.group.rotation.y = 0;
+      return;
+    }
+    const wrapped = ((phase % 1) + 1) % 1, distance = wrapped * rec.totalLength;
+    let segment = 0;
+    while (segment < rec.cumulative.length - 2 && rec.cumulative[segment + 1] < distance) segment++;
+    const start = rec.cumulative[segment], end = rec.cumulative[segment + 1];
+    const k = end > start ? (distance - start) / (end - start) : 0;
+    rec.group.position.lerpVectors(rec.points[segment], rec.points[segment + 1], k);
+    const direction = rec.direction.subVectors(rec.points[segment + 1], rec.points[segment]);
+    rec.group.rotation.y = Math.atan2(-direction.z, direction.x);
+  }
+
+  _syncBarges() {
+    const signature = JSON.stringify([this.engine.state.riverFlowTick, this.engine.state.riverFlows]);
+    if (signature === this._riverFlowSignature) return;
+    this._riverFlowSignature = signature;
+    this._clearBarges();
+    const assets = this.manifest.riverAssets;
+    if (!assets?.barge) return;
+    const plans = riverVisualFlows(this.engine.state, this.engine.terrain);
+    for (const [index, { flow }] of plans.entries()) {
+      const group = new THREE.Group(), boat = this._clone(fileOf(assets.barge));
+      const cargoKey = flow.resource === "food" ? "cargoFood" : "cargoWater";
+      const cargo = this._clone(fileOf(assets[cargoKey]));
+      cargo.position.y = 0.11;
+      group.add(boat, cargo);
+      group.userData.flowIndex = index;
+      const points = flow.path.map(cell => new THREE.Vector3(worldX(cell.c), -0.06, worldZ(cell.r)));
+      const cumulative = [0];
+      for (let i = 1; i < points.length; i++) cumulative.push(cumulative[i - 1] + points[i].distanceTo(points[i - 1]));
+      const rec = { group, flow, points, cumulative, totalLength: cumulative.at(-1), direction: new THREE.Vector3(), phase: index / Math.max(1, plans.length), stationaryIndex: index };
+      this.bargeRoot.add(group);
+      this._barges.push(rec);
+      this._positionBarge(rec, rec.phase);
+    }
+  }
+
+  _animateBarges(time) {
+    if (this.reducedEffects) return;
+    for (const rec of this._barges) this._positionBarge(rec, rec.phase + time * 0.35 / Math.max(0.001, rec.totalLength));
+  }
+
+  _clearRiverSelectionVisuals() {
+    for (const child of [...this.riverSelectionRoot.children]) this.disposeObj(child);
+    this.riverSelectionRoot.clear();
+    this._riverSelectionSignature = null;
+  }
+
+  setRiverSelection(building) {
+    this._selectedQuay = building?.def?.id === "river_quay" && this.engine.state.buildings.includes(building) ? building : null;
+    this._syncRiverSelection();
+    return !!this._selectedQuay;
+  }
+
+  _syncRiverSelection() {
+    const b = this._selectedQuay;
+    const signature = JSON.stringify([b?.c, b?.r, this.engine.state.riverFlowTick, this.engine.state.riverFlows]);
+    if (signature === this._riverSelectionSignature) return;
+    this._clearRiverSelectionVisuals();
+    this._riverSelectionSignature = signature;
+    if (!b || !this.engine.state.buildings.includes(b)) { this._selectedQuay = null; return; }
+    const basin = this.engine.quayBasin?.(b);
+    if (basin) {
+      this._riverSelectionPlaneGeometry ||= this._keepGeometry(new THREE.PlaneGeometry(0.94, 0.94));
+      const material = new THREE.MeshBasicMaterial({ color: 0x52d8e8, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide });
+      for (const cell of basin.cells) {
+        const marker = new THREE.Mesh(this._riverSelectionPlaneGeometry, material);
+        marker.rotation.x = -Math.PI / 2;
+        marker.position.set(worldX(cell.c), 0.17, worldZ(cell.r));
+        this.riverSelectionRoot.add(marker);
+      }
+    }
+    for (const { flow } of riverVisualFlows(this.engine.state, this.engine.terrain).filter(({ flow }) =>
+      (flow.sourceQuay.c === b.c && flow.sourceQuay.r === b.r) || (flow.destinationQuay.c === b.c && flow.destinationQuay.r === b.r))) {
+      const points = flow.path.map(cell => new THREE.Vector3(worldX(cell.c), 0.22, worldZ(cell.r)));
+      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),
+        new THREE.LineBasicMaterial({ color: flow.resource === "food" ? 0xf2b65b : 0x65d9ff, transparent: true, opacity: 0.9, depthWrite: false }));
+      this.riverSelectionRoot.add(line);
+    }
+  }
+
+  focusQuayPartner(building) {
+    if (building?.def?.id !== "river_quay") return false;
+    const basin = this.engine.quayBasin?.(building);
+    const network = this.engine.state.riverNetworks.find(item => item.basin === basin?.id);
+    const district = districtOf(building.c, building.r);
+    const partnerInfo = network?.quays.find(quay => districtOf(quay.c, quay.r) !== district);
+    const partner = partnerInfo && this.engine.state.buildings.find(candidate => candidate.def.id === "river_quay" && candidate.c === partnerInfo.c && candidate.r === partnerInfo.r);
+    if (!partner) return false;
+    this.setRiverSelection(building);
+    this.focusBuilding(partner);
+    return true;
+  }
+
+  _clearRiverVisuals() {
+    this._clearBarges();
+    this._riverFlowSignature = null;
+    this._selectedQuay = null;
+    this._clearRiverSelectionVisuals();
+  }
+
   _activityOf(building) {
     return building?.disabled ? 0 : clamp01(building?.activity ?? building?.occupancy ?? 1);
   }
@@ -643,6 +762,7 @@ export class Renderer3D {
     if (restarted) {
       this._architecturePreview?.dispose();
       this._architecturePreview = null;
+      this._clearRiverVisuals();
       this._buildingRotations = new WeakMap();
       this._syncedEngine = this.engine;
       this.setHover(null);
@@ -686,6 +806,8 @@ export class Renderer3D {
     this._syncEnvironment(restarted);
     this._syncPeople();
     this._syncWeather();
+    this._syncBarges();
+    this._syncRiverSelection();
     this.applyLens();
     this._updateGhost();
   }
@@ -961,7 +1083,8 @@ export class Renderer3D {
     this.ghost.visible = !!cell;
     if (!cell) return;
     this.ghost.position.set(worldX(cell.c), 0, worldZ(cell.r));
-    this.ghost.rotation.y = choice ? choice.rotation : this.ghostRotation;
+    this.ghost.rotation.y = choice ? choice.rotation : this.ghostId === "river_quay"
+      ? quayRotationForTarget(cell.c, cell.r, quayTargetForRotation(this.engine.waterSides(cell.c, cell.r), this.ghostRotation)) : this.ghostRotation;
     this.refreshGhostTint();
   }
   refreshGhostTint() {
@@ -1255,6 +1378,7 @@ export class Renderer3D {
       const occupancy = this._occupancyOf(person.userData.home);
       person.position.y = 0.02 + (this.reducedEffects ? 0 : Math.sin(time * 2 + person.userData.phase) * 0.008 * occupancy);
     }
+    this._animateBarges(time);
     this._updateCameraTransition(dt);
     this._updateLandscape(dt);
     this._updateGhost(); // includes canPlace even when money/unlocks change under a still pointer
@@ -1278,6 +1402,7 @@ export class Renderer3D {
       environmentLod: this._environmentDetailReduced ? "valley" : "full",
       environmentRebuiltCells: this._environmentRebuiltCells,
       peopleCount: this._people.filter(person => person.visible).length,
+      bargeCount: this._barges.length, riverSelectionCount: this.riverSelectionRoot.children.length,
       smokeCount: this.smokePuffs.filter(puff => puff.visible).length, projectionMode: this.projectionMode,
       cameraScale: this.cameraScale, quality: this.quality, reducedEffects: this.reducedEffects,
       photoMode: this.photoMode, ambiance: this.ambiance, roofsVisible: this.roofsVisible,
@@ -1304,6 +1429,7 @@ export class Renderer3D {
     for (const rec of this._records) this.disposeObj(rec.group);
     this._clearGhost();
     this._clearEnvironment();
+    this._clearRiverVisuals();
     this.disposeObj(this.scene);
     for (const geometry of this._ownedGeometries) this._disposeGeometry(geometry);
     for (const material of this._ownedMaterials) this._disposeMaterial(material);

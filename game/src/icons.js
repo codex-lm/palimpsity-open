@@ -11,6 +11,7 @@ const PATHS = {
   factory: '<path d="M4 34V16h24v18H4Z"/><path d="m4 16 6-7 6 7 6-7 6 7M9 34V23h8v11M26 34V6h6v28M26 10h6"/><path d="M11 19h9M29 3v3"/>',
   warehouse: '<path d="m4 15 16-9 16 9v19H4V15Z"/><path d="M8 34V20h24v14M14 34V24h12v10M4 15h32M11 19h5m3 0h5"/>',
   water_plant: '<path d="M10 8h20v14H10V8Z"/><path d="M8 8h24M14 22v10m12-10v10M8 32h24M15 32v3m10-3v3"/><path d="M20 11c-3 4-4 5-4 7a4 4 0 0 0 8 0c0-2-1-3-4-7Z"/>',
+  river_quay: '<path d="M5 15h21v17H5V15Z"/><path d="M8 15V8h12v7M6 32h22M9 24h10M26 8l4 4-4 4M30 12H17M23 20v13M8 36l4-4 4 4 4-4 4 4 4-4 4 4"/><path d="M12 20h7v6h-7z"/>',
   tower: '<path d="M9 36V5h22v31H9Z"/><path d="M7 36h26M13 10h4v4h-4zm10 0h4v4h-4zm-10 8h4v4h-4zm10 0h4v4h-4zm-10 8h4v4h-4zm10 0h4v4h-4zM7 14h4m20 8h4M13 34h14"/>',
   depot: '<path d="m7 18 13-8 13 8v16H7V18Z"/><path d="M11 34V22h18v12M17 34v-7h6v7M7 18h26M12 15h5m3 0h5"/><path d="M4 34h32"/>',
   tram: '<path d="M6 34h28M8 38h24M10 30V12h20v18H10Z"/><path d="M13 16h14M13 22h4m6 0h4M14 30v4m12-4v4M7 12h26M16 8h8"/>',

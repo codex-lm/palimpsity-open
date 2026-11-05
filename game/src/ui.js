@@ -1,6 +1,6 @@
 import {
   ORDER, BUILDINGS, RES_VISIBLE, RES_HIDDEN, RES_META,
-  REGIMES, REGIME_META, districtOf, DISTRICT_NAMES,
+  REGIMES, REGIME_META, districtOf, DISTRICT_NAMES, UPKEEP,
 } from "./data.js";
 import { buildingIcon, uiIcon } from "./icons.js";
 import { localizeDOM } from "./localization.js";
@@ -31,6 +31,10 @@ const OUTPUT_LABELS = {
 };
 const INPUT_LABELS = { food: "Food need", water: "Water need", energy: "Energy need", materials: "Materials need", workers: "Worker need", money: "Money need", heat: "Heat need" };
 const EXTERNAL_LABELS = { heat: "Heat output", cooling: "Cooling", distribution: "Distribution service", capacity: "Distribution capacity", congestion: "Congestion" };
+const QUAY_STATUS_LABELS = {
+  active: "Active (current turn)", waiting: "Waiting for a partner district", no_surplus: "No surplus to transport",
+  crew: "Crew unavailable", suspended: "Quay suspended", drought: "Drought reduced capacity",
+};
 const tagText = tag => tag.replace(/_/g, " ");
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -492,6 +496,33 @@ export class UI {
     localizeDOM(box);
   }
 
+  renderQuayInspector(building) {
+    const info = this.engine.quayInfo(building);
+    if (!info) return "";
+    const def = this.engine.profileOf(building);
+    const homeDistrict = districtOf(building.c, building.r), districtName = DISTRICT_NAMES[homeDistrict];
+    const others = info.otherDistricts.map(id => DISTRICT_NAMES[id]).join(", ") || "No partner district";
+    const status = info.status === "active" && info.flowTick !== this.engine.state.tick ? "Active (last completed turn)" : QUAY_STATUS_LABELS[info.status];
+    const flows = info.flows.length ? info.flows.map(flow => {
+      const amount = metricValue(flow.amount), resource = flow.resource;
+      return flow.sourceQuay.c === building.c && flow.sourceQuay.r === building.r
+        ? `<li>Export: ${amount} ${resource} → ${DISTRICT_NAMES[flow.destinationDistrict]}</li>`
+        : `<li>Import: ${amount} ${resource} ← ${DISTRICT_NAMES[flow.sourceDistrict]}</li>`;
+    }).join("") : `<li>No completed-turn flow</li>`;
+    const quays = info.network?.quays || [];
+    const selectedInNetwork = quays.some(quay => quay.c === building.c && quay.r === building.r && quay.district === homeDistrict);
+    const hasPartnerTarget = selectedInNetwork && quays.some(quay => quay.district !== homeDistrict);
+    const canFocus = hasPartnerTarget && typeof this.renderer.focusQuayPartner === "function";
+    return `<section class="quay-info"><div class="section-kicker">River network</div><div class="quay-status" data-status="${info.status}">${status}</div>
+      <dl class="quay-facts"><div><dt>Water basin</dt><dd>${info.basin ?? "No water basin"}</dd></div><div><dt>Home district</dt><dd>${districtName}</dd></div><div><dt>Other districts</dt><dd>${others}</dd></div>
+      <div><dt>Crew activity</dt><dd>${Math.round(info.activity * 100)}%</dd></div><div><dt>Current network capacity</dt><dd>${metricValue(info.effectiveCapacity)} / ${info.nominalCapacity} units per turn</dd></div>
+      <div><dt>Operating costs</dt><dd>${def.upkeep ?? UPKEEP[def.id] ?? 0} €/turn · ${def.inputs?.workers || 0} workers · ${def.ext?.maintenance || 0} maintenance demand</dd></div></dl>
+      <p class="insp-note">Unlocks in phase 2. Place two quays in different districts on the same water basin.</p>
+      <button type="button" class="quay-partner" data-quay-partner ${canFocus ? "" : "disabled"}>${uiIcon("focus")}Focus partner</button>
+      <div class="quay-flows"><b>Last completed-turn flows</b><p>${Number.isInteger(info.flowTick) ? `Last completed turn: ${info.flowTick}` : "No completed river turn yet"}</p><ul>${flows}</ul></div>
+    </section>`;
+  }
+
   renderTransformationPreview(option, feedback = null) {
     const rows = comparisonRows(option.before, option.after);
     const changedRows = rows.filter(row => row.changed), unchangedRows = rows.filter(row => !row.changed);
@@ -581,12 +612,14 @@ export class UI {
       else if (active.classList?.contains("transform-feedback") && active.classList.contains("error")) focusedAction = ".transform-feedback.error";
       else if (active.hasAttribute?.("data-transform-cancel")) focusedAction = "[data-transform-cancel]";
       else if (active.hasAttribute?.("data-focus-building")) focusedAction = "[data-focus-building]";
+      else if (active.hasAttribute?.("data-quay-partner")) focusedAction = "[data-quay-partner]";
     }
     this.inspectBuilding = building;
     if (!building || !this.engine.state.buildings.includes(building)) {
       this.inspectBuilding = null;
       this.transformPreview = null;
       this.transformFeedback = null;
+      this.renderer.setRiverSelection?.(null);
       setHTML(this.$.inspector, "");
       this.$.inspector.classList.remove("on");
       this.$.side?.classList.remove("has-inspector", "has-transform-preview");
@@ -600,6 +633,7 @@ export class UI {
       this.setSideOpen?.(true);
     }
     this.$.side?.classList.add("has-inspector");
+    this.renderer.setRiverSelection?.(building.def.id === "river_quay" ? building : null);
     const def = this.engine.profileOf(building);
     const value = this.engine.buildingValue(building);
     const pct = clamp((value - 0.4) / 2 * 100, 0, 100);
@@ -631,6 +665,7 @@ export class UI {
     if (bonusTags.length) html += `<div class="insp-note">The <b>${REGIME_META[this.engine.dominantRegime().key].lbl}</b> regime values: ${bonusTags.map(tagText).join(", ")}.</div>`;
     const districtName = DISTRICT_NAMES[districtOf(building.c, building.r)];
     html += `<div class="insp-age">Age: ${building.age} turns · ${districtName} · local heat: ${heat.toFixed(1)}</div></div>`;
+    if (building.def.id === "river_quay") html += this.renderQuayInspector?.(building) || "";
 
     if (building.def.id === "commons") html += `<div class="insp-disabled">${this.engine.transformationBlockReason(building, "add_floor")}</div>`;
     const transformations = building.def.id === "commons" ? [] : this.engine.transformationOptions?.(building) || [];
@@ -672,6 +707,8 @@ export class UI {
       this.renderer.focusBuilding?.(building);
       this.setSideOpen?.(false);
     });
+    const quayPartner = this.$.inspector.querySelector("[data-quay-partner]");
+    if (quayPartner) quayPartner.onclick = () => this.renderer.focusQuayPartner?.(building);
     for (const button of this.$.inspector.querySelectorAll("[data-layer-group-toggle]")) {
       button.onclick = () => {
         this.layerGroup = button.dataset.layerGroupToggle;

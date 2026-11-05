@@ -242,7 +242,7 @@ test("reducedEffects freezes workshop, tram, smoke and resident motion", () => {
     haloRoot: new THREE.Group(), smokePuffs: [puff], _people: [person],
     controls: { update() {} }, camera: {}, renderer: { render() {} },
     _syncHalo() {}, _animateDisabled() {}, _updateCameraTransition() {}, _updateLandscape() {},
-    _updateGhost() {}, applyLens() {}, _updateFog() {}, _syncEnvironmentLod() {},
+    _updateGhost() {}, applyLens() {}, _updateFog() {}, _syncEnvironmentLod() {}, _animateBarges() {},
     _activityOf: Renderer3D.prototype._activityOf, _occupancyOf: Renderer3D.prototype._occupancyOf,
   };
   Renderer3D.prototype.frame.call(fixture);

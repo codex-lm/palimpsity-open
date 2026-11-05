@@ -143,6 +143,16 @@ function clearTools() {
   setStatus("");
 }
 
+function placementOptions(cr) {
+  const options = { family: ui.buildFamily };
+  if (selected === "river_quay" && cr) {
+    const sides = engine.waterSides(cr.c, cr.r), index = sides.length ? Math.round(selectedRotation / (Math.PI / 2)) % sides.length : 0;
+    const target = sides[index] || sides[0];
+    if (target) options.target = target;
+  }
+  return options;
+}
+
 function cellStatus(cr) {
   if (!cr) { setStatus("Outside the valley.", true); return; }
   if (bulldoze) {
@@ -151,8 +161,10 @@ function cellStatus(cr) {
     return;
   }
   if (selected) {
-    const reason = engine.placeBlockReason(selected, cr.c, cr.r);
-    setStatus((river ? `${DISTRICT_NAMES[districtOf(cr.c, cr.r)]} · ` : "") + (reason || `Place ${BUILDINGS[selected].name.toLowerCase()} · ${BUILDINGS[selected].cost.money} € · Enter to confirm`), !!reason);
+    const def = BUILDINGS[selected], materials = def.cost?.materials || 0;
+    const cost = `${def.cost?.money || 0} €${materials ? ` + ${materials} ${materials === 1 ? "material" : "materials"}` : ""}`;
+    const reason = engine.placeBlockReason(selected, cr.c, cr.r, placementOptions(cr));
+    setStatus((river ? `${DISTRICT_NAMES[districtOf(cr.c, cr.r)]} · ` : "") + (reason || `Place ${def.name.toLowerCase()} · ${cost} · Enter to confirm`), !!reason);
     return;
   }
   const building = engine.occ[cr.r]?.[cr.c];
@@ -185,14 +197,14 @@ function handleCell(cr) {
     return;
   }
   if (selected) {
-    const building = engine.place(selected, cr.c, cr.r, { family: ui.buildFamily });
+    const building = engine.place(selected, cr.c, cr.r, placementOptions(cr));
     if (building) {
       renderer.setBuildingRotation(building, selectedRotation);
       renderer.sync();
       ui.update();
       setStatus(`${building.def.name} built · choose another tile or press Escape`);
     } else {
-      const reason = engine.placeBlockReason(selected, cr.c, cr.r);
+      const reason = engine.placeBlockReason(selected, cr.c, cr.r, placementOptions(cr));
       if (reason) { engine.toast(reason); ui.update(); }
       cellStatus(cr);
     }

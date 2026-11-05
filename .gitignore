@@ -6,3 +6,6 @@ Thumbs.db
 game/art/diorama/*.blend
 game/art/diorama/*.blend1
 game/art/diorama/*.png
+game/art/.tools/
+game/art/**/__pycache__/
+game/art/**/*.pyc

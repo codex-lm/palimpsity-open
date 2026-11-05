@@ -133,6 +133,11 @@
         ],
         "axis": "y"
       }
+    },
+    "river_quay": {
+      "file": "river_quay.glb",
+      "footprint": 0.95,
+      "height": 0.671
     }
   },
   "transportVariants": {
@@ -347,6 +352,17 @@
       "furniture_planter": {
         "file": "environment/furniture_planter.glb"
       }
+    }
+  },
+  "riverAssets": {
+    "barge": {
+      "file": "river_barge.glb"
+    },
+    "cargoFood": {
+      "file": "river_cargo_food.glb"
+    },
+    "cargoWater": {
+      "file": "river_cargo_water.glb"
     }
   }
 }

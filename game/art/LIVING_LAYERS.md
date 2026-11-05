@@ -10,7 +10,7 @@ Depuis `game/`, avec Blender 4.5 ou une version compatible :
 BLENDER_EXE=/chemin/absolu/vers/blender npm run assets:diorama
 ```
 
-La commande régénère successivement le diorama existant, Living Layers et les 14 modules Environment sans leurs rendus de présentation. Elle contrôle les **98 GLB référencés par le manifeste**, plus `terrain.glb` de présentation, soit **99 GLB contrôlés** au total. Pour ne régénérer que ce kit et obtenir le rendu de contrôle des neuf maisons assemblées :
+La commande régénère successivement le diorama existant, Living Layers, les 14 modules Environment et les quatre River Assets sans leurs rendus de présentation. Elle contrôle les **102 GLB référencés par le manifeste**, plus `terrain.glb` de présentation, soit **103 GLB contrôlés** au total. Pour ne régénérer que ce kit et obtenir le rendu de contrôle des neuf maisons assemblées :
 
 ```sh
 blender --background --factory-startup --python-exit-code 1 \

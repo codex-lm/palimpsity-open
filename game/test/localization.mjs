@@ -126,6 +126,12 @@ test('Living Layers shop profiles, tags and controls have complete French copy',
   const commons = BUILDINGS.commons;
   assert.equal(translate(`${commons.name}, 105 € + 8 materials. ${commons.desc}`, 'fr'), `Communs, 105 € + 8 matériaux. ${translate(commons.desc, 'fr')}`);
   assert.equal(translate(`${commons.desc} Cost: 105 € + 8 materials`, 'fr'), `${translate(commons.desc, 'fr')} Coût : 105 € + 8 matériaux`);
+  assert.equal(translate('River quay', 'fr'), 'Quai fluvial');
+  assert.equal(translate('Waiting for a partner district', 'fr'), 'En attente d’un quartier partenaire');
+  assert.equal(translate('Last completed turn: 1', 'fr'), 'Dernier tour terminé : 1');
+  assert.equal(translate('Import: 8 food ← northwest district', 'fr'), 'Import : 8 nourriture ← quartier nord-ouest');
+  assert.equal(translate('0.5 €/turn · 2 workers · 0.4 maintenance demand', 'fr'), '0.5 €/tour · 2 travailleurs · 0.4 demande d’entretien');
+  assert.equal(translate('Place river quay · 60 € + 4 materials · Enter to confirm', 'fr'), 'Poser quai fluvial · 60 € + 4 matériaux · Entrée pour confirmer');
 });
 
 class TextBoundary {

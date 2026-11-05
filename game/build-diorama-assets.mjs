@@ -10,7 +10,7 @@ const outputDir = path.join(gameDir, "art", "diorama");
 const script = path.join(outputDir, "build_assets.py");
 const blender = process.env.BLENDER_EXE;
 const demoModelIds = ["house", "well", "farm", "workshop", "market", "generator", "park"];
-const catalogModelIds = [...demoModelIds, "path", "road", "factory", "warehouse", "water_plant", "tower", "depot", "tram", "maint_center", "greenhouse", "recycler"];
+const catalogModelIds = [...demoModelIds, "path", "road", "factory", "warehouse", "water_plant", "tower", "depot", "tram", "maint_center", "greenhouse", "recycler", "river_quay"];
 const transportIds = ["path", "road", "tram"];
 const variantNames = ["end", "straight", "corner", "tee", "cross"];
 
@@ -57,9 +57,9 @@ async function validateOutputs() {
   assert(JSON.stringify(gameMap.terrain) === JSON.stringify(genTerrain()), "game-map.json ne correspond pas à genTerrain()");
 
   const manifest = JSON.parse(await readFile(path.join(outputDir, "asset-manifest.json"), "utf8"));
-  assert(Object.keys(manifest).sort().join(",") === "decor,environment,layers,models,terrain,transportVariants", "Manifeste: structure racine invalide");
+  assert(Object.keys(manifest).sort().join(",") === "decor,environment,layers,models,riverAssets,terrain,transportVariants", "Manifeste: structure racine invalide");
   assert(manifest.terrain === "terrain-game.glb", "Manifeste: terrain invalide");
-  assert(Object.keys(manifest.models).length === 18 && catalogModelIds.every((id) => id in manifest.models), "Manifeste: les 18 ids sont requis");
+  assert(Object.keys(manifest.models).length === 19 && catalogModelIds.every((id) => id in manifest.models), "Manifeste: les 19 ids sont requis");
   for (const [id, entry] of Object.entries(manifest.models)) {
     assert(entry.file === `${id}.glb` && entry.footprint <= 0.95 && entry.height > 0, `Manifeste: entrée invalide pour ${id}`);
   }
@@ -101,9 +101,14 @@ async function validateOutputs() {
   assert(Object.keys(manifest.environment?.modules ?? {}).sort().join(",") === [...environmentKeys].sort().join(","), "Manifeste: les 14 modules environment sont requis");
   for (const key of environmentKeys) assert(manifest.environment.modules[key].file === `environment/${key}.glb`, `Manifeste: module ${key} invalide`);
 
+  assert(Object.keys(manifest.models.river_quay).sort().join(",") === "file,footprint,height", "Manifeste: river_quay invalide");
+  const riverEntries = { barge: "river_barge.glb", cargoFood: "river_cargo_food.glb", cargoWater: "river_cargo_water.glb" };
+  assert(Object.keys(manifest.riverAssets ?? {}).sort().join(",") === Object.keys(riverEntries).sort().join(","), "Manifeste: riverAssets invalide");
+  for (const [key, file] of Object.entries(riverEntries)) assert(manifest.riverAssets[key].file === file && Object.keys(manifest.riverAssets[key]).join(",") === "file", `Manifeste: ${key} invalide`);
+
   const glbFiles = collectGlbFiles(manifest);
   glbFiles.add("terrain.glb");
-  assert(glbFiles.size === 99, `99 GLB attendus, ${glbFiles.size} trouvés`);
+  assert(glbFiles.size === 103, `103 GLB attendus, ${glbFiles.size} trouvés`);
   for (const file of [...glbFiles, "palimpsity-diorama.blend", "preview.png", "assets-preview.png", "assets-preview-18.png", "game-terrain-preview.png", "vegetation-preview.png", "rear-preview.png"]) {
     const info = await stat(path.join(outputDir, file));
     assert(info.size >= 1024, `${file} est vide ou incomplet.`);
@@ -112,7 +117,7 @@ async function validateOutputs() {
     const data = await readFile(path.join(outputDir, file));
     assert(data.toString("ascii", 0, 4) === "glTF" && data.readUInt32LE(4) === 2 && data.readUInt32LE(8) === data.length, `${file} n'est pas un GLB 2.0 valide.`);
   }
-  console.log(`Contrôle Node réussi: 18 modèles, 15 variantes, 45 modules layers, 14 modules environment, ${glbFiles.size} GLB, manifeste, cartes et six rendus.`);
+  console.log(`Contrôle Node réussi: 19 modèles, 15 variantes, 45 modules layers, 14 modules environment, 3 riverAssets, ${glbFiles.size} GLB, manifeste, cartes et six rendus.`);
 }
 
 async function runBlender(scriptPath, extraArgs = []) {
@@ -136,6 +141,7 @@ async function run() {
   await runBlender(script);
   await runBlender(path.join(gameDir, "art", "living-layers", "build_living_layers.py"), ["--", "--skip-render"]);
   await runBlender(path.join(gameDir, "art", "environment", "build_environment.py"), ["--", "--skip-render"]);
+  await runBlender(path.join(gameDir, "art", "river", "build_river_assets.py"), ["--", "--skip-render"]);
   await validateOutputs();
   console.log(`Assets prêts dans ${outputDir}`);
 }

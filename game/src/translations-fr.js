@@ -47,6 +47,7 @@ export const EXACT_FR = {
   "Water treatment plant": "Station d'eau",
   "Supplies water efficiently at scale, but relies on energy and central infrastructure. Old wells become vital again during outages and crises.": "Traite l'eau à grande échelle, efficace. Mais dépend du réseau et de l'énergie : en panne ou en crise, les vieux puits redeviennent vitaux.",
   "River quay": "Quai fluvial",
+  "river quay": "quai fluvial",
   "Two quays in different districts on the same water basin share food and water surpluses. River transport is halved during the drought.": "Deux quais dans des quartiers différents sur le même bassin partagent les surplus de nourriture et d'eau. Le transport fluvial est réduit de moitié pendant la sécheresse.",
   "A river quay needs an adjacent water tile.": "Un quai fluvial doit être adjacent à une case d'eau.",
   "Choose one adjacent water tile for the quay.": "Choisis une case d'eau adjacente pour le quai.",
@@ -487,7 +488,29 @@ export const EXACT_FR = {
   "No economic changes.": "Aucun changement économique.",
   "Current architecture": "Architecture actuelle",
   "Proposed architecture": "Architecture proposée",
-  "Scroll for more buildings": "Faire défiler pour voir plus de bâtiments"
+  "Scroll for more buildings": "Faire défiler pour voir plus de bâtiments",
+  "river": "rivière",
+  "River network": "Réseau fluvial",
+  "Water basin": "Bassin",
+  "No water basin": "Aucun bassin",
+  "Home district": "Quartier du quai",
+  "Other districts": "Autres quartiers",
+  "No partner district": "Aucun quartier partenaire",
+  "Crew activity": "Activité de l’équipage",
+  "Current network capacity": "Capacité actuelle du réseau",
+  "Operating costs": "Coûts d’exploitation",
+  "Unlocks in phase 2. Place two quays in different districts on the same water basin.": "Déblocage en phase 2. Place deux quais dans des quartiers différents du même bassin.",
+  "Focus partner": "Centrer sur le partenaire",
+  "Last completed-turn flows": "Flux du dernier tour terminé",
+  "No completed river turn yet": "Aucun tour fluvial terminé",
+  "No completed-turn flow": "Aucun flux au dernier tour terminé",
+  "Active (current turn)": "Actif (tour courant)",
+  "Active (last completed turn)": "Actif (dernier tour terminé)",
+  "Waiting for a partner district": "En attente d’un quartier partenaire",
+  "No surplus to transport": "Aucun excédent à transporter",
+  "Crew unavailable": "Équipage indisponible",
+  "Quay suspended": "Quai suspendu",
+  "Drought reduced capacity": "Capacité réduite par la sécheresse"
 };
 
 export const TEMPLATES_FR = [
@@ -617,8 +640,8 @@ export const TEMPLATES_FR = [
     "fr": "Démolir {0} · remboursement de 40 %"
   },
   {
-    "en": "Place {0} · {1} € · Enter to confirm",
-    "fr": "Poser {0} · {1} € · Entrée pour confirmer"
+    "en": "Place {0} · {1} · Enter to confirm",
+    "fr": "Poser {0} · {1} · Entrée pour confirmer"
   },
   {
     "en": "{0} · Enter to inspect",
@@ -863,5 +886,25 @@ export const TEMPLATES_FR = [
   {
     "en": "{0} buildings",
     "fr": "{0} bâtiments"
+  },
+  {
+    "en": "{0} / {1} units per turn",
+    "fr": "{0} / {1} unités par tour"
+  },
+  {
+    "en": "{0} €/turn · {1} workers · {2} maintenance demand",
+    "fr": "{0} €/tour · {1} travailleurs · {2} demande d’entretien"
+  },
+  {
+    "en": "Last completed turn: {0}",
+    "fr": "Dernier tour terminé : {0}"
+  },
+  {
+    "en": "Export: {0} {1} → {2}",
+    "fr": "Export : {0} {1} → {2}"
+  },
+  {
+    "en": "Import: {0} {1} ← {2}",
+    "fr": "Import : {0} {1} ← {2}"
   }
 ];

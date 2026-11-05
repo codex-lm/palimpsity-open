@@ -8,6 +8,7 @@ import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { UI } from '../src/ui.js';
 import { CityEngine } from '../src/engine.js';
+import { BUILDINGS } from '../src/data.js';
 import { Renderer3D } from '../src/render3d.js';
 
 class InspectorBoundary {
@@ -49,6 +50,7 @@ function fixture() {
     engine, renderer: { sync() { syncs++; } },
     $: { inspector, 'objectives-summary': {}, 'objectives-list': {} },
     showInspector: UI.prototype.showInspector,
+    renderQuayInspector: UI.prototype.renderQuayInspector,
     update() { this.showInspector(this.inspectBuilding); UI.prototype.renderObjectives.call(this); },
   };
   return { engine, workshop, inspector, ui, syncs: () => syncs };
@@ -72,6 +74,42 @@ test('NILO-003 Commons affiche le blocage exact sans offres de travaux', () => {
   ui.showInspector(commons);
   assert.ok(inspector.innerHTML.includes('This civic building cannot be expanded.'));
   assert.doesNotMatch(inspector.innerHTML, /living-layers|data-transform-preview|data-transform-confirm/);
+});
+
+test('LOT015 quay affiche bassin, équipage, capacité et flux datés sans activité vide', () => {
+  const { engine, inspector, ui } = fixture();
+  engine.state.phase = 2; engine.state.unlocked.add('river_quay'); engine.state.res.money = 1000; engine.state.res.materials = 100;
+  const quay = engine.place('river_quay', 2, 5);
+  ui.showInspector(quay);
+  assert.ok(inspector.innerHTML.includes('River network'));
+  assert.ok(inspector.innerHTML.includes('No completed-turn flow'));
+  assert.ok(inspector.innerHTML.includes('0 / 12 units per turn'));
+  assert.ok(inspector.innerHTML.includes('0.5 €/turn · 2 workers · 0.4 maintenance demand'));
+  assert.ok(inspector.innerHTML.includes('data-quay-partner disabled'));
+
+  const second = engine.place('river_quay', 4, 6);
+  quay.activity = second.activity = 1;
+  const outputDef = { ...BUILDINGS.farm, tags: [], inputs: {}, outputs: { food: 10, water: 10 }, ext: {} };
+  engine.state.buildings.push({ def: outputDef, c: 0, r: 6, age: 0, disabled: false, activity: 1, flowOutput: { food: 10, water: 10 }, flowInput: {}, grossMaintenance: 0 });
+  engine.occ[6][0] = engine.state.buildings.at(-1);
+  const needDef = { ...BUILDINGS.farm, tags: [], inputs: { food: 8, water: 8 }, outputs: {}, ext: {} };
+  engine.state.buildings.push({ def: needDef, c: 0, r: 0, age: 0, disabled: false, activity: 1, flowOutput: {}, flowInput: { food: 8, water: 8 }, grossMaintenance: 0 });
+  engine.occ[0][0] = engine.state.buildings.at(-1);
+  engine.computeDistricts(1);
+  ui.renderer.focusQuayPartner = () => {};
+  ui.showInspector(quay);
+  assert.ok(inspector.innerHTML.includes('12 / 12 units per turn'));
+  assert.ok(inspector.innerHTML.includes('Last completed turn: 1'));
+  assert.ok(inspector.innerHTML.includes('Import: 8 food'));
+  assert.ok(inspector.innerHTML.includes('Import: 4 water'));
+  assert.ok(!inspector.innerHTML.includes('data-quay-partner disabled'));
+
+  const duplicate = engine.place('river_quay', 3, 5);
+  duplicate.activity = 0.5;
+  engine.computeDistricts(2);
+  ui.showInspector(duplicate);
+  assert.ok(engine.quayInfo(duplicate).otherDistricts.length > 0);
+  assert.ok(inspector.innerHTML.includes('data-quay-partner disabled'), 'An unselected duplicate has no renderer partner target');
 });
 
 test('la commande de rénovation paie le moteur, actualise le profil et conserve le modèle', () => {

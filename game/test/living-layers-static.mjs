@@ -60,7 +60,8 @@ test("construction palette keeps a localized family choice and passes it to plac
   assert.match(ui, /this\.buildFamily = "banks"/);
   assert.match(ui, /button\.dataset\.family = family/);
   assert.match(ui, /this\.renderer\.setGhost\(this\.selected, \{ family: this\.buildFamily \}\)/);
-  assert.match(main, /engine\.place\(selected, cr\.c, cr\.r, \{ family: ui\.buildFamily \}\)/);
+  assert.match(main, /const options = \{ family: ui\.buildFamily \}/);
+  assert.match(main, /engine\.place\(selected, cr\.c, cr\.r, placementOptions\(cr\)\)/);
   assert.equal(translate("House family", "en"), "House family");
   assert.equal(translate("House family", "fr"), "Famille des maisons");
   for (const [family, french] of [["Banks", "Rives"], ["Works", "Fabriques"], ["Gardens", "Jardins"]]) {

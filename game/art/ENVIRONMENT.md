@@ -11,7 +11,7 @@ blender --background --factory-startup --python-exit-code 1 \
   --python art/environment/build_environment.py
 ```
 
-Ajouter `-- --skip-render` pour omettre `diorama/environment-preview.png`. La commande complète `npm run assets:diorama` régénère successivement les assets legacy, les 45 modules Living Layers et ces 14 modules, puis valide les 99 GLB attendus, `terrain.glb` de présentation compris.
+Ajouter `-- --skip-render` pour omettre `diorama/environment-preview.png`. La commande complète `npm run assets:diorama` régénère successivement les assets legacy, les 45 modules Living Layers, ces 14 modules et les quatre River Assets, puis valide les 103 GLB attendus, `terrain.glb` de présentation compris. Les axes et le manifeste fluviaux sont décrits dans `RIVER_ASSETS.md`.
 
 Le manifeste commun contient :
 

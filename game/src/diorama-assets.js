@@ -94,6 +94,34 @@ export function environmentPlanForCell(terrain, c, r, occupied = () => null) {
   return modules;
 }
 
+export function quayRotationForTarget(c, r, target) {
+  const dc = (target?.c ?? c) - c, dr = (target?.r ?? r) - r;
+  if (dc === 1 && dr === 0) return Math.PI / 2;
+  if (dc === -1 && dr === 0) return -Math.PI / 2;
+  if (dc === 0 && dr === -1) return Math.PI;
+  return 0;
+}
+
+export function quayTargetForRotation(waterSides, rotation) {
+  const index = waterSides.length ? Math.round(rotation / (Math.PI / 2)) % waterSides.length : 0;
+  return waterSides[index] || waterSides[0] || null;
+}
+
+export function riverVisualFlows(state, terrain) {
+  const buildings = state?.buildings || [];
+  const hasQuay = endpoint => buildings.some(building => building.def?.id === "river_quay" && building.c === endpoint?.c && building.r === endpoint?.r);
+  return (state?.riverFlows || []).map((flow, index) => ({ flow, index }))
+    .filter(({ flow }) => {
+      const path = flow?.path;
+      return Number.isFinite(flow?.amount) && flow.amount > 0 && ["food", "water"].includes(flow.resource)
+        && hasQuay(flow.sourceQuay) && hasQuay(flow.destinationQuay) && Array.isArray(path) && path.length >= 1
+        && path.every((cell, index) => terrain[cell.r]?.[cell.c] === 1
+          && (index === 0 || Math.abs(cell.c - path[index - 1].c) + Math.abs(cell.r - path[index - 1].r) === 1));
+    })
+    .sort((a, b) => b.flow.amount - a.flow.amount || a.index - b.index)
+    .slice(0, 6);
+}
+
 export function decodeEmbeddedGLB(uri) {
   if (typeof uri !== "string" || !uri.startsWith(EMBEDDED_HEADER)) throw new Error(INVALID_EMBEDDED_MODEL);
   let binary;
